@@ -9,6 +9,9 @@ Página única (HTML + JavaScript, sem dependências) para estudar e testar cál
 - **Queda de tensão:** ΔV = k · ρ(T) · L · I / S, com seção mínima para o limite escolhido.
 - **Equivalente:** resistência equivalente em série e em paralelo, com desenhos e fórmulas de atalho.
 - **Notação:** operações em notação científica e conversão de prefixos (T, G, M, k, m, µ, n, p).
+- **Matemática:** contas com frações (soma, subtração, multiplicação e divisão, com simplificação), regra de três direta e inversa e porcentagem.
+
+As divisões aparecem como fração empilhada (numerador em cima, denominador embaixo).
 
 Cada aba traz fórmula, legenda dos símbolos, explicação, exemplo resolvido e exercícios com resposta antes da calculadora.
 

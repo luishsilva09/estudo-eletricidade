@@ -2,49 +2,65 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffc20e">
 <title>Estudo de Eletricidade</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-/* Layout: coluna única estreita; abas no topo; cada aba tem campos em grade de 2 e um cartão de resultado. */
+/* Tema: multímetro de bancada. Carcaça amarela no topo, visor LCD nos resultados,
+   seletor de funções como barra fixa embaixo (celular) ou no topo (telas largas).
+   Mobile first: os estilos base são do celular; o @media (min-width) ajusta para cima. */
 :root{
-  --bg:#f3f5f7;
+  --bg:#e8ebee;
   --surface:#ffffff;
-  --ink:#14202b;
-  --muted:#5b6b79;
-  --line:#d3dae1;
-  --accent:#b4532a;
-  --accent-soft:#f8e9e1;
+  --ink:#1d2328;
+  --muted:#55616b;
+  --line:#cbd2d9;
+  --accent:#855400;        /* âmbar escuro: texto e contornos sobre fundo claro */
+  --accent-soft:#fff2c4;
+  --hi:#ffc20e;            /* amarelo da carcaça: só como preenchimento */
+  --hi-ink:#1d2328;
+  --panel:#22282e;         /* grafite do corpo do aparelho */
+  --panel-ink:#aeb8c1;
+  --lcd:#c7d1bb;
+  --lcd-ink:#16221a;
+  --lcd-muted:#40503f;
   --good:#1c7c54;
   --bad:#b3261e;
   --font-display:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --font-cond:"IBM Plex Sans Condensed","IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
   --font-mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --bar-h:60px;
   color-scheme:light;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --bg:#0e1419;
-    --surface:#161e26;
-    --ink:#e6ecf1;
-    --muted:#93a3b1;
-    --line:#2a3642;
-    --accent:#e8946b;
-    --accent-soft:#2c211b;
+    --bg:#13171b;
+    --surface:#1d2329;
+    --ink:#e8ecef;
+    --muted:#9aa7b2;
+    --line:#333d46;
+    --accent:#ffc20e;
+    --accent-soft:#352b08;
+    --panel:#0b0e11;
     --good:#4cc38a;
     --bad:#ff8a80;
     color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
-  --bg:#0e1419;
-  --surface:#161e26;
-  --ink:#e6ecf1;
-  --muted:#93a3b1;
-  --line:#2a3642;
-  --accent:#e8946b;
-  --accent-soft:#2c211b;
+  --bg:#13171b;
+  --surface:#1d2329;
+  --ink:#e8ecef;
+  --muted:#9aa7b2;
+  --line:#333d46;
+  --accent:#ffc20e;
+  --accent-soft:#352b08;
+  --panel:#0b0e11;
   --good:#4cc38a;
   --bad:#ff8a80;
   color-scheme:dark;
@@ -52,33 +68,58 @@
 
 *{box-sizing:border-box}
 html,body{margin:0}
+html{-webkit-text-size-adjust:100%}
 body{
   background:var(--bg);
   color:var(--ink);
   font-family:var(--font-display);
   font-size:16px;
   line-height:1.5;
-  padding:24px 16px 48px;
+  padding:0 16px calc(var(--bar-h) + env(safe-area-inset-bottom) + 28px);
 }
-main{max-width:520px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
-h1{font-size:1.4rem;line-height:1.2;margin:0;text-wrap:balance;font-weight:600}
-h2{font-size:.8rem;margin:0 0 8px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+main{max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+h1{font-family:var(--font-cond);font-size:2rem;line-height:1.05;letter-spacing:-.01em;margin:0;text-wrap:balance;font-weight:700}
+h2{font-family:var(--font-cond);font-size:1.15rem;line-height:1.25;margin:0 0 8px;font-weight:600;color:var(--ink)}
 .lead{margin:0;color:var(--muted);font-size:.95rem}
-header .lead{margin-top:6px}
+
+/* cabeçalho: a carcaça amarela, com um resistor no fio */
+header{
+  background:var(--hi);color:var(--hi-ink);
+  margin:0 -16px;padding:calc(env(safe-area-inset-top) + 22px) 16px 16px;
+  display:flex;flex-direction:column;gap:8px;
+}
+header .lead{color:var(--hi-ink);font-size:.95rem;max-width:34ch}
+.fio{display:flex;align-items:center;margin-top:6px}
+.fio::before,.fio::after{content:"";flex:1;height:2px;background:var(--hi-ink)}
+.fio svg{width:92px;height:18px;flex:none;display:block}
+.fio path{fill:none;stroke:var(--hi-ink);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+
 .formula{
   font-family:var(--font-mono);font-size:.85rem;
   background:var(--surface);border:1px solid var(--line);border-radius:8px;
   padding:10px 12px;overflow-x:auto;white-space:nowrap;
 }
 
-/* abas */
-.tabs{display:flex;gap:4px;overflow-x:auto;border-bottom:1px solid var(--line);scrollbar-width:thin}
-.tab{
-  font:inherit;font-size:.9rem;background:transparent;color:var(--muted);
-  border:0;border-bottom:3px solid transparent;padding:10px 12px;cursor:pointer;white-space:nowrap;
+/* abas: seletor de funções */
+.tabs{
+  position:fixed;left:0;right:0;bottom:0;z-index:20;
+  display:grid;grid-template-columns:repeat(6,minmax(0,1fr));
+  background:var(--panel);
+  padding:0 max(4px, env(safe-area-inset-right)) env(safe-area-inset-bottom) max(4px, env(safe-area-inset-left));
 }
-.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent);font-weight:600}
-.tab:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.tab{
+  font:inherit;background:transparent;color:var(--panel-ink);
+  border:0;cursor:pointer;min-height:var(--bar-h);padding:7px 2px 6px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
+  box-shadow:inset 0 3px 0 transparent;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+}
+.tab .sym{font-family:var(--font-mono);font-size:1.1rem;font-weight:500;line-height:1.3}
+.tab .tl{font-family:var(--font-cond);font-size:.72rem;font-weight:500;line-height:1.2;white-space:nowrap}
+.tab[aria-selected="true"]{color:var(--hi);box-shadow:inset 0 3px 0 var(--hi);background:rgba(255,194,14,.09)}
+.tab[aria-selected="true"] .sym{font-weight:600}
+.tab[aria-selected="true"] .tl{font-weight:700}
+.tab:focus-visible{outline:2px solid var(--hi);outline-offset:-4px;border-radius:8px}
 .panel{display:flex;flex-direction:column;gap:16px}
 
 /* campos */
@@ -87,7 +128,7 @@ header .lead{margin-top:6px}
 select{
   font-family:var(--font-display);font-size:1rem;color:var(--ink);
   background:var(--surface);border:1px solid var(--line);border-radius:8px;
-  padding:10px;width:100%;
+  padding:10px;width:100%;min-height:48px;
 }
 select:focus-visible,.btn:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
@@ -98,66 +139,69 @@ select:focus-visible,.btn:focus-visible,input:focus-visible{outline:2px solid va
 .field .tag{display:none;color:var(--accent);font-weight:600}
 .field.auto .tag{display:inline}
 .wrap{
-  display:flex;align-items:center;
+  display:flex;align-items:center;min-height:48px;
   background:var(--surface);border:1px solid var(--line);border-radius:8px;
   padding:0 10px;
 }
-.field.auto .wrap{border-color:var(--accent);background:var(--accent-soft)}
+.field.auto .wrap{border-color:var(--accent);background:var(--accent-soft);box-shadow:inset 4px 0 0 var(--hi)}
 .wrap input{
   flex:1;min-width:0;border:0;background:transparent;color:var(--ink);
-  font-family:var(--font-mono);font-size:1rem;padding:10px 0;
+  font-family:var(--font-mono);font-size:1.05rem;padding:11px 0;
   font-variant-numeric:tabular-nums;
 }
 .wrap input:focus-visible{outline:0}
 .wrap:focus-within{outline:2px solid var(--accent);outline-offset:2px}
 .unit{font-family:var(--font-mono);font-size:.8rem;color:var(--muted);margin-left:6px;white-space:nowrap}
 
-.actions{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.actions{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
 .status{margin:0;font-size:.9rem;color:var(--muted);min-height:1.4em}
 .status.bad{color:var(--bad)}
 .btn{
-  font:inherit;font-size:.9rem;background:transparent;color:var(--ink);
-  border:1px solid var(--line);border-radius:8px;padding:6px 12px;cursor:pointer;white-space:nowrap;
+  font:inherit;font-size:.92rem;font-weight:500;background:var(--surface);color:var(--ink);
+  border:1px solid var(--line);border-radius:8px;padding:8px 14px;min-height:44px;min-width:44px;
+  cursor:pointer;white-space:nowrap;touch-action:manipulation;
 }
 
-/* resultados */
+/* resultados: o visor LCD. As cores do visor não mudam com o tema. */
 .result{
-  background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--accent);
-  border-radius:8px;padding:14px 16px;
+  --ink:var(--lcd-ink);--muted:var(--lcd-muted);--good:#0f5c3a;--bad:#9a1c14;--accent:var(--lcd-ink);
+  background:var(--lcd);color:var(--lcd-ink);
+  border:5px solid var(--panel);border-radius:12px;padding:14px 16px;
+  box-shadow:inset 0 2px 6px rgba(22,34,26,.28);
 }
 .r-pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.r-label{display:block;font-size:.85rem;color:var(--muted)}
-.r-value{display:block;font-family:var(--font-mono);font-size:1.6rem;font-weight:500;line-height:1.25;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
-.r-value.big{font-size:1.8rem}
+.r-label{display:block;font-family:var(--font-cond);font-size:.9rem;font-weight:500;color:var(--muted)}
+.r-value{display:block;font-family:var(--font-mono);font-size:1.7rem;font-weight:600;line-height:1.25;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.r-value.big{font-size:2rem}
 .r-extra{display:block;font-size:.9rem;color:var(--muted);margin-top:2px;overflow-wrap:anywhere}
-.pill{display:inline-block;padding:1px 8px;border-radius:999px;font-size:.8rem;border:1px solid currentColor;margin-left:4px}
+.pill{display:inline-block;padding:1px 8px;border-radius:999px;font-size:.8rem;font-weight:600;border:1.5px solid currentColor;margin-left:4px}
 .pill.ok{color:var(--good)}
 .pill.bad{color:var(--bad)}
 
-.steps{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px 16px}
+.steps{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
 .steps ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
 .steps li{display:flex;flex-direction:column;gap:2px}
 .steps li span{font-size:.85rem;color:var(--muted)}
 .steps code{font-family:var(--font-mono);font-size:.85rem;overflow-x:auto;white-space:nowrap;padding-bottom:2px}
-.note{font-size:.8rem;color:var(--muted);margin:0}
+.note{font-size:.82rem;color:var(--muted);margin:0}
 
 /* tabela de materiais */
-.table-card{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px 16px}
-.tablewrap{overflow-x:auto}
+.table-card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
 table{width:100%;border-collapse:collapse;font-size:.9rem}
-th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
-th{font-size:.8rem;color:var(--muted);font-weight:500}
+th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+th{font-family:var(--font-cond);font-size:.85rem;color:var(--muted);font-weight:600}
 th.num,td.num{text-align:right}
 td.num{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
 tbody tr{cursor:pointer}
 tbody tr:last-child td{border-bottom:0}
-tbody tr.on{background:var(--accent-soft)}
+tbody tr.on{background:var(--accent-soft);box-shadow:inset 4px 0 0 var(--hi)}
 
 /* série / paralelo e linhas de resistores */
-.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;align-self:flex-start}
-.seg button{font:inherit;font-size:.9rem;background:var(--surface);color:var(--ink);border:0;padding:8px 16px;cursor:pointer}
-.seg button[aria-pressed="true"]{background:var(--accent-soft);font-weight:600;box-shadow:inset 0 -2px 0 var(--accent)}
-.seg button:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.seg{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{font:inherit;font-size:.95rem;background:var(--surface);color:var(--ink);border:0;padding:8px 16px;min-height:46px;cursor:pointer;touch-action:manipulation}
+.seg button[aria-pressed="true"]{background:var(--hi);color:var(--hi-ink);font-weight:600}
+.seg button:focus-visible{outline:2px solid var(--accent);outline-offset:-3px}
 .rlist{display:flex;flex-direction:column;gap:8px}
 .rrow{display:flex;gap:8px;align-items:center}
 .rrow .wrap{flex:1;min-width:0}
@@ -165,41 +209,83 @@ tbody tr.on{background:var(--accent-soft)}
 .btn[disabled]{opacity:.4;cursor:default}
 .opline{display:flex;flex-direction:column;gap:4px}
 
-.diagrams{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.fig{margin:0;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:6px}
-.fig.on{border-color:var(--accent)}
-.fig svg{width:100%;height:auto;display:block}
-.fig figcaption{font-size:.8rem;color:var(--muted)}
+.diagrams{display:grid;grid-template-columns:1fr;gap:12px}
+.fig{margin:0;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:6px}
+.fig.on{border-color:var(--accent);box-shadow:inset 0 4px 0 var(--hi)}
+.fig svg{width:100%;height:auto;display:block;max-width:300px;margin:0 auto}
+.fig figcaption{font-size:.85rem;color:var(--muted)}
 .fig figcaption strong{color:var(--ink)}
 .wire{stroke:var(--ink);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
 .bat{stroke:var(--ink);stroke-width:2}
-.rbox{fill:var(--surface);stroke:var(--accent);stroke-width:2}
+.rbox{fill:var(--accent-soft);stroke:var(--accent);stroke-width:2}
 .dot{fill:var(--ink)}
 .lbl{fill:var(--ink);font-family:var(--font-mono);font-size:11px;text-anchor:middle;dominant-baseline:central}
-@media (max-width:479px){.diagrams{grid-template-columns:1fr}}
 .flist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
-.flist li{display:flex;flex-direction:column;gap:2px;padding-left:10px;border-left:3px solid transparent}
-.flist li.fit{border-left-color:var(--accent)}
+.flist li{display:flex;flex-direction:column;gap:2px;padding-left:10px;border-left:4px solid transparent}
+.flist li.fit{border-left-color:var(--hi)}
 .flist li.fit strong::after{content:"serve para os seus valores";font-size:.75rem;font-weight:500;color:var(--accent);margin-left:8px}
 .flist code{font-family:var(--font-mono);font-size:.85rem;overflow-x:auto;white-space:nowrap;padding-bottom:2px}
-.fcard,.study{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
-.fcard h2{margin:0}
-.fbig{font-family:var(--font-mono);font-size:1.1rem;line-height:1.5;display:flex;flex-direction:column;gap:2px;overflow-x:auto;padding:8px 10px;background:var(--accent-soft);border-radius:8px}
+
+/* fórmula e estudo */
+.fcard,.study{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.fcard{padding:0;overflow:hidden;gap:0}
+.fcard h2{margin:0;padding:14px 16px 10px;font-size:1.3rem}
+.fcard .tablewrap{padding:4px 8px 6px}
+.fbig{
+  font-family:var(--font-mono);font-size:1.1rem;font-weight:500;line-height:1.55;
+  display:flex;flex-direction:column;gap:2px;overflow-x:auto;
+  padding:12px 16px;background:var(--panel);color:var(--hi);
+}
 .fbig span{white-space:nowrap}
-.legend td:first-child{font-family:var(--font-mono);font-weight:500;color:var(--accent)}
-.legend td:nth-child(2){white-space:normal;min-width:170px}
+.fbig small{display:block;font-family:var(--font-cond);font-size:.85rem;font-weight:500;color:var(--panel-ink);margin-bottom:2px}
+.legend td:first-child{font-family:var(--font-mono);font-weight:600;color:var(--accent)}
+.legend td:nth-child(2){white-space:normal;min-width:150px}
 .legend tbody tr{cursor:default}
 .study h2{margin:0}
-.study h3{font-size:.95rem;margin:6px 0 0}
+.study h3{font-family:var(--font-cond);font-size:1.02rem;font-weight:600;margin:6px 0 0}
 .study p{margin:0;font-size:.95rem}
-.study ul,.study ol{margin:0;padding-left:1.2rem;display:flex;flex-direction:column;gap:6px;font-size:.95rem}
-.study details{margin-top:4px}
-.study summary{cursor:pointer;color:var(--accent);font-size:.9rem}
+.study ul,.study ol{margin:0;padding-left:1.2rem;display:flex;flex-direction:column;gap:8px;font-size:.95rem}
+.study details{margin-top:6px}
+.study summary{cursor:pointer;color:var(--accent);font-size:.92rem;font-weight:500;padding:9px 0;touch-action:manipulation}
 .study summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.study details p{margin-top:4px;padding:8px 10px;background:var(--accent-soft);border-radius:8px}
-.about{background:var(--accent-soft);border-radius:8px;padding:12px 14px;font-size:.9rem;display:flex;flex-direction:column;gap:6px}
+.study details p{margin-top:2px;padding:10px 12px;background:var(--accent-soft);border-radius:8px}
+.about{background:var(--accent-soft);border-left:4px solid var(--hi);border-radius:0 8px 8px 0;padding:12px 14px;font-size:.9rem;display:flex;flex-direction:column;gap:6px}
 .about p{margin:0}
+/* calculadora de frações: campos empilhados com a barra no meio */
+.fcalc{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:10px;align-items:center}
+.fin{display:flex;flex-direction:column;gap:6px;min-width:0}
+.fin .wrap input{text-align:center}
+.fbar{height:3px;background:var(--ink);border-radius:2px}
+.ops{display:grid;grid-template-columns:44px 44px;gap:6px}
+.ops button{font-family:var(--font-mono);font-size:1.25rem;line-height:1;min-height:44px;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:8px;cursor:pointer;touch-action:manipulation}
+.ops button[aria-pressed="true"]{background:var(--hi);color:var(--hi-ink);border-color:var(--hi);font-weight:600}
+.ops button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.tool{display:flex;flex-direction:column;gap:12px}
+.tool h2{margin:0}
+/* divisão empilhada (numerador sobre denominador) */
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;position:relative;margin:2px .2em;line-height:1.25;font-size:.94em;white-space:nowrap}
+.frac > span:first-child{border-bottom:1.5px solid currentColor;padding:0 .35em 1px;align-self:stretch;text-align:center}
+.frac > span:last-child{padding:1px .35em 0}
+.frac .sl{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+.fbig{gap:8px}
+.steps code,.flist code{padding:2px 0 4px}
 [hidden]{display:none !important}
+
+/* telas largas: seletor sobe para o topo e a carcaça ganha cantos */
+@media (min-width:720px){
+  body{padding:24px 16px 56px}
+  header{margin:0;border-radius:14px 14px 0 0;padding:26px 24px 18px}
+  h1{font-size:2.4rem}
+  .tabs{position:sticky;top:0;bottom:auto;left:auto;right:auto;margin-top:-16px;padding:0 4px;border-radius:0 0 14px 14px}
+  .diagrams{grid-template-columns:1fr 1fr}
+}
+@media (max-width:359px){
+  .grid,.r-pair{grid-template-columns:1fr}
+  .tab .tl{font-size:.62rem}
+}
+@media (prefers-reduced-motion:no-preference){
+  .tab{transition:color .15s,background-color .15s}
+}
 </style>
 </head>
 <body>
@@ -207,21 +293,24 @@ tbody tr.on{background:var(--accent-soft)}
   <header>
     <h1>Estudo de Eletricidade</h1>
     <p class="lead">Fórmulas, legendas, exemplos e exercícios, com calculadoras para testar os valores.</p>
+    <div class="fio" aria-hidden="true"><svg viewBox="0 0 92 18"><path d="M0 9 H10 L16 1 L28 17 L40 1 L52 17 L64 1 L76 17 L82 9 H92"/></svg></div>
   </header>
-  <p class="note">Nos campos de valor você pode digitar prefixos: 4k7 ou 4,7k = 4.700, 250m = 0,25, 10µ ou 10u = 0,00001, 2M = 2.000.000. Atenção: m minúsculo é mili e M maiúsculo é mega.</p>
 
   <nav class="tabs" role="tablist" aria-label="Calculadoras">
-    <button type="button" class="tab" role="tab" id="t-ohm" aria-controls="tab-ohm" aria-selected="true">1ª Lei de Ohm</button>
-    <button type="button" class="tab" role="tab" id="t-cabo" aria-controls="tab-cabo" aria-selected="false">2ª Lei de Ohm</button>
-    <button type="button" class="tab" role="tab" id="t-queda" aria-controls="tab-queda" aria-selected="false">Queda de tensão</button>
-    <button type="button" class="tab" role="tab" id="t-equivalente" aria-controls="tab-equivalente" aria-selected="false">Equivalente</button>
-    <button type="button" class="tab" role="tab" id="t-notacao" aria-controls="tab-notacao" aria-selected="false">Notação</button>
+    <button type="button" class="tab" role="tab" id="t-ohm" aria-controls="tab-ohm" aria-selected="true" aria-label="1ª Lei de Ohm"><span class="sym" aria-hidden="true">Ω</span><span class="tl">1ª Lei</span></button>
+    <button type="button" class="tab" role="tab" id="t-cabo" aria-controls="tab-cabo" aria-selected="false" aria-label="2ª Lei de Ohm"><span class="sym" aria-hidden="true">ρ</span><span class="tl">2ª Lei</span></button>
+    <button type="button" class="tab" role="tab" id="t-queda" aria-controls="tab-queda" aria-selected="false" aria-label="Queda de tensão"><span class="sym" aria-hidden="true">ΔV</span><span class="tl">Queda</span></button>
+    <button type="button" class="tab" role="tab" id="t-equivalente" aria-controls="tab-equivalente" aria-selected="false"><span class="sym" aria-hidden="true">Req</span><span class="tl">Equivalente</span></button>
+    <button type="button" class="tab" role="tab" id="t-notacao" aria-controls="tab-notacao" aria-selected="false"><span class="sym" aria-hidden="true">10ⁿ</span><span class="tl">Notação</span></button>
+    <button type="button" class="tab" role="tab" id="t-matematica" aria-controls="tab-matematica" aria-selected="false"><span class="sym" aria-hidden="true">½</span><span class="tl">Matemática</span></button>
   </nav>
+
+  <p class="note top">Nos campos de valor você pode digitar prefixos: 4k7 ou 4,7k = 4.700, 250m = 0,25, 10µ ou 10u = 0,00001, 2M = 2.000.000. Atenção: m minúsculo é mili e M maiúsculo é mega.</p>
 
   <!-- ABA: RESISTÊNCIA DO CABO -->
   <section id="tab-cabo" class="panel" role="tabpanel" aria-labelledby="t-cabo" hidden>
-    <section class="fcard" aria-label="Fórmula e legenda"><h2>2ª Lei de Ohm (resistividade)</h2><div class="fbig"><span>R = ρ · L / A</span><span>ρ(T) = ρ₂₀ · [1 + α · (T − 20)]</span></div><div class="tablewrap"><table class="legend"><thead><tr><th>Símbolo</th><th>Significado</th><th>Unidade</th></tr></thead><tbody><tr><td>R</td><td>Resistência do condutor</td><td>ohm (Ω)</td></tr><tr><td>ρ</td><td>Resistividade do material (ρ₂₀ é o valor a 20 °C)</td><td>Ω·mm²/m</td></tr><tr><td>L</td><td>Comprimento do condutor</td><td>metro (m)</td></tr><tr><td>A</td><td>Área da seção transversal (bitola)</td><td>mm²</td></tr><tr><td>α</td><td>Coeficiente de temperatura do material</td><td>1/°C</td></tr><tr><td>T</td><td>Temperatura do condutor</td><td>°C</td></tr></tbody></table></div></section>
-    <section class="study" aria-label="Estudo"><h2>Entenda antes de calcular</h2><h3>Como ler a fórmula</h3><ul><li>Fio mais longo, mais resistência: R cresce junto com L.</li><li>Fio mais grosso, menos resistência: R diminui quando A aumenta.</li><li>Cada material tem sua resistividade ρ. Prata e cobre conduzem melhor que ferro e nicromo.</li><li>Aquecer o condutor aumenta ρ. Por isso a resistência sobe com a temperatura (α positivo).</li></ul><h3>Exemplo resolvido</h3><p>Cabo de cobre de 150 m e 4 mm² a 20 °C, com ρ = 0,0173 Ω·mm²/m: R = 0,0173 · 150 / 4 = <strong>0,6488 Ω</strong>. A 2 °C, o fator de temperatura é 1 + 0,004 · (2 − 20) = 0,928, e a resistência cai para cerca de <strong>0,602 Ω</strong>.</p><h3>Pratique</h3><ol><li>Cobre (ρ = 0,0173 Ω·mm²/m), 100 m, 2,5 mm², a 20 °C. Qual a resistência?<details><summary>Ver resposta</summary><p>R = 0,0173 · 100 / 2,5 = <strong>0,692 Ω</strong>.</p></details></li><li>Se a seção do mesmo cabo dobrar, para 5 mm², o que acontece com a resistência?<details><summary>Ver resposta</summary><p>Ela cai pela metade: R = 0,0173 · 100 / 5 = <strong>0,346 Ω</strong>. A resistência é inversamente proporcional à seção.</p></details></li></ol></section>
+    <section class="fcard" aria-label="Fórmula e legenda"><h2>2ª Lei de Ohm (resistividade)</h2><div class="fbig"><span>R = <span class="frac"><span>ρ · L</span><span class="sl"> / </span><span>A</span></span></span><span>ρ(T) = ρ₂₀ · [1 + α · (T − 20)]</span></div><div class="tablewrap"><table class="legend"><thead><tr><th>Símbolo</th><th>Significado</th><th>Unidade</th></tr></thead><tbody><tr><td>R</td><td>Resistência do condutor</td><td>ohm (Ω)</td></tr><tr><td>ρ</td><td>Resistividade do material (ρ₂₀ é o valor a 20 °C)</td><td>Ω·mm²/m</td></tr><tr><td>L</td><td>Comprimento do condutor</td><td>metro (m)</td></tr><tr><td>A</td><td>Área da seção transversal (bitola)</td><td>mm²</td></tr><tr><td>α</td><td>Coeficiente de temperatura do material</td><td>1/°C</td></tr><tr><td>T</td><td>Temperatura do condutor</td><td>°C</td></tr></tbody></table></div></section>
+    <section class="study" aria-label="Estudo"><h2>Entenda antes de calcular</h2><h3>Como ler a fórmula</h3><ul><li>Fio mais longo, mais resistência: R cresce junto com L.</li><li>Fio mais grosso, menos resistência: R diminui quando A aumenta.</li><li>Cada material tem sua resistividade ρ. Prata e cobre conduzem melhor que ferro e nicromo.</li><li>Aquecer o condutor aumenta ρ. Por isso a resistência sobe com a temperatura (α positivo).</li></ul><h3>Exemplo resolvido</h3><p>Cabo de cobre de 150 m e 4 mm² a 20 °C, com ρ = 0,0173 Ω·mm²/m: R = <span class="frac"><span>0,0173 · 150</span><span class="sl"> / </span><span>4</span></span> = <strong>0,6488 Ω</strong>. A 2 °C, o fator de temperatura é 1 + 0,004 · (2 − 20) = 0,928, e a resistência cai para cerca de <strong>0,602 Ω</strong>.</p><h3>Pratique</h3><ol><li>Cobre (ρ = 0,0173 Ω·mm²/m), 100 m, 2,5 mm², a 20 °C. Qual a resistência?<details><summary>Ver resposta</summary><p>R = <span class="frac"><span>0,0173 · 100</span><span class="sl"> / </span><span>2,5</span></span> = <strong>0,692 Ω</strong>.</p></details></li><li>Se a seção do mesmo cabo dobrar, para 5 mm², o que acontece com a resistência?<details><summary>Ver resposta</summary><p>Ela cai pela metade: R = <span class="frac"><span>0,0173 · 100</span><span class="sl"> / </span><span>5</span></span> = <strong>0,346 Ω</strong>. A resistência é inversamente proporcional à seção.</p></details></li></ol></section>
     <h2>Calculadora</h2>
     <p class="lead">Preencha cinco campos e deixe vazio o que quer descobrir. A calculadora resolve o campo que faltar.</p>
     <div class="about"><p><strong>O que é:</strong> a segunda lei de Ohm. A resistência de um fio aumenta com o comprimento e com a resistividade do material, e diminui quando a seção é maior. O calor também aumenta a resistência.</p><p><strong>Para que serve:</strong> saber quanta resistência um cabo tem, ou descobrir o comprimento, a seção, a temperatura ou o material a partir dela.</p></div>
@@ -283,8 +372,8 @@ tbody tr.on{background:var(--accent-soft)}
 
   <!-- ABA: LEI DE OHM E POTÊNCIA -->
   <section id="tab-ohm" class="panel" role="tabpanel" aria-labelledby="t-ohm">
-    <section class="fcard" aria-label="Fórmula e legenda"><h2>1ª Lei de Ohm e potência elétrica</h2><div class="fbig"><span>V = R · I</span><span>P = V · I</span><span>P = R · I²  ou  P = V² / R</span></div><div class="tablewrap"><table class="legend"><thead><tr><th>Símbolo</th><th>Significado</th><th>Unidade</th></tr></thead><tbody><tr><td>V</td><td>Tensão elétrica (diferença de potencial)</td><td>volt (V)</td></tr><tr><td>I</td><td>Corrente elétrica</td><td>ampère (A)</td></tr><tr><td>R</td><td>Resistência elétrica</td><td>ohm (Ω)</td></tr><tr><td>P</td><td>Potência elétrica</td><td>watt (W)</td></tr></tbody></table></div></section>
-    <section class="study" aria-label="Estudo"><h2>Entenda antes de calcular</h2><h3>Como ler a fórmula</h3><ul><li>Com a mesma tensão, quanto maior a resistência, menor a corrente (I = V / R).</li><li>A potência é a energia transformada por segundo, em calor, luz ou movimento (P = V · I).</li><li>Substituindo uma fórmula na outra, a potência também sai de P = R · I² ou de P = V² / R.</li></ul><h3>Exemplo resolvido</h3><p>Um chuveiro de 220 V com resistência de 11 Ω: I = 220 / 11 = <strong>20 A</strong> e P = 220 · 20 = <strong>4.400 W</strong>.</p><h3>Pratique</h3><ol><li>Uma lâmpada de 60 W é ligada em 120 V. Qual a corrente? E a resistência?<details><summary>Ver resposta</summary><p>I = P / V = 60 / 120 = <strong>0,5 A</strong>. R = V / I = 120 / 0,5 = <strong>240 Ω</strong>.</p></details></li><li>Um resistor de 100 Ω é percorrido por 0,2 A. Qual a tensão e a potência?<details><summary>Ver resposta</summary><p>V = R · I = 100 · 0,2 = <strong>20 V</strong>. P = V · I = 20 · 0,2 = <strong>4 W</strong>.</p></details></li></ol></section>
+    <section class="fcard" aria-label="Fórmula e legenda"><h2>1ª Lei de Ohm e potência elétrica</h2><div class="fbig"><span>V = R · I</span><span>P = V · I</span><span>P = R · I²  ou  P = <span class="frac"><span>V²</span><span class="sl"> / </span><span>R</span></span></span></div><div class="tablewrap"><table class="legend"><thead><tr><th>Símbolo</th><th>Significado</th><th>Unidade</th></tr></thead><tbody><tr><td>V</td><td>Tensão elétrica (diferença de potencial)</td><td>volt (V)</td></tr><tr><td>I</td><td>Corrente elétrica</td><td>ampère (A)</td></tr><tr><td>R</td><td>Resistência elétrica</td><td>ohm (Ω)</td></tr><tr><td>P</td><td>Potência elétrica</td><td>watt (W)</td></tr></tbody></table></div></section>
+    <section class="study" aria-label="Estudo"><h2>Entenda antes de calcular</h2><h3>Como ler a fórmula</h3><ul><li>Com a mesma tensão, quanto maior a resistência, menor a corrente (I = <span class="frac"><span>V</span><span class="sl"> / </span><span>R</span></span>).</li><li>A potência é a energia transformada por segundo, em calor, luz ou movimento (P = V · I).</li><li>Substituindo uma fórmula na outra, a potência também sai de P = R · I² ou de P = <span class="frac"><span>V²</span><span class="sl"> / </span><span>R</span></span>.</li></ul><h3>Exemplo resolvido</h3><p>Um chuveiro de 220 V com resistência de 11 Ω: I = <span class="frac"><span>220</span><span class="sl"> / </span><span>11</span></span> = <strong>20 A</strong> e P = 220 · 20 = <strong>4.400 W</strong>.</p><h3>Pratique</h3><ol><li>Uma lâmpada de 60 W é ligada em 120 V. Qual a corrente? E a resistência?<details><summary>Ver resposta</summary><p>I = <span class="frac"><span>P</span><span class="sl"> / </span><span>V</span></span> = <span class="frac"><span>60</span><span class="sl"> / </span><span>120</span></span> = <strong>0,5 A</strong>. R = <span class="frac"><span>V</span><span class="sl"> / </span><span>I</span></span> = <span class="frac"><span>120</span><span class="sl"> / </span><span>0,5</span></span> = <strong>240 Ω</strong>.</p></details></li><li>Um resistor de 100 Ω é percorrido por 0,2 A. Qual a tensão e a potência?<details><summary>Ver resposta</summary><p>V = R · I = 100 · 0,2 = <strong>20 V</strong>. P = V · I = 20 · 0,2 = <strong>4 W</strong>.</p></details></li></ol></section>
     <h2>Calculadora</h2>
     <p class="lead">Preencha dois campos e a calculadora acha os outros dois.</p>
     <div class="about"><p><strong>O que é:</strong> a primeira lei de Ohm (V = R · I) junto com a fórmula da potência (P = V · I). Elas ligam tensão, corrente, resistência e potência de um circuito.</p><p><strong>Para que serve:</strong> achar a corrente de um aparelho, a potência de um resistor ou a resistência necessária para uma corrente desejada.</p></div>
@@ -315,8 +404,8 @@ tbody tr.on{background:var(--accent-soft)}
 
   <!-- ABA: QUEDA DE TENSÃO -->
   <section id="tab-queda" class="panel" role="tabpanel" aria-labelledby="t-queda" hidden>
-    <section class="fcard" aria-label="Fórmula e legenda"><h2>Queda de tensão em cabos</h2><div class="fbig"><span>ΔV = k · ρ(T) · L · I / S</span><span>ΔV % = ΔV / V · 100</span></div><div class="tablewrap"><table class="legend"><thead><tr><th>Símbolo</th><th>Significado</th><th>Unidade</th></tr></thead><tbody><tr><td>ΔV</td><td>Queda de tensão no cabo</td><td>volt (V)</td></tr><tr><td>k</td><td>Fator do circuito: 2 (monofásico ou bifásico) ou √3 (trifásico)</td><td>—</td></tr><tr><td>ρ(T)</td><td>Resistividade do material na temperatura de trabalho</td><td>Ω·mm²/m</td></tr><tr><td>L</td><td>Comprimento de ida (um sentido)</td><td>metro (m)</td></tr><tr><td>I</td><td>Corrente do circuito</td><td>ampère (A)</td></tr><tr><td>S</td><td>Seção do condutor</td><td>mm²</td></tr><tr><td>V</td><td>Tensão do circuito (entre fases no trifásico)</td><td>volt (V)</td></tr></tbody></table></div></section>
-    <section class="study" aria-label="Estudo"><h2>Entenda antes de calcular</h2><h3>Como ler a fórmula</h3><ul><li>O k = 2 vem do caminho da corrente: ela vai e volta, então o cabo conta duas vezes.</li><li>A queda cresce com o comprimento e com a corrente, e diminui quando a seção aumenta.</li><li>A queda em % compara a perda com a tensão do circuito. Quanto menor, melhor chega a energia no aparelho.</li></ul><h3>Exemplo resolvido</h3><p>Cobre a 70 °C, 220 V, 20 A, 40 m e 4 mm²: ρ(70) = 0,0173 · 1,2 = 0,02076. ΔV = 2 · 0,02076 · 40 · 20 / 4 = <strong>8,3 V</strong>, ou <strong>3,77 %</strong> de 220 V.</p><h3>Pratique</h3><ol><li>No mesmo circuito (220 V, 20 A, 40 m, cobre a 70 °C), troque o cabo por um de 6 mm². Qual a queda?<details><summary>Ver resposta</summary><p>ΔV = 2 · 0,02076 · 40 · 20 / 6 = <strong>5,54 V</strong>, ou <strong>2,52 %</strong> de 220 V.</p></details></li><li>Se o comprimento do cabo dobrar e o resto ficar igual, o que acontece com a queda?<details><summary>Ver resposta</summary><p>Ela também dobra, porque ΔV é proporcional a L.</p></details></li></ol></section>
+    <section class="fcard" aria-label="Fórmula e legenda"><h2>Queda de tensão em cabos</h2><div class="fbig"><span>ΔV = <span class="frac"><span>k · ρ(T) · L · I</span><span class="sl"> / </span><span>S</span></span></span><span>ΔV % = <span class="frac"><span>ΔV</span><span class="sl"> / </span><span>V</span></span> · 100</span></div><div class="tablewrap"><table class="legend"><thead><tr><th>Símbolo</th><th>Significado</th><th>Unidade</th></tr></thead><tbody><tr><td>ΔV</td><td>Queda de tensão no cabo</td><td>volt (V)</td></tr><tr><td>k</td><td>Fator do circuito: 2 (monofásico ou bifásico) ou √3 (trifásico)</td><td>—</td></tr><tr><td>ρ(T)</td><td>Resistividade do material na temperatura de trabalho</td><td>Ω·mm²/m</td></tr><tr><td>L</td><td>Comprimento de ida (um sentido)</td><td>metro (m)</td></tr><tr><td>I</td><td>Corrente do circuito</td><td>ampère (A)</td></tr><tr><td>S</td><td>Seção do condutor</td><td>mm²</td></tr><tr><td>V</td><td>Tensão do circuito (entre fases no trifásico)</td><td>volt (V)</td></tr></tbody></table></div></section>
+    <section class="study" aria-label="Estudo"><h2>Entenda antes de calcular</h2><h3>Como ler a fórmula</h3><ul><li>O k = 2 vem do caminho da corrente: ela vai e volta, então o cabo conta duas vezes.</li><li>A queda cresce com o comprimento e com a corrente, e diminui quando a seção aumenta.</li><li>A queda em % compara a perda com a tensão do circuito. Quanto menor, melhor chega a energia no aparelho.</li></ul><h3>Exemplo resolvido</h3><p>Cobre a 70 °C, 220 V, 20 A, 40 m e 4 mm²: ρ(70) = 0,0173 · 1,2 = 0,02076. ΔV = <span class="frac"><span>2 · 0,02076 · 40 · 20</span><span class="sl"> / </span><span>4</span></span> = <strong>8,3 V</strong>, ou <strong>3,77 %</strong> de 220 V.</p><h3>Pratique</h3><ol><li>No mesmo circuito (220 V, 20 A, 40 m, cobre a 70 °C), troque o cabo por um de 6 mm². Qual a queda?<details><summary>Ver resposta</summary><p>ΔV = <span class="frac"><span>2 · 0,02076 · 40 · 20</span><span class="sl"> / </span><span>6</span></span> = <strong>5,54 V</strong>, ou <strong>2,52 %</strong> de 220 V.</p></details></li><li>Se o comprimento do cabo dobrar e o resto ficar igual, o que acontece com a queda?<details><summary>Ver resposta</summary><p>Ela também dobra, porque ΔV é proporcional a L.</p></details></li></ol></section>
     <h2>Calculadora</h2>
     <p class="lead">Calcula a queda de tensão no cabo e a menor seção que respeita o limite que você definir.</p>
     <div class="about"><p><strong>O que é:</strong> todo cabo tem resistência, então perde um pouco de tensão pelo caminho. Quanto mais longo o cabo e maior a corrente, maior a perda.</p><p><strong>Para que serve:</strong> conferir se a tensão chega boa na ponta do cabo e escolher a seção certa para o comprimento e a corrente do circuito.</p></div>
@@ -365,8 +454,8 @@ tbody tr.on{background:var(--accent-soft)}
 
   <!-- ABA: RESISTÊNCIA EQUIVALENTE -->
   <section id="tab-equivalente" class="panel" role="tabpanel" aria-labelledby="t-equivalente" hidden>
-    <section class="fcard" aria-label="Fórmula e legenda"><h2>Resistência equivalente</h2><div class="fbig"><span>Série: Req = R₁ + R₂ + … + Rₙ</span><span>Paralelo: 1/Req = 1/R₁ + 1/R₂ + … + 1/Rₙ</span></div><div class="tablewrap"><table class="legend"><thead><tr><th>Símbolo</th><th>Significado</th><th>Unidade</th></tr></thead><tbody><tr><td>Req</td><td>Resistência equivalente (o resistor único que substitui o conjunto)</td><td>ohm (Ω)</td></tr><tr><td>R₁ … Rₙ</td><td>Resistência de cada resistor</td><td>ohm (Ω)</td></tr><tr><td>1/R</td><td>Condutância (inverso da resistência)</td><td>siemens (S)</td></tr><tr><td>N</td><td>Quantidade de resistores iguais (atalho do paralelo)</td><td>—</td></tr></tbody></table></div></section>
-    <section class="study" aria-label="Estudo"><h2>Entenda antes de calcular</h2><h3>Como ler a fórmula</h3><ul><li>Série: só há um caminho. A corrente é a mesma em todos e a tensão se divide entre eles.</li><li>Paralelo: há vários caminhos. A tensão é a mesma em todos e a corrente se divide.</li><li>No paralelo, a Req é sempre menor que o menor resistor, porque ganhar caminhos facilita a passagem da corrente.</li></ul><h3>Exemplo resolvido</h3><p>Resistores de 100 Ω, 220 Ω e 330 Ω. Em série: 100 + 220 + 330 = <strong>650 Ω</strong>. Em paralelo: 1/100 + 1/220 + 1/330 = 0,017576 S, então Req = 1 / 0,017576 ≈ <strong>56,9 Ω</strong>.</p><h3>Pratique</h3><ol><li>Três resistores de 30 Ω em paralelo. Qual a Req?<details><summary>Ver resposta</summary><p>Resistores iguais: Req = R / N = 30 / 3 = <strong>10 Ω</strong>.</p></details></li><li>Dois resistores, de 6 Ω e 3 Ω, em paralelo. Qual a Req?<details><summary>Ver resposta</summary><p>Produto pela soma: (6 · 3) / (6 + 3) = 18 / 9 = <strong>2 Ω</strong>.</p></details></li></ol></section>
+    <section class="fcard" aria-label="Fórmula e legenda"><h2>Resistência equivalente</h2><div class="fbig"><span>Série: Req = R₁ + R₂ + … + Rₙ</span><span>Paralelo: <span class="frac"><span>1</span><span class="sl"> / </span><span>Req</span></span> = <span class="frac"><span>1</span><span class="sl"> / </span><span>R₁</span></span> + <span class="frac"><span>1</span><span class="sl"> / </span><span>R₂</span></span> + … + <span class="frac"><span>1</span><span class="sl"> / </span><span>Rₙ</span></span></span></div><div class="tablewrap"><table class="legend"><thead><tr><th>Símbolo</th><th>Significado</th><th>Unidade</th></tr></thead><tbody><tr><td>Req</td><td>Resistência equivalente (o resistor único que substitui o conjunto)</td><td>ohm (Ω)</td></tr><tr><td>R₁ … Rₙ</td><td>Resistência de cada resistor</td><td>ohm (Ω)</td></tr><tr><td><span class="frac"><span>1</span><span class="sl"> / </span><span>R</span></span></td><td>Condutância (inverso da resistência)</td><td>siemens (S)</td></tr><tr><td>N</td><td>Quantidade de resistores iguais (atalho do paralelo)</td><td>—</td></tr></tbody></table></div></section>
+    <section class="study" aria-label="Estudo"><h2>Entenda antes de calcular</h2><h3>Como ler a fórmula</h3><ul><li>Série: só há um caminho. A corrente é a mesma em todos e a tensão se divide entre eles.</li><li>Paralelo: há vários caminhos. A tensão é a mesma em todos e a corrente se divide.</li><li>No paralelo, a Req é sempre menor que o menor resistor, porque ganhar caminhos facilita a passagem da corrente.</li></ul><h3>Exemplo resolvido</h3><p>Resistores de 100 Ω, 220 Ω e 330 Ω. Em série: 100 + 220 + 330 = <strong>650 Ω</strong>. Em paralelo: <span class="frac"><span>1</span><span class="sl"> / </span><span>100</span></span> + <span class="frac"><span>1</span><span class="sl"> / </span><span>220</span></span> + <span class="frac"><span>1</span><span class="sl"> / </span><span>330</span></span> = 0,017576 S, então Req = <span class="frac"><span>1</span><span class="sl"> / </span><span>0,017576</span></span> ≈ <strong>56,9 Ω</strong>.</p><h3>Pratique</h3><ol><li>Três resistores de 30 Ω em paralelo. Qual a Req?<details><summary>Ver resposta</summary><p>Resistores iguais: Req = <span class="frac"><span>R</span><span class="sl"> / </span><span>N</span></span> = <span class="frac"><span>30</span><span class="sl"> / </span><span>3</span></span> = <strong>10 Ω</strong>.</p></details></li><li>Dois resistores, de 6 Ω e 3 Ω, em paralelo. Qual a Req?<details><summary>Ver resposta</summary><p>Produto pela soma: <span class="frac"><span>6 · 3</span><span class="sl"> / </span><span>6 + 3</span></span> = <span class="frac"><span>18</span><span class="sl"> / </span><span>9</span></span> = <strong>2 Ω</strong>.</p></details></li></ol></section>
     <h2>Calculadora</h2>
     <p class="lead">Informe os resistores e escolha como eles estão ligados.</p>
     <div class="about"><p><strong>O que é:</strong> a troca de vários resistores por um só que se comporta igual. Em série as resistências se somam. Em paralelo, o total fica menor que o menor resistor.</p><p><strong>Para que serve:</strong> simplificar um circuito para depois aplicar a Lei de Ohm e achar a corrente total.</p></div>
@@ -393,16 +482,16 @@ tbody tr.on{background:var(--accent-soft)}
     <section id="eq-formulas" class="table-card" hidden>
       <h2>Fórmulas do paralelo</h2>
       <ul class="flist">
-        <li id="f-geral" class="fit"><strong>Geral, para qualquer quantidade</strong><code>1/Req = 1/R₁ + 1/R₂ + … + 1/Rₙ</code></li>
-        <li id="f-dois"><strong>Dois resistores (produto pela soma)</strong><code>Req = (R₁ · R₂) / (R₁ + R₂)</code></li>
-        <li id="f-iguais"><strong>N resistores iguais</strong><code>Req = R / N</code></li>
+        <li id="f-geral" class="fit"><strong>Geral, para qualquer quantidade</strong><code><span class="frac"><span>1</span><span class="sl"> / </span><span>Req</span></span> = <span class="frac"><span>1</span><span class="sl"> / </span><span>R₁</span></span> + <span class="frac"><span>1</span><span class="sl"> / </span><span>R₂</span></span> + … + <span class="frac"><span>1</span><span class="sl"> / </span><span>Rₙ</span></span></code></li>
+        <li id="f-dois"><strong>Dois resistores (produto pela soma)</strong><code>Req = <span class="frac"><span>R₁ · R₂</span><span class="sl"> / </span><span>R₁ + R₂</span></span></code></li>
+        <li id="f-iguais"><strong>N resistores iguais</strong><code>Req = <span class="frac"><span>R</span><span class="sl"> / </span><span>N</span></span></code></li>
       </ul>
     </section>
   </section>
 
   <!-- ABA: NOTAÇÃO CIENTÍFICA -->
   <section id="tab-notacao" class="panel" role="tabpanel" aria-labelledby="t-notacao" hidden>
-    <section class="fcard" aria-label="Fórmula e legenda"><h2>Notação científica e prefixos</h2><div class="fbig"><span>N = a × 10ⁿ  (1 ≤ a &lt; 10)</span><span>(a × 10ᵐ) · (b × 10ⁿ) = (a · b) × 10ᵐ⁺ⁿ</span><span>(a × 10ᵐ) / (b × 10ⁿ) = (a / b) × 10ᵐ⁻ⁿ</span></div><div class="tablewrap"><table class="legend"><thead><tr><th>Símbolo</th><th>Significado</th><th>Unidade</th></tr></thead><tbody><tr><td>a, b</td><td>Coeficientes (na forma normalizada ficam entre 1 e 10)</td><td>—</td></tr><tr><td>m, n</td><td>Expoentes inteiros da potência de 10</td><td>—</td></tr><tr><td>k, M, G</td><td>Prefixos de múltiplos: 10³, 10⁶, 10⁹</td><td>—</td></tr><tr><td>m, µ, n, p</td><td>Prefixos de submúltiplos: 10⁻³, 10⁻⁶, 10⁻⁹, 10⁻¹²</td><td>—</td></tr></tbody></table></div></section>
+    <section class="fcard" aria-label="Fórmula e legenda"><h2>Notação científica e prefixos</h2><div class="fbig"><span>N = a × 10ⁿ  (1 ≤ a &lt; 10)</span><span>(a × 10ᵐ) · (b × 10ⁿ) = (a · b) × 10ᵐ⁺ⁿ</span><span><span class="frac"><span>a × 10ᵐ</span><span class="sl"> / </span><span>b × 10ⁿ</span></span> = <span class="frac"><span>a</span><span class="sl"> / </span><span>b</span></span> × 10ᵐ⁻ⁿ</span></div><div class="tablewrap"><table class="legend"><thead><tr><th>Símbolo</th><th>Significado</th><th>Unidade</th></tr></thead><tbody><tr><td>a, b</td><td>Coeficientes (na forma normalizada ficam entre 1 e 10)</td><td>—</td></tr><tr><td>m, n</td><td>Expoentes inteiros da potência de 10</td><td>—</td></tr><tr><td>k, M, G</td><td>Prefixos de múltiplos: 10³, 10⁶, 10⁹</td><td>—</td></tr><tr><td>m, µ, n, p</td><td>Prefixos de submúltiplos: 10⁻³, 10⁻⁶, 10⁻⁹, 10⁻¹²</td><td>—</td></tr></tbody></table></div></section>
     <section class="study" aria-label="Estudo"><h2>Entenda antes de calcular</h2><h3>Como ler a fórmula</h3><ul><li>Expoente positivo indica número grande: a vírgula anda para a direita. Negativo indica número pequeno.</li><li>Na multiplicação, multiplique os coeficientes e some os expoentes. Na divisão, divida os coeficientes e subtraia os expoentes.</li><li>Na soma e na subtração, primeiro iguale os expoentes e só depois some ou subtraia os coeficientes.</li></ul><h3>Exemplo resolvido</h3><p>4,7 kΩ = 4,7 × 10³ Ω = <strong>4.700 Ω</strong>. O prefixo quilo (k) vale 10³.</p><h3>Pratique</h3><ol><li>Calcule (2 × 10³) · (3 × 10⁴).<details><summary>Ver resposta</summary><p>Coeficientes: 2 · 3 = 6. Expoentes: 3 + 4 = 7. Resultado: <strong>6 × 10⁷</strong>.</p></details></li><li>Converta 250 mA para ampères.<details><summary>Ver resposta</summary><p>Mili (m) vale 10⁻³: 250 × 10⁻³ = <strong>0,25 A</strong>.</p></details></li></ol></section>
     <h2>Calculadora</h2>
     <p class="lead">Soma, subtrai, multiplica e divide números em notação científica, com o passo a passo.</p>
@@ -473,9 +562,77 @@ tbody tr.on{background:var(--accent-soft)}
       </div>
     </section>
   </section>
+
+  <!-- ABA: MATEMÁTICA BÁSICA -->
+  <section id="tab-matematica" class="panel" role="tabpanel" aria-labelledby="t-matematica" hidden>
+    <section class="fcard" aria-label="Fórmula e legenda"><h2>Matemática básica: frações</h2><div class="fbig"><span><small>Soma</small><span class="frac"><span>a</span><span class="sl"> / </span><span>b</span></span> + <span class="frac"><span>c</span><span class="sl"> / </span><span>d</span></span> = <span class="frac"><span>a · d + c · b</span><span class="sl"> / </span><span>b · d</span></span></span><span><small>Multiplicação</small><span class="frac"><span>a</span><span class="sl"> / </span><span>b</span></span> · <span class="frac"><span>c</span><span class="sl"> / </span><span>d</span></span> = <span class="frac"><span>a · c</span><span class="sl"> / </span><span>b · d</span></span></span><span><small>Divisão</small><span class="frac"><span>a</span><span class="sl"> / </span><span>b</span></span> ÷ <span class="frac"><span>c</span><span class="sl"> / </span><span>d</span></span> = <span class="frac"><span>a</span><span class="sl"> / </span><span>b</span></span> · <span class="frac"><span>d</span><span class="sl"> / </span><span>c</span></span></span><span><small>Regra de três</small><span class="frac"><span>a</span><span class="sl"> / </span><span>b</span></span> = <span class="frac"><span>c</span><span class="sl"> / </span><span>x</span></span>  →  x = <span class="frac"><span>b · c</span><span class="sl"> / </span><span>a</span></span></span></div><div class="tablewrap"><table class="legend"><thead><tr><th>Termo</th><th>Significado</th><th>Exemplo</th></tr></thead><tbody><tr><td>Numerador</td><td>Número de cima: quantas partes você tem</td><td>o 3 de <span class="frac"><span>3</span><span class="sl"> / </span><span>4</span></span></td></tr><tr><td>Denominador</td><td>Número de baixo: em quantas partes o inteiro foi dividido (nunca é zero)</td><td>o 4 de <span class="frac"><span>3</span><span class="sl"> / </span><span>4</span></span></td></tr><tr><td>MMC</td><td>Menor múltiplo comum: o menor número que aparece na tabuada dos dois denominadores</td><td>MMC(4, 6) = 12</td></tr><tr><td>MDC</td><td>Maior divisor comum: o maior número que divide os dois sem sobrar resto</td><td>MDC(8, 12) = 4</td></tr></tbody></table></div></section>
+    <section class="study" aria-label="Estudo"><h2>Entenda antes de calcular</h2><h3>Como ler uma fração</h3><ul><li>A barra da fração é uma divisão: <span class="frac"><span>3</span><span class="sl"> / </span><span>4</span></span> é o mesmo que 3 dividido por 4, ou 0,75.</li><li>Para somar ou subtrair, os denominadores precisam ser iguais. Se não forem, reescreva as duas frações com o MMC embaixo.</li><li>Para multiplicar, é direto: de cima com de cima, de baixo com de baixo.</li><li>Para dividir, mantenha a primeira fração, inverta a segunda e multiplique.</li><li>No final, simplifique: divida o de cima e o de baixo pelo mesmo número (o MDC) até não dar mais.</li></ul><h3>Exemplo resolvido</h3><p><span class="frac"><span>1</span><span class="sl"> / </span><span>2</span></span> + <span class="frac"><span>1</span><span class="sl"> / </span><span>3</span></span>: o MMC de 2 e 3 é 6. Então <span class="frac"><span>1</span><span class="sl"> / </span><span>2</span></span> = <span class="frac"><span>3</span><span class="sl"> / </span><span>6</span></span> e <span class="frac"><span>1</span><span class="sl"> / </span><span>3</span></span> = <span class="frac"><span>2</span><span class="sl"> / </span><span>6</span></span>. Somando os numeradores: <span class="frac"><span>3</span><span class="sl"> / </span><span>6</span></span> + <span class="frac"><span>2</span><span class="sl"> / </span><span>6</span></span> = <strong><span class="frac"><span>5</span><span class="sl"> / </span><span>6</span></span></strong>.</p><h3>Pratique</h3><ol><li>Resistores de 6 Ω e 3 Ω em paralelo: quanto dá <span class="frac"><span>1</span><span class="sl"> / </span><span>6</span></span> + <span class="frac"><span>1</span><span class="sl"> / </span><span>3</span></span>? E a Req?<details><summary>Ver resposta</summary><p>MMC de 6 e 3 é 6: <span class="frac"><span>1</span><span class="sl"> / </span><span>6</span></span> + <span class="frac"><span>2</span><span class="sl"> / </span><span>6</span></span> = <span class="frac"><span>3</span><span class="sl"> / </span><span>6</span></span> = <strong><span class="frac"><span>1</span><span class="sl"> / </span><span>2</span></span></strong>. A Req é o inverso: <strong>2 Ω</strong>.</p></details></li><li>Calcule <span class="frac"><span>3</span><span class="sl"> / </span><span>4</span></span> ÷ <span class="frac"><span>3</span><span class="sl"> / </span><span>8</span></span>.<details><summary>Ver resposta</summary><p>Inverta a segunda e multiplique: <span class="frac"><span>3</span><span class="sl"> / </span><span>4</span></span> · <span class="frac"><span>8</span><span class="sl"> / </span><span>3</span></span> = <span class="frac"><span>24</span><span class="sl"> / </span><span>12</span></span> = <strong>2</strong>.</p></details></li><li>Se 100 m de cabo têm 0,692 Ω, quanto têm 250 m?<details><summary>Ver resposta</summary><p>Regra de três direta: x = <span class="frac"><span>0,692 · 250</span><span class="sl"> / </span><span>100</span></span> = <strong>1,73 Ω</strong>.</p></details></li></ol></section>
+
+    <h2>Calculadora de frações</h2>
+    <p class="lead">Digite o número de cima e o de baixo de cada fração e escolha a conta. Deixe a segunda fração vazia para só simplificar a primeira.</p>
+    <div class="about"><p><strong>O que é:</strong> soma, subtração, multiplicação e divisão de frações, com o resultado já simplificado e em decimal.</p><p><strong>Para que serve:</strong> conferir contas com divisão, como os inversos do paralelo, sem se perder no passo a passo. Aceita número inteiro (deixe o de baixo vazio) e decimal com vírgula.</p></div>
+    <div class="fcalc">
+      <div class="fin">
+        <div class="wrap"><input id="m-n1" type="text" inputmode="decimal" value="1" aria-label="Numerador da primeira fração"></div>
+        <span class="fbar" aria-hidden="true"></span>
+        <div class="wrap"><input id="m-d1" type="text" inputmode="decimal" value="2" aria-label="Denominador da primeira fração"></div>
+      </div>
+      <div class="ops" id="m-op" role="group" aria-label="Operação">
+        <button type="button" data-o="add" aria-pressed="true" aria-label="Somar">+</button>
+        <button type="button" data-o="sub" aria-pressed="false" aria-label="Subtrair">−</button>
+        <button type="button" data-o="mul" aria-pressed="false" aria-label="Multiplicar">×</button>
+        <button type="button" data-o="div" aria-pressed="false" aria-label="Dividir">÷</button>
+      </div>
+      <div class="fin">
+        <div class="wrap"><input id="m-n2" type="text" inputmode="decimal" value="1" aria-label="Numerador da segunda fração"></div>
+        <span class="fbar" aria-hidden="true"></span>
+        <div class="wrap"><input id="m-d2" type="text" inputmode="decimal" value="3" aria-label="Denominador da segunda fração"></div>
+      </div>
+    </div>
+    <div class="actions">
+      <p id="m-status" class="status" role="status" aria-live="polite"></p>
+      <button type="button" id="m-clear" class="btn">Limpar tudo</button>
+    </div>
+    <section id="m-result" class="result" hidden aria-live="polite"></section>
+    <section id="m-steps" class="steps" hidden></section>
+
+    <section class="table-card tool" aria-label="Regra de três">
+      <h2>Regra de três</h2>
+      <p class="lead">A está para B assim como C está para x.</p>
+      <div class="seg" id="t3-mode" role="group" aria-label="Tipo de proporção">
+        <button type="button" data-m="direta" aria-pressed="true">Direta</button>
+        <button type="button" data-m="inversa" aria-pressed="false">Inversa</button>
+      </div>
+      <p class="note" id="t3-hint"></p>
+      <div class="grid">
+        <div class="field"><label for="t3-a"><span>A</span></label><div class="wrap"><input id="t3-a" type="text" inputmode="decimal" value="100"></div></div>
+        <div class="field"><label for="t3-b"><span>B (corresponde a A)</span></label><div class="wrap"><input id="t3-b" type="text" inputmode="decimal" value="0,692"></div></div>
+        <div class="field wide"><label for="t3-c"><span>C (mesma grandeza de A)</span></label><div class="wrap"><input id="t3-c" type="text" inputmode="decimal" value="250"></div></div>
+      </div>
+      <p id="t3-status" class="status" role="status" aria-live="polite"></p>
+      <section id="t3-result" class="result" hidden aria-live="polite"></section>
+      <section id="t3-steps" class="steps" hidden></section>
+    </section>
+
+    <section class="table-card tool" aria-label="Porcentagem">
+      <h2>Porcentagem</h2>
+      <p class="lead">Preencha dois campos e deixe vazio o que quer descobrir.</p>
+      <div class="grid">
+        <div class="field"><label for="pc-pct"><span>Porcentagem</span></label><div class="wrap"><input id="pc-pct" type="text" inputmode="decimal" value="4"><span class="unit">%</span></div></div>
+        <div class="field"><label for="pc-tot"><span>Total</span></label><div class="wrap"><input id="pc-tot" type="text" inputmode="decimal" value="220"></div></div>
+        <div class="field wide"><label for="pc-par"><span>Parte</span></label><div class="wrap"><input id="pc-par" type="text" inputmode="decimal"></div></div>
+      </div>
+      <p id="pc-status" class="status" role="status" aria-live="polite"></p>
+      <section id="pc-result" class="result" hidden aria-live="polite"></section>
+      <section id="pc-steps" class="steps" hidden></section>
+    </section>
+  </section>
 </main>
 
+
 <script>
+/* fração empilhada: numerador em cima, denominador embaixo */
+function fr(n, d){ return '<span class="frac"><span>' + n + '</span><span class="sl"> / </span><span>' + d + '</span></span>'; }
 /* ---------- utilitários e dados compartilhados ---------- */
 var MATERIALS = [
   {id:'cobre', name:'Cobre', rho:0.0173, alpha:0.004},
@@ -542,7 +699,7 @@ function fillMaterialSelect(sel, onlyIds){
 
 /* ---------- abas ---------- */
 (function(){
-  var names = ['ohm', 'cabo', 'queda', 'equivalente', 'notacao'];
+  var names = ['ohm', 'cabo', 'queda', 'equivalente', 'notacao', 'matematica'];
   var tabs = names.map(function(n){ return document.getElementById('t-' + n); });
   var panels = names.map(function(n){ return document.getElementById('tab-' + n); });
   function show(name){
@@ -558,6 +715,7 @@ function fillMaterialSelect(sel, onlyIds){
     t.addEventListener('click', function(){
       show(names[i]);
       try { location.hash = names[i]; } catch (e) {}
+      window.scrollTo(0, 0);
     });
     t.addEventListener('keydown', function(e){
       var j = -1;
@@ -653,7 +811,7 @@ function fillMaterialSelect(sel, onlyIds){
       '<h2>Passo a passo</h2><ol>' +
       '<li><span>Fator de temperatura</span><code>1 + ' + br(v.alpha) + ' · (' + br(v.T) + ' − 20) = ' + br(fac) + '</code></li>' +
       '<li><span>Resistividade na temperatura</span><code>' + br(v.rho) + ' · ' + br(fac) + ' = ' + br(rT) + ' Ω·mm²/m</code></li>' +
-      '<li><span>Resistência</span><code>' + br(rT) + ' · ' + br(v.L) + ' / ' + br(v.A) + ' = ' + br(R) + ' Ω</code></li>' +
+      '<li><span>Resistência</span><code>' + fr(br(rT) + ' · ' + br(v.L), br(v.A)) + ' = ' + br(R) + ' Ω</code></li>' +
       '</ol>';
     stepsEl.hidden = false;
   }
@@ -767,12 +925,12 @@ function fillMaterialSelect(sel, onlyIds){
   }
   function solveOhm(v){
     var V = v.V, I = v.I, R = v.R, P = v.P;
-    if (V !== null && I !== null) return {out:{R:V / I, P:V * I}, how:{R:'V / I', P:'V · I'}};
-    if (V !== null && R !== null) return {out:{I:V / R, P:V * V / R}, how:{I:'V / R', P:'V² / R'}};
-    if (V !== null && P !== null) return {out:{I:P / V, R:V * V / P}, how:{I:'P / V', R:'V² / P'}};
+    if (V !== null && I !== null) return {out:{R:V / I, P:V * I}, how:{R:fr('V', 'I'), P:'V · I'}};
+    if (V !== null && R !== null) return {out:{I:V / R, P:V * V / R}, how:{I:fr('V', 'R'), P:fr('V²', 'R')}};
+    if (V !== null && P !== null) return {out:{I:P / V, R:V * V / P}, how:{I:fr('P', 'V'), R:fr('V²', 'P')}};
     if (I !== null && R !== null) return {out:{V:I * R, P:I * I * R}, how:{V:'I · R', P:'I² · R'}};
-    if (I !== null && P !== null) return {out:{V:P / I, R:P / (I * I)}, how:{V:'P / I', R:'P / I²'}};
-    return {out:{V:Math.sqrt(P * R), I:Math.sqrt(P / R)}, how:{V:'√(P · R)', I:'√(P / R)'}};
+    if (I !== null && P !== null) return {out:{V:P / I, R:P / (I * I)}, how:{V:fr('P', 'I'), R:fr('P', 'I²')}};
+    return {out:{V:Math.sqrt(P * R), I:Math.sqrt(P / R)}, how:{V:'√(P · R)', I:'√(' + fr('P', 'R') + ')'}};
   }
   function update(){
     clearAuto();
@@ -882,9 +1040,9 @@ function fillMaterialSelect(sel, onlyIds){
     stepsEl.innerHTML =
       '<h2>Passo a passo</h2><ol>' +
       '<li><span>Resistividade do ' + m.name.toLowerCase() + ' na temperatura</span><code>' + br(m.rho) + ' · [1 + ' + br(m.alpha) + ' · (' + br(v.T) + ' − 20)] = ' + br(rho) + ' Ω·mm²/m</code></li>' +
-      '<li><span>Queda de tensão</span><code>' + kTxt + ' · ' + br(rho) + ' · ' + br(v.L) + ' · ' + br(v.I) + ' / ' + br(v.S) + ' = ' + br(dV, 4) + ' V</code></li>' +
-      '<li><span>Percentual</span><code>' + br(dV, 4) + ' / ' + br(v.V) + ' · 100 = ' + br(pct, 3) + ' %</code></li>' +
-      '<li><span>Seção mínima para o limite</span><code>' + kTxt + ' · ' + br(rho) + ' · ' + br(v.L) + ' · ' + br(v.I) + ' / (' + br(v.lim) + ' % · ' + br(v.V) + ') = ' + br(sMin, 3) + ' mm²</code></li>' +
+      '<li><span>Queda de tensão</span><code>' + fr(kTxt + ' · ' + br(rho) + ' · ' + br(v.L) + ' · ' + br(v.I), br(v.S)) + ' = ' + br(dV, 4) + ' V</code></li>' +
+      '<li><span>Percentual</span><code>' + fr(br(dV, 4), br(v.V)) + ' · 100 = ' + br(pct, 3) + ' %</code></li>' +
+      '<li><span>Seção mínima para o limite</span><code>' + fr(kTxt + ' · ' + br(rho) + ' · ' + br(v.L) + ' · ' + br(v.I), br(v.lim) + ' % · ' + br(v.V)) + ' = ' + br(sMin, 3) + ' mm²</code></li>' +
       '</ol>';
     stepsEl.hidden = false;
     setStatus(st, okLim ? 'A seção informada respeita o limite.' : 'A seção informada passa do limite. Aumente a seção ou reduza o comprimento.', !okLim);
@@ -985,13 +1143,13 @@ function fillMaterialSelect(sel, onlyIds){
         var two = vals.length === 2;
         var same = vals.every(function(x){ return x === vals[0]; });
         var extra = '';
-        if (two) extra += '<li><span>Atalho para 2 resistores (produto pela soma)</span><code>(' + br(vals[0]) + ' · ' + br(vals[1]) + ') / (' + br(vals[0]) + ' + ' + br(vals[1]) + ') = ' + br(vals[0] * vals[1] / (vals[0] + vals[1]), 5) + ' Ω</code></li>';
-        if (same) extra += '<li><span>Atalho para resistores iguais (R / N)</span><code>' + br(vals[0]) + ' / ' + vals.length + ' = ' + br(vals[0] / vals.length, 5) + ' Ω</code></li>';
+        if (two) extra += '<li><span>Atalho para 2 resistores (produto pela soma)</span><code>' + fr(br(vals[0]) + ' · ' + br(vals[1]), br(vals[0]) + ' + ' + br(vals[1])) + ' = ' + br(vals[0] * vals[1] / (vals[0] + vals[1]), 5) + ' Ω</code></li>';
+        if (same) extra += '<li><span>Atalho para resistores iguais</span><code>' + fr(br(vals[0]), vals.length) + ' = ' + br(vals[0] / vals.length, 5) + ' Ω</code></li>';
         fitDois.classList.toggle('fit', two);
         fitIguais.classList.toggle('fit', same);
         html = '<h2>Passo a passo</h2><ol>' +
-          '<li><span>Some os inversos (condutâncias)</span><code>' + vals.map(function(x){ return '1/' + br(x); }).join(' + ') + ' = ' + br(inv, 5) + ' S</code></li>' +
-          '<li><span>Inverta o resultado</span><code>Req = 1 / ' + br(inv, 5) + ' = ' + br(req, 5) + ' Ω</code></li>' + extra + '</ol>';
+          '<li><span>Some os inversos (condutâncias)</span><code>' + vals.map(function(x){ return fr('1', br(x)); }).join(' + ') + ' = ' + br(inv, 5) + ' S</code></li>' +
+          '<li><span>Inverta o resultado</span><code>Req = ' + fr('1', br(inv, 5)) + ' = ' + br(req, 5) + ' Ω</code></li>' + extra + '</ol>';
       }
     }
     res.innerHTML = '<span class="r-label">Resistência equivalente (' + (mode === 'serie' ? 'série' : 'paralelo') + ')</span>' +
@@ -1061,7 +1219,7 @@ function fillMaterialSelect(sel, onlyIds){
     } else if (op === 'div'){
       if (b === 0){ setStatus(st, 'Não dá para dividir por zero.', true); return; }
       c = clean(a / b); E = m - n;
-      steps = '<li><span>Divida os coeficientes</span><code>' + br(a, 8) + ' / ' + br(b, 8) + ' = ' + br(c, 8) + '</code></li>' +
+      steps = '<li><span>Divida os coeficientes</span><code>' + fr(br(a, 8), br(b, 8)) + ' = ' + br(c, 8) + '</code></li>' +
               '<li><span>Subtraia os expoentes</span><code>' + m + ' − ' + (n < 0 ? '(' + n + ')' : n) + ' = ' + E + '</code></li>';
     } else {
       E = Math.max(m, n);
@@ -1164,6 +1322,199 @@ function fillMaterialSelect(sel, onlyIds){
   }
   vEl.addEventListener('input', update);
   [fSel, tSel, uSel].forEach(function(x){ x.addEventListener('change', update); });
+  update();
+})();
+
+/* ---------- matemática básica: frações ---------- */
+(function(){
+  var n1 = document.getElementById('m-n1'), d1 = document.getElementById('m-d1');
+  var n2 = document.getElementById('m-n2'), d2 = document.getElementById('m-d2');
+  var opBox = document.getElementById('m-op'), st = document.getElementById('m-status');
+  var res = document.getElementById('m-result'), stepsEl = document.getElementById('m-steps');
+  var op = 'add', SIGN = {add:' + ', sub:' − ', mul:' · ', div:' ÷ '};
+
+  function gcd(a, b){ a = Math.abs(a); b = Math.abs(b); while (b){ var t = a % b; a = b; b = t; } return a || 1; }
+  /* Texto digitado vira {n, d} inteiros. Vazio = null; inválido = NaN. */
+  function rat(s){
+    s = s.replace(/\s/g, '').replace('−', '-').replace(',', '.');
+    if (s === '') return null;
+    if (!/^[+-]?(\d+\.?\d*|\.\d+)$/.test(s)) return NaN;
+    var neg = s.charAt(0) === '-';
+    s = s.replace(/^[+-]/, '');
+    var p = s.split('.'), dec = (p[1] || '').replace(/0+$/, '');
+    if (dec.length > 9 || p[0].length > 9) return NaN;
+    var n = Number((p[0] || '0') + dec);
+    return {n: neg ? -n : n, d: Math.pow(10, dec.length)};
+  }
+  /* Junta o campo de cima e o de baixo numa fração. Devolve null, NaN, 'num', 'zero' ou {n, d}. */
+  function read(top, bottom){
+    var a = rat(top.value), b = rat(bottom.value);
+    if (a === null && b === null) return null;
+    if ((a !== null && typeof a !== 'object') || (b !== null && typeof b !== 'object')) return NaN;
+    if (a === null) return 'num';
+    if (b === null) b = {n:1, d:1};
+    if (b.n === 0) return 'zero';
+    var n = a.n * b.d, d = a.d * b.n;
+    if (d < 0){ n = -n; d = -d; }
+    return {n:n, d:d};
+  }
+  function simp(f){ var g = gcd(f.n, f.d); return {n: f.n / g, d: f.d / g}; }
+  function I(n){ return (n < 0 ? '−' : '') + Math.abs(n).toLocaleString('pt-BR', {maximumFractionDigits: 0}); }
+  function P(n){ return n < 0 ? '(' + I(n) + ')' : I(n); }
+  function show(f){ return f.d === 1 ? I(f.n) : (f.n < 0 ? '−' : '') + fr(I(Math.abs(f.n)), I(f.d)); }
+  function li(label, codes){ return '<li><span>' + label + '</span>' + codes.map(function(c){ return '<code>' + c + '</code>'; }).join('') + '</li>'; }
+  function hide(){ res.hidden = true; stepsEl.hidden = true; }
+
+  function update(){
+    var A = read(n1, d1), B = read(n2, d2);
+    if ((A !== null && A !== A) || (B !== null && B !== B)){ setStatus(st, 'Use apenas números, por exemplo 3 ou 0,5.', true); hide(); return; }
+    if (A === 'zero' || B === 'zero'){ setStatus(st, 'O número de baixo não pode ser zero.', true); hide(); return; }
+    if (A === 'num' || B === 'num'){ setStatus(st, 'Preencha o número de cima.'); hide(); return; }
+    if (A === null){ setStatus(st, 'Preencha a primeira fração.'); hide(); return; }
+
+    var r, steps = '', label = 'Resultado';
+    if (B === null){
+      r = A; label = 'Fração simplificada';
+      setStatus(st, 'Só a primeira fração: simplificando.');
+    } else {
+      steps += li('A conta', [show(A) + SIGN[op] + (B.n < 0 ? '(' + show(B) + ')' : show(B))]);
+      if (op === 'add' || op === 'sub'){
+        var m = A.d / gcd(A.d, B.d) * B.d, a2 = A.n * (m / A.d), b2 = B.n * (m / B.d);
+        if (A.d !== B.d){
+          steps += li('Ache o MMC dos denominadores', ['MMC(' + I(A.d) + ', ' + I(B.d) + ') = ' + I(m)]);
+          steps += li('Reescreva as duas com ' + I(m) + ' embaixo', [show(A) + ' = ' + fr(I(a2), I(m)), show(B) + ' = ' + fr(I(b2), I(m))]);
+        } else {
+          steps += li('Os denominadores já são iguais', ['mantenha o ' + I(m) + ' embaixo']);
+        }
+        r = {n: op === 'add' ? a2 + b2 : a2 - b2, d: m};
+        steps += li((op === 'add' ? 'Some' : 'Subtraia') + ' os números de cima', [fr(I(a2) + (op === 'add' ? ' + ' : ' − ') + P(b2), I(m)) + ' = ' + fr(I(r.n), I(m))]);
+      } else {
+        var C = B;
+        if (op === 'div'){
+          if (B.n === 0){ setStatus(st, 'Não dá para dividir por zero.', true); hide(); return; }
+          C = {n: B.n < 0 ? -B.d : B.d, d: Math.abs(B.n)};
+          steps += li('Inverta a segunda fração e troque por multiplicação', [show(A) + ' · ' + (C.n < 0 ? '(' + show(C) + ')' : fr(I(C.n), I(C.d)))]);
+        }
+        r = {n: A.n * C.n, d: A.d * C.d};
+        steps += li('Multiplique de cima com de cima e de baixo com de baixo', [fr(I(A.n) + ' · ' + P(C.n), I(A.d) + ' · ' + I(C.d)) + ' = ' + fr(I(r.n), I(r.d))]);
+      }
+      setStatus(st, '');
+    }
+    if (!Number.isSafeInteger(r.n) || !Number.isSafeInteger(r.d)){ setStatus(st, 'Números grandes demais para esta calculadora.', true); hide(); return; }
+
+    var s = simp(r), g = gcd(r.n, r.d);
+    if (g > 1 && r.n !== 0) steps += li('Simplifique: divida em cima e embaixo por ' + I(g) + ' (o MDC)', [fr(I(r.n), I(r.d)) + ' = ' + show(s)]);
+    else if (r.n !== 0 && r.d !== 1) steps += li('Simplificação', ['não dá para simplificar mais']);
+    if (r.n === 0) s = {n:0, d:1};
+
+    var extra = '';
+    if (s.d !== 1){
+      if (Math.abs(s.n) > s.d){
+        var whole = Math.trunc(s.n / s.d), rem = Math.abs(s.n) - Math.abs(whole) * s.d;
+        extra += '<span class="r-extra">= ' + I(whole) + ' inteiro' + (Math.abs(whole) > 1 ? 's' : '') + ' e ' + fr(I(rem), I(s.d)) + '</span>';
+      }
+      extra += '<span class="r-extra">= ' + (s.n / s.d).toLocaleString('pt-BR', {maximumSignificantDigits: 8}) + ' em decimal</span>';
+    }
+    res.innerHTML = '<span class="r-label">' + label + '</span><span class="r-value big">' + show(s) + '</span>' + extra;
+    res.hidden = false;
+    stepsEl.innerHTML = '<h2>Passo a passo</h2><ol>' + steps + '</ol>';
+    stepsEl.hidden = steps === '';
+  }
+  [n1, d1, n2, d2].forEach(function(x){ x.addEventListener('input', update); });
+  opBox.querySelectorAll('button').forEach(function(b){
+    b.addEventListener('click', function(){
+      op = b.dataset.o;
+      opBox.querySelectorAll('button').forEach(function(x){ x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+      update();
+    });
+  });
+  document.getElementById('m-clear').addEventListener('click', function(){
+    [n1, d1, n2, d2].forEach(function(x){ x.value = ''; });
+    update(); n1.focus();
+  });
+  update();
+})();
+
+/* ---------- matemática básica: regra de três ---------- */
+(function(){
+  var a = document.getElementById('t3-a'), b = document.getElementById('t3-b'), c = document.getElementById('t3-c');
+  var modeBox = document.getElementById('t3-mode'), hint = document.getElementById('t3-hint'), st = document.getElementById('t3-status');
+  var res = document.getElementById('t3-result'), stepsEl = document.getElementById('t3-steps');
+  var mode = 'direta';
+  var HINT = {
+    direta: 'Direta: quando uma grandeza aumenta, a outra aumenta junto. Exemplo: mais metros de cabo, mais resistência.',
+    inversa: 'Inversa: quando uma grandeza aumenta, a outra diminui. Exemplo: seção maior, resistência menor.'
+  };
+  function hide(){ res.hidden = true; stepsEl.hidden = true; }
+  function update(){
+    hint.textContent = HINT[mode];
+    var A = parse(a.value), B = parse(b.value), C = parse(c.value);
+    if ([A, B, C].some(function(x){ return Number.isNaN(x); })){ setStatus(st, 'Use apenas números, por exemplo 2,5.', true); hide(); return; }
+    if (A === null || B === null || C === null){ setStatus(st, 'Preencha A, B e C.'); hide(); return; }
+    var x, steps;
+    if (mode === 'direta'){
+      if (A === 0){ setStatus(st, 'A não pode ser zero.', true); hide(); return; }
+      x = clean(B * C / A);
+      steps = '<li><span>Monte a proporção</span><code>' + fr(br(A, 6), br(B, 6)) + ' = ' + fr(br(C, 6), 'x') + '</code></li>' +
+        '<li><span>Multiplique em cruz</span><code>' + br(A, 6) + ' · x = ' + br(B, 6) + ' · ' + br(C, 6) + '</code></li>' +
+        '<li><span>Isole o x</span><code>x = ' + fr(br(B, 6) + ' · ' + br(C, 6), br(A, 6)) + ' = ' + br(x, 6) + '</code></li>';
+    } else {
+      if (C === 0){ setStatus(st, 'C não pode ser zero.', true); hide(); return; }
+      x = clean(A * B / C);
+      steps = '<li><span>Nas grandezas inversas o produto se mantém</span><code>' + br(A, 6) + ' · ' + br(B, 6) + ' = ' + br(C, 6) + ' · x</code></li>' +
+        '<li><span>Isole o x</span><code>x = ' + fr(br(A, 6) + ' · ' + br(B, 6), br(C, 6)) + ' = ' + br(x, 6) + '</code></li>';
+    }
+    res.innerHTML = '<span class="r-label">Valor de x (corresponde a C)</span><span class="r-value big">' + br(x, 6) + '</span>';
+    res.hidden = false;
+    stepsEl.innerHTML = '<h2>Passo a passo</h2><ol>' + steps + '</ol>';
+    stepsEl.hidden = false;
+    setStatus(st, '');
+  }
+  [a, b, c].forEach(function(x){ x.addEventListener('input', update); });
+  modeBox.querySelectorAll('button').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      mode = btn.dataset.m;
+      modeBox.querySelectorAll('button').forEach(function(x){ x.setAttribute('aria-pressed', x === btn ? 'true' : 'false'); });
+      update();
+    });
+  });
+  update();
+})();
+
+/* ---------- matemática básica: porcentagem ---------- */
+(function(){
+  var pct = document.getElementById('pc-pct'), tot = document.getElementById('pc-tot'), par = document.getElementById('pc-par');
+  var st = document.getElementById('pc-status'), res = document.getElementById('pc-result'), stepsEl = document.getElementById('pc-steps');
+  function hide(){ res.hidden = true; stepsEl.hidden = true; }
+  function update(){
+    var p = parse(pct.value), t = parse(tot.value), q = parse(par.value);
+    if ([p, t, q].some(function(x){ return Number.isNaN(x); })){ setStatus(st, 'Use apenas números, por exemplo 4 ou 2,5.', true); hide(); return; }
+    var empty = [p, t, q].filter(function(x){ return x === null; }).length;
+    if (empty > 1){ setStatus(st, 'Preencha dois campos.'); hide(); return; }
+    if (empty === 0){ setStatus(st, 'Deixe vazio o campo que quer descobrir.'); hide(); return; }
+    var label, val, step;
+    if (q === null){
+      val = clean(p / 100 * t); label = br(p, 6) + ' % de ' + br(t, 6);
+      step = fr(br(p, 6), '100') + ' · ' + br(t, 6) + ' = ' + br(val, 6);
+      val = br(val, 6);
+    } else if (p === null){
+      if (t === 0){ setStatus(st, 'O total não pode ser zero.', true); hide(); return; }
+      val = clean(q / t * 100); label = br(q, 6) + ' é quantos por cento de ' + br(t, 6);
+      step = fr(br(q, 6), br(t, 6)) + ' · 100 = ' + br(val, 6) + ' %';
+      val = br(val, 6) + ' %';
+    } else {
+      if (p === 0){ setStatus(st, 'A porcentagem não pode ser zero.', true); hide(); return; }
+      val = clean(q / (p / 100)); label = 'Total em que ' + br(q, 6) + ' vale ' + br(p, 6) + ' %';
+      step = fr(br(q, 6) + ' · 100', br(p, 6)) + ' = ' + br(val, 6);
+      val = br(val, 6);
+    }
+    res.innerHTML = '<span class="r-label">' + label + '</span><span class="r-value big">' + val + '</span>';
+    res.hidden = false;
+    stepsEl.innerHTML = '<h2>Passo a passo</h2><ol><li><span>Por cento quer dizer dividido por 100</span><code>' + step + '</code></li></ol>';
+    stepsEl.hidden = false;
+    setStatus(st, '');
+  }
+  [pct, tot, par].forEach(function(x){ x.addEventListener('input', update); });
   update();
 })();
 </script>
