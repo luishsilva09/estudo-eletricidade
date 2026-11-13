@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Estudo de Eletricidade</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Layout: coluna única estreita; abas no topo; cada aba tem campos em grade de 2 e um cartão de resultado. */
+:root{
+  --bg:#f3f5f7;
+  --surface:#ffffff;
+  --ink:#14202b;
+  --muted:#5b6b79;
+  --line:#d3dae1;
+  --accent:#b4532a;
+  --accent-soft:#f8e9e1;
+  --good:#1c7c54;
+  --bad:#b3261e;
+  --font-display:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --font-mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0e1419;
+    --surface:#161e26;
+    --ink:#e6ecf1;
+    --muted:#93a3b1;
+    --line:#2a3642;
+    --accent:#e8946b;
+    --accent-soft:#2c211b;
+    --good:#4cc38a;
+    --bad:#ff8a80;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0e1419;
+  --surface:#161e26;
+  --ink:#e6ecf1;
+  --muted:#93a3b1;
+  --line:#2a3642;
+  --accent:#e8946b;
+  --accent-soft:#2c211b;
+  --good:#4cc38a;
+  --bad:#ff8a80;
+  color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:var(--font-display);
+  font-size:16px;
+  line-height:1.5;
+  padding:24px 16px 48px;
+}
+main{max-width:520px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+h1{font-size:1.4rem;line-height:1.2;margin:0;text-wrap:balance;font-weight:600}
+h2{font-size:.8rem;margin:0 0 8px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.lead{margin:0;color:var(--muted);font-size:.95rem}
+header .lead{margin-top:6px}
+.formula{
+  font-family:var(--font-mono);font-size:.85rem;
+  background:var(--surface);border:1px solid var(--line);border-radius:8px;
+  padding:10px 12px;overflow-x:auto;white-space:nowrap;
+}
+
+/* abas */
+.tabs{display:flex;gap:4px;overflow-x:auto;border-bottom:1px solid var(--line);scrollbar-width:thin}
+.tab{
+  font:inherit;font-size:.9rem;background:transparent;color:var(--muted);
+  border:0;border-bottom:3px solid transparent;padding:10px 12px;cursor:pointer;white-space:nowrap;
+}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent);font-weight:600}
+.tab:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.panel{display:flex;flex-direction:column;gap:16px}
+
+/* campos */
+.matrow{display:flex;flex-direction:column;gap:4px}
+.matrow label{font-size:.85rem;color:var(--muted)}
+select{
+  font-family:var(--font-display);font-size:1rem;color:var(--ink);
+  background:var(--surface);border:1px solid var(--line);border-radius:8px;
+  padding:10px;width:100%;
+}
+select:focus-visible,.btn:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.field.wide{grid-column:1 / -1}
+.field label{font-size:.85rem;color:var(--muted);display:flex;justify-content:space-between;gap:6px}
+.field .tag{display:none;color:var(--accent);font-weight:600}
+.field.auto .tag{display:inline}
+.wrap{
+  display:flex;align-items:center;
+  background:var(--surface);border:1px solid var(--line);border-radius:8px;
+  padding:0 10px;
+}
+.field.auto .wrap{border-color:var(--accent);background:var(--accent-soft)}
+.wrap input{
+  flex:1;min-width:0;border:0;background:transparent;color:var(--ink);
+  font-family:var(--font-mono);font-size:1rem;padding:10px 0;
+  font-variant-numeric:tabular-nums;
+}
+.wrap input:focus-visible{outline:0}
+.wrap:focus-within{outline:2px solid var(--accent);outline-offset:2px}
+.unit{font-family:var(--font-mono);font-size:.8rem;color:var(--muted);margin-left:6px;white-space:nowrap}
+
+.actions{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.status{margin:0;font-size:.9rem;color:var(--muted);min-height:1.4em}
+.status.bad{color:var(--bad)}
+.btn{
+  font:inherit;font-size:.9rem;background:transparent;color:var(--ink);
+  border:1px solid var(--line);border-radius:8px;padding:6px 12px;cursor:pointer;white-space:nowrap;
+}
+
+/* resultados */
+.result{
+  background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--accent);
+  border-radius:8px;padding:14px 16px;
+}
+.r-pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.r-label{display:block;font-size:.85rem;color:var(--muted)}
+.r-value{display:block;font-family:var(--font-mono);font-size:1.6rem;font-weight:500;line-height:1.25;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.r-value.big{font-size:1.8rem}
+.r-extra{display:block;font-size:.9rem;color:var(--muted);margin-top:2px;overflow-wrap:anywhere}
+.pill{display:inline-block;padding:1px 8px;border-radius:999px;font-size:.8rem;border:1px solid currentColor;margin-left:4px}
+.pill.ok{color:var(--good)}
+.pill.bad{color:var(--bad)}
+
+.steps{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px 16px}
+.steps ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.steps li{display:flex;flex-direction:column;gap:2px}
+.steps li span{font-size:.85rem;color:var(--muted)}
+.steps code{font-family:var(--font-mono);font-size:.85rem;overflow-x:auto;white-space:nowrap;padding-bottom:2px}
+.note{font-size:.8rem;color:var(--muted);margin:0}
+
+/* tabela de materiais */
+.table-card{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px 16px}
+.tablewrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.9rem}
+th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+th{font-size:.8rem;color:var(--muted);font-weight:500}
+th.num,td.num{text-align:right}
+td.num{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+tbody tr{cursor:pointer}
+tbody tr:last-child td{border-bottom:0}
+tbody tr.on{background:var(--accent-soft)}
+
+/* série / paralelo e linhas de resistores */
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;align-self:flex-start}
+.seg button{font:inherit;font-size:.9rem;background:var(--surface);color:var(--ink);border:0;padding:8px 16px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent-soft);font-weight:600;box-shadow:inset 0 -2px 0 var(--accent)}
+.seg button:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.rlist{display:flex;flex-direction:column;gap:8px}
+.rrow{display:flex;gap:8px;align-items:center}
+.rrow .wrap{flex:1;min-width:0}
+.rlabel{width:2.2rem;font-family:var(--font-mono);font-size:.85rem;color:var(--muted)}
+.btn[disabled]{opacity:.4;cursor:default}
+.opline{display:flex;flex-direction:column;gap:4px}
+
+.diagrams{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fig{margin:0;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:6px}
+.fig.on{border-color:var(--accent)}
+.fig svg{width:100%;height:auto;display:block}
+.fig figcaption{font-size:.8rem;color:var(--muted)}
+.fig figcaption strong{color:var(--ink)}
+.wire{stroke:var(--ink);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.bat{stroke:var(--ink);stroke-width:2}
+.rbox{fill:var(--surface);stroke:var(--accent);stroke-width:2}
+.dot{fill:var(--ink)}
+.lbl{fill:var(--ink);font-family:var(--font-mono);font-size:11px;text-anchor:middle;dominant-baseline:central}
+@media (max-width:479px){.diagrams{grid-template-columns:1fr}}
+.flist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+.flist li{display:flex;flex-direction:column;gap:2px;padding-left:10px;border-left:3px solid transparent}
+.flist li.fit{border-left-color:var(--accent)}
+.flist li.fit strong::after{content:"serve para os seus valores";font-size:.75rem;font-weight:500;color:var(--accent);margin-left:8px}
+.flist code{font-family:var(--font-mono);font-size:.85rem;overflow-x:auto;white-space:nowrap;padding-bottom:2px}
+.fcard,.study{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.fcard h2{margin:0}
+.fbig{font-family:var(--font-mono);font-size:1.1rem;line-height:1.5;display:flex;flex-direction:column;gap:2px;overflow-x:auto;padding:8px 10px;background:var(--accent-soft);border-radius:8px}
+.fbig span{white-space:nowrap}
+.legend td:first-child{font-family:var(--font-mono);font-weight:500;color:var(--accent)}
+.legend td:nth-child(2){white-space:normal;min-width:170px}
+.legend tbody tr{cursor:default}
+.study h2{margin:0}
+.study h3{font-size:.95rem;margin:6px 0 0}
+.study p{margin:0;font-size:.95rem}
+.study ul,.study ol{margin:0;padding-left:1.2rem;display:flex;flex-direction:column;gap:6px;font-size:.95rem}
+.study details{margin-top:4px}
+.study summary{cursor:pointer;color:var(--accent);font-size:.9rem}
+.study summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.study details p{margin-top:4px;padding:8px 10px;background:var(--accent-soft);border-radius:8px}
+.about{background:var(--accent-soft);border-radius:8px;padding:12px 14px;font-size:.9rem;display:flex;flex-direction:column;gap:6px}
+.about p{margin:0}
+[hidden]{display:none !important}
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Estudo de Eletricidade</h1>
+    <p class="lead">Fórmulas, legendas, exemplos e exercícios, com calculadoras para testar os valores.</p>
+  </header>
+  <p class="note">Nos campos de valor você pode digitar prefixos: 4k7 ou 4,7k = 4.700, 250m = 0,25, 10µ ou 10u = 0,00001, 2M = 2.000.000. Atenção: m minúsculo é mili e M maiúsculo é mega.</p>
+
+  <nav class="tabs" role="tablist" aria-label="Calculadoras">
+    <button type="button" class="tab" role="tab" id="t-ohm" aria-controls="tab-ohm" aria-selected="true">1ª Lei de Ohm</button>
+    <button type="button" class="tab" role="tab" id="t-cabo" aria-controls="tab-cabo" aria-selected="false">2ª Lei de Ohm</button>
+    <button type="button" class="tab" role="tab" id="t-queda" aria-controls="tab-queda" aria-selected="false">Queda de tensão</button>
+    <button type="button" class="tab" role="tab" id="t-equivalente" aria-controls="tab-equivalente" aria-selected="false">Equivalente</button>
+    <button type="button" class="tab" role="tab" id="t-notacao" aria-controls="tab-notacao" aria-selected="false">Notação</button>
+  </nav>
+
+  <!-- ABA: RESISTÊNCIA DO CABO -->
+  <section id="tab-cabo" class="panel" role="tabpanel" aria-labelledby="t-cabo" hidden>
+    <section class="fcard" aria-label="Fórmula e legenda"><h2>2ª Lei de Ohm (resistividade)</h2><div class="fbig"><span>R = ρ · L / A</span><span>ρ(T) = ρ₂₀ · [1 + α · (T − 20)]</span></div><div class="tablewrap"><table class="legend"><thead><tr><th>Símbolo</th><th>Significado</th><th>Unidade</th></tr></thead><tbody><tr><td>R</td><td>Resistência do condutor</td><td>ohm (Ω)</td></tr><tr><td>ρ</td><td>Resistividade do material (ρ₂₀ é o valor a 20 °C)</td><td>Ω·mm²/m</td></tr><tr><td>L</td><td>Comprimento do condutor</td><td>metro (m)</td></tr><tr><td>A</td><td>Área da seção transversal (bitola)</td><td>mm²</td></tr><tr><td>α</td><td>Coeficiente de temperatura do material</td><td>1/°C</td></tr><tr><td>T</td><td>Temperatura do condutor</td><td>°C</td></tr></tbody></table></div></section>
+    <section class="study" aria-label="Estudo"><h2>Entenda antes de calcular</h2><h3>Como ler a fórmula</h3><ul><li>Fio mais longo, mais resistência: R cresce junto com L.</li><li>Fio mais grosso, menos resistência: R diminui quando A aumenta.</li><li>Cada material tem sua resistividade ρ. Prata e cobre conduzem melhor que ferro e nicromo.</li><li>Aquecer o condutor aumenta ρ. Por isso a resistência sobe com a temperatura (α positivo).</li></ul><h3>Exemplo resolvido</h3><p>Cabo de cobre de 150 m e 4 mm² a 20 °C, com ρ = 0,0173 Ω·mm²/m: R = 0,0173 · 150 / 4 = <strong>0,6488 Ω</strong>. A 2 °C, o fator de temperatura é 1 + 0,004 · (2 − 20) = 0,928, e a resistência cai para cerca de <strong>0,602 Ω</strong>.</p><h3>Pratique</h3><ol><li>Cobre (ρ = 0,0173 Ω·mm²/m), 100 m, 2,5 mm², a 20 °C. Qual a resistência?<details><summary>Ver resposta</summary><p>R = 0,0173 · 100 / 2,5 = <strong>0,692 Ω</strong>.</p></details></li><li>Se a seção do mesmo cabo dobrar, para 5 mm², o que acontece com a resistência?<details><summary>Ver resposta</summary><p>Ela cai pela metade: R = 0,0173 · 100 / 5 = <strong>0,346 Ω</strong>. A resistência é inversamente proporcional à seção.</p></details></li></ol></section>
+    <h2>Calculadora</h2>
+    <p class="lead">Preencha cinco campos e deixe vazio o que quer descobrir. A calculadora resolve o campo que faltar.</p>
+    <div class="about"><p><strong>O que é:</strong> a segunda lei de Ohm. A resistência de um fio aumenta com o comprimento e com a resistividade do material, e diminui quando a seção é maior. O calor também aumenta a resistência.</p><p><strong>Para que serve:</strong> saber quanta resistência um cabo tem, ou descobrir o comprimento, a seção, a temperatura ou o material a partir dela.</p></div>
+
+    <div class="matrow">
+      <label for="mat">Material</label>
+      <select id="mat"></select>
+    </div>
+
+    <form id="form" autocomplete="off" novalidate>
+      <div class="grid">
+        <div class="field" data-k="L">
+          <label for="L"><span>Comprimento</span><span class="tag">calculado</span></label>
+          <div class="wrap"><input id="L" name="L" type="text" inputmode="decimal"><span class="unit">m</span></div>
+        </div>
+        <div class="field" data-k="A">
+          <label for="A"><span>Seção</span><span class="tag">calculado</span></label>
+          <div class="wrap"><input id="A" name="A" type="text" inputmode="decimal"><span class="unit">mm²</span></div>
+        </div>
+        <div class="field" data-k="T">
+          <label for="T"><span>Temperatura</span><span class="tag">calculado</span></label>
+          <div class="wrap"><input id="T" name="T" type="text" inputmode="decimal"><span class="unit">°C</span></div>
+        </div>
+        <div class="field" data-k="R">
+          <label for="R"><span>Resistência</span><span class="tag">calculado</span></label>
+          <div class="wrap"><input id="R" name="R" type="text" inputmode="decimal"><span class="unit">Ω</span></div>
+        </div>
+        <div class="field" data-k="rho">
+          <label for="rho"><span>ρ a 20 °C</span><span class="tag">calculado</span></label>
+          <div class="wrap"><input id="rho" name="rho" type="text" inputmode="decimal"><span class="unit">Ω·mm²/m</span></div>
+        </div>
+        <div class="field" data-k="alpha">
+          <label for="alpha"><span>α</span><span class="tag">calculado</span></label>
+          <div class="wrap"><input id="alpha" name="alpha" type="text" inputmode="decimal"><span class="unit">/°C</span></div>
+        </div>
+      </div>
+    </form>
+
+    <div class="actions">
+      <p id="status" class="status" role="status" aria-live="polite"></p>
+      <button type="button" id="clear" class="btn">Limpar tudo</button>
+    </div>
+
+    <section id="result" class="result" hidden aria-live="polite"></section>
+    <section id="steps" class="steps" hidden></section>
+
+    <section class="table-card" aria-label="Valores de base dos materiais">
+      <h2>Valores de base a 20 °C</h2>
+      <div class="tablewrap">
+        <table id="mtable">
+          <thead><tr><th>Material</th><th class="num">ρ₂₀ (Ω·mm²/m)</th><th class="num">α (/°C)</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <p class="note">Cobre e alumínio usam os valores da tabela da conversa. Os outros materiais são valores típicos a 20 °C e variam com a pureza e a liga (latão, por exemplo). Edite ρ e α para usar a sua tabela. Use vírgula ou ponto nos decimais.</p>
+  </section>
+
+  <!-- ABA: LEI DE OHM E POTÊNCIA -->
+  <section id="tab-ohm" class="panel" role="tabpanel" aria-labelledby="t-ohm">
+    <section class="fcard" aria-label="Fórmula e legenda"><h2>1ª Lei de Ohm e potência elétrica</h2><div class="fbig"><span>V = R · I</span><span>P = V · I</span><span>P = R · I²  ou  P = V² / R</span></div><div class="tablewrap"><table class="legend"><thead><tr><th>Símbolo</th><th>Significado</th><th>Unidade</th></tr></thead><tbody><tr><td>V</td><td>Tensão elétrica (diferença de potencial)</td><td>volt (V)</td></tr><tr><td>I</td><td>Corrente elétrica</td><td>ampère (A)</td></tr><tr><td>R</td><td>Resistência elétrica</td><td>ohm (Ω)</td></tr><tr><td>P</td><td>Potência elétrica</td><td>watt (W)</td></tr></tbody></table></div></section>
+    <section class="study" aria-label="Estudo"><h2>Entenda antes de calcular</h2><h3>Como ler a fórmula</h3><ul><li>Com a mesma tensão, quanto maior a resistência, menor a corrente (I = V / R).</li><li>A potência é a energia transformada por segundo, em calor, luz ou movimento (P = V · I).</li><li>Substituindo uma fórmula na outra, a potência também sai de P = R · I² ou de P = V² / R.</li></ul><h3>Exemplo resolvido</h3><p>Um chuveiro de 220 V com resistência de 11 Ω: I = 220 / 11 = <strong>20 A</strong> e P = 220 · 20 = <strong>4.400 W</strong>.</p><h3>Pratique</h3><ol><li>Uma lâmpada de 60 W é ligada em 120 V. Qual a corrente? E a resistência?<details><summary>Ver resposta</summary><p>I = P / V = 60 / 120 = <strong>0,5 A</strong>. R = V / I = 120 / 0,5 = <strong>240 Ω</strong>.</p></details></li><li>Um resistor de 100 Ω é percorrido por 0,2 A. Qual a tensão e a potência?<details><summary>Ver resposta</summary><p>V = R · I = 100 · 0,2 = <strong>20 V</strong>. P = V · I = 20 · 0,2 = <strong>4 W</strong>.</p></details></li></ol></section>
+    <h2>Calculadora</h2>
+    <p class="lead">Preencha dois campos e a calculadora acha os outros dois.</p>
+    <div class="about"><p><strong>O que é:</strong> a primeira lei de Ohm (V = R · I) junto com a fórmula da potência (P = V · I). Elas ligam tensão, corrente, resistência e potência de um circuito.</p><p><strong>Para que serve:</strong> achar a corrente de um aparelho, a potência de um resistor ou a resistência necessária para uma corrente desejada.</p></div>
+    <div class="grid">
+      <div class="field" data-k="V">
+        <label for="o-V"><span>Tensão</span><span class="tag">calculado</span></label>
+        <div class="wrap"><input id="o-V" type="text" inputmode="decimal"><span class="unit">V</span></div>
+      </div>
+      <div class="field" data-k="I">
+        <label for="o-I"><span>Corrente</span><span class="tag">calculado</span></label>
+        <div class="wrap"><input id="o-I" type="text" inputmode="decimal"><span class="unit">A</span></div>
+      </div>
+      <div class="field" data-k="R">
+        <label for="o-R"><span>Resistência</span><span class="tag">calculado</span></label>
+        <div class="wrap"><input id="o-R" type="text" inputmode="decimal"><span class="unit">Ω</span></div>
+      </div>
+      <div class="field" data-k="P">
+        <label for="o-P"><span>Potência</span><span class="tag">calculado</span></label>
+        <div class="wrap"><input id="o-P" type="text" inputmode="decimal"><span class="unit">W</span></div>
+      </div>
+    </div>
+    <div class="actions">
+      <p id="o-status" class="status" role="status" aria-live="polite"></p>
+      <button type="button" id="o-clear" class="btn">Limpar tudo</button>
+    </div>
+    <section id="o-result" class="result" hidden aria-live="polite"></section>
+  </section>
+
+  <!-- ABA: QUEDA DE TENSÃO -->
+  <section id="tab-queda" class="panel" role="tabpanel" aria-labelledby="t-queda" hidden>
+    <section class="fcard" aria-label="Fórmula e legenda"><h2>Queda de tensão em cabos</h2><div class="fbig"><span>ΔV = k · ρ(T) · L · I / S</span><span>ΔV % = ΔV / V · 100</span></div><div class="tablewrap"><table class="legend"><thead><tr><th>Símbolo</th><th>Significado</th><th>Unidade</th></tr></thead><tbody><tr><td>ΔV</td><td>Queda de tensão no cabo</td><td>volt (V)</td></tr><tr><td>k</td><td>Fator do circuito: 2 (monofásico ou bifásico) ou √3 (trifásico)</td><td>—</td></tr><tr><td>ρ(T)</td><td>Resistividade do material na temperatura de trabalho</td><td>Ω·mm²/m</td></tr><tr><td>L</td><td>Comprimento de ida (um sentido)</td><td>metro (m)</td></tr><tr><td>I</td><td>Corrente do circuito</td><td>ampère (A)</td></tr><tr><td>S</td><td>Seção do condutor</td><td>mm²</td></tr><tr><td>V</td><td>Tensão do circuito (entre fases no trifásico)</td><td>volt (V)</td></tr></tbody></table></div></section>
+    <section class="study" aria-label="Estudo"><h2>Entenda antes de calcular</h2><h3>Como ler a fórmula</h3><ul><li>O k = 2 vem do caminho da corrente: ela vai e volta, então o cabo conta duas vezes.</li><li>A queda cresce com o comprimento e com a corrente, e diminui quando a seção aumenta.</li><li>A queda em % compara a perda com a tensão do circuito. Quanto menor, melhor chega a energia no aparelho.</li></ul><h3>Exemplo resolvido</h3><p>Cobre a 70 °C, 220 V, 20 A, 40 m e 4 mm²: ρ(70) = 0,0173 · 1,2 = 0,02076. ΔV = 2 · 0,02076 · 40 · 20 / 4 = <strong>8,3 V</strong>, ou <strong>3,77 %</strong> de 220 V.</p><h3>Pratique</h3><ol><li>No mesmo circuito (220 V, 20 A, 40 m, cobre a 70 °C), troque o cabo por um de 6 mm². Qual a queda?<details><summary>Ver resposta</summary><p>ΔV = 2 · 0,02076 · 40 · 20 / 6 = <strong>5,54 V</strong>, ou <strong>2,52 %</strong> de 220 V.</p></details></li><li>Se o comprimento do cabo dobrar e o resto ficar igual, o que acontece com a queda?<details><summary>Ver resposta</summary><p>Ela também dobra, porque ΔV é proporcional a L.</p></details></li></ol></section>
+    <h2>Calculadora</h2>
+    <p class="lead">Calcula a queda de tensão no cabo e a menor seção que respeita o limite que você definir.</p>
+    <div class="about"><p><strong>O que é:</strong> todo cabo tem resistência, então perde um pouco de tensão pelo caminho. Quanto mais longo o cabo e maior a corrente, maior a perda.</p><p><strong>Para que serve:</strong> conferir se a tensão chega boa na ponta do cabo e escolher a seção certa para o comprimento e a corrente do circuito.</p></div>
+    <div class="grid">
+      <div class="field wide">
+        <label for="q-circ"><span>Circuito</span></label>
+        <select id="q-circ">
+          <option value="mono">Monofásico ou bifásico (2 condutores)</option>
+          <option value="tri">Trifásico (3 condutores)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="q-mat"><span>Material</span></label>
+        <select id="q-mat"></select>
+      </div>
+      <div class="field">
+        <label for="q-T"><span>Temp. do condutor</span></label>
+        <div class="wrap"><input id="q-T" type="text" inputmode="decimal" value="70"><span class="unit">°C</span></div>
+      </div>
+      <div class="field">
+        <label for="q-V"><span>Tensão</span></label>
+        <div class="wrap"><input id="q-V" type="text" inputmode="decimal" value="220"><span class="unit">V</span></div>
+      </div>
+      <div class="field">
+        <label for="q-I"><span>Corrente</span></label>
+        <div class="wrap"><input id="q-I" type="text" inputmode="decimal" value="20"><span class="unit">A</span></div>
+      </div>
+      <div class="field">
+        <label for="q-L"><span>Comprimento (ida)</span></label>
+        <div class="wrap"><input id="q-L" type="text" inputmode="decimal" value="40"><span class="unit">m</span></div>
+      </div>
+      <div class="field">
+        <label for="q-S"><span>Seção</span></label>
+        <div class="wrap"><input id="q-S" type="text" inputmode="decimal" value="4"><span class="unit">mm²</span></div>
+      </div>
+      <div class="field wide">
+        <label for="q-lim"><span>Queda máxima aceitável</span></label>
+        <div class="wrap"><input id="q-lim" type="text" inputmode="decimal" value="4"><span class="unit">%</span></div>
+      </div>
+    </div>
+    <p id="q-status" class="status" role="status" aria-live="polite"></p>
+    <section id="q-result" class="result" hidden aria-live="polite"></section>
+    <section id="q-steps" class="steps" hidden></section>
+    <p class="note">Cálculo resistivo simples: ignora reatância e fator de potência. No trifásico use a tensão entre fases. 70 °C é a temperatura máxima de cabos com isolação PVC; use um valor menor se o cabo trabalha mais frio. Confirme limites e seções no projeto e na NBR 5410.</p>
+  </section>
+
+  <!-- ABA: RESISTÊNCIA EQUIVALENTE -->
+  <section id="tab-equivalente" class="panel" role="tabpanel" aria-labelledby="t-equivalente" hidden>
+    <section class="fcard" aria-label="Fórmula e legenda"><h2>Resistência equivalente</h2><div class="fbig"><span>Série: Req = R₁ + R₂ + … + Rₙ</span><span>Paralelo: 1/Req = 1/R₁ + 1/R₂ + … + 1/Rₙ</span></div><div class="tablewrap"><table class="legend"><thead><tr><th>Símbolo</th><th>Significado</th><th>Unidade</th></tr></thead><tbody><tr><td>Req</td><td>Resistência equivalente (o resistor único que substitui o conjunto)</td><td>ohm (Ω)</td></tr><tr><td>R₁ … Rₙ</td><td>Resistência de cada resistor</td><td>ohm (Ω)</td></tr><tr><td>1/R</td><td>Condutância (inverso da resistência)</td><td>siemens (S)</td></tr><tr><td>N</td><td>Quantidade de resistores iguais (atalho do paralelo)</td><td>—</td></tr></tbody></table></div></section>
+    <section class="study" aria-label="Estudo"><h2>Entenda antes de calcular</h2><h3>Como ler a fórmula</h3><ul><li>Série: só há um caminho. A corrente é a mesma em todos e a tensão se divide entre eles.</li><li>Paralelo: há vários caminhos. A tensão é a mesma em todos e a corrente se divide.</li><li>No paralelo, a Req é sempre menor que o menor resistor, porque ganhar caminhos facilita a passagem da corrente.</li></ul><h3>Exemplo resolvido</h3><p>Resistores de 100 Ω, 220 Ω e 330 Ω. Em série: 100 + 220 + 330 = <strong>650 Ω</strong>. Em paralelo: 1/100 + 1/220 + 1/330 = 0,017576 S, então Req = 1 / 0,017576 ≈ <strong>56,9 Ω</strong>.</p><h3>Pratique</h3><ol><li>Três resistores de 30 Ω em paralelo. Qual a Req?<details><summary>Ver resposta</summary><p>Resistores iguais: Req = R / N = 30 / 3 = <strong>10 Ω</strong>.</p></details></li><li>Dois resistores, de 6 Ω e 3 Ω, em paralelo. Qual a Req?<details><summary>Ver resposta</summary><p>Produto pela soma: (6 · 3) / (6 + 3) = 18 / 9 = <strong>2 Ω</strong>.</p></details></li></ol></section>
+    <h2>Calculadora</h2>
+    <p class="lead">Informe os resistores e escolha como eles estão ligados.</p>
+    <div class="about"><p><strong>O que é:</strong> a troca de vários resistores por um só que se comporta igual. Em série as resistências se somam. Em paralelo, o total fica menor que o menor resistor.</p><p><strong>Para que serve:</strong> simplificar um circuito para depois aplicar a Lei de Ohm e achar a corrente total.</p></div>
+    <div class="seg" id="eq-mode" role="group" aria-label="Tipo de ligação">
+      <button type="button" data-m="serie" aria-pressed="true">Série</button>
+      <button type="button" data-m="paralelo" aria-pressed="false">Paralelo</button>
+    </div>
+    <div class="diagrams">
+      <figure class="fig on" id="fig-serie"><svg viewBox="0 0 230 120" role="img" aria-label="Três resistores em série ligados a uma bateria"><path class="wire" d="M30 52 V30 H60 M94 30 H106 M140 30 H152 M186 30 H205 V90 H30 V62"/><rect class="rbox" x="60" y="20" width="34" height="20" rx="2"/><rect class="rbox" x="106" y="20" width="34" height="20" rx="2"/><rect class="rbox" x="152" y="20" width="34" height="20" rx="2"/><text class="lbl" x="77" y="30">R1</text><text class="lbl" x="123" y="30">R2</text><text class="lbl" x="169" y="30">R3</text><line class="bat" x1="20" y1="52" x2="40" y2="52"/><line class="bat" x1="25" y1="62" x2="35" y2="62" stroke-width="4"/><text class="lbl" x="50" y="48">+</text></svg>
+        <figcaption><strong>Série.</strong> Um só caminho: a mesma corrente passa por todos e as resistências se somam.</figcaption>
+      </figure>
+      <figure class="fig" id="fig-paralelo"><svg viewBox="0 0 230 120" role="img" aria-label="Três resistores em paralelo ligados a uma bateria"><path class="wire" d="M30 52 V20 H205 V100 H30 V62 M80 20 V45 M80 75 V100 M130 20 V45 M130 75 V100 M180 20 V45 M180 75 V100"/><rect class="rbox" x="67" y="45" width="26" height="30" rx="2"/><rect class="rbox" x="117" y="45" width="26" height="30" rx="2"/><rect class="rbox" x="167" y="45" width="26" height="30" rx="2"/><text class="lbl" x="80" y="60">R1</text><text class="lbl" x="130" y="60">R2</text><text class="lbl" x="180" y="60">R3</text><circle class="dot" cx="80" cy="20" r="3"/><circle class="dot" cx="130" cy="20" r="3"/><circle class="dot" cx="180" cy="20" r="3"/><circle class="dot" cx="80" cy="100" r="3"/><circle class="dot" cx="130" cy="100" r="3"/><circle class="dot" cx="180" cy="100" r="3"/><line class="bat" x1="20" y1="52" x2="40" y2="52"/><line class="bat" x1="25" y1="62" x2="35" y2="62" stroke-width="4"/><text class="lbl" x="50" y="48">+</text></svg>
+        <figcaption><strong>Paralelo.</strong> Vários caminhos: a tensão é a mesma em todos, a corrente se divide e o total fica menor que o menor resistor.</figcaption>
+      </figure>
+    </div>
+    <div class="rlist" id="eq-rows"></div>
+    <div class="actions">
+      <button type="button" id="eq-add" class="btn">+ Adicionar resistor</button>
+      <button type="button" id="eq-clear" class="btn">Limpar valores</button>
+    </div>
+    <p id="eq-status" class="status" role="status" aria-live="polite"></p>
+    <section id="eq-result" class="result" hidden aria-live="polite"></section>
+    <section id="eq-steps" class="steps" hidden></section>
+    <section id="eq-formulas" class="table-card" hidden>
+      <h2>Fórmulas do paralelo</h2>
+      <ul class="flist">
+        <li id="f-geral" class="fit"><strong>Geral, para qualquer quantidade</strong><code>1/Req = 1/R₁ + 1/R₂ + … + 1/Rₙ</code></li>
+        <li id="f-dois"><strong>Dois resistores (produto pela soma)</strong><code>Req = (R₁ · R₂) / (R₁ + R₂)</code></li>
+        <li id="f-iguais"><strong>N resistores iguais</strong><code>Req = R / N</code></li>
+      </ul>
+    </section>
+  </section>
+
+  <!-- ABA: NOTAÇÃO CIENTÍFICA -->
+  <section id="tab-notacao" class="panel" role="tabpanel" aria-labelledby="t-notacao" hidden>
+    <section class="fcard" aria-label="Fórmula e legenda"><h2>Notação científica e prefixos</h2><div class="fbig"><span>N = a × 10ⁿ  (1 ≤ a &lt; 10)</span><span>(a × 10ᵐ) · (b × 10ⁿ) = (a · b) × 10ᵐ⁺ⁿ</span><span>(a × 10ᵐ) / (b × 10ⁿ) = (a / b) × 10ᵐ⁻ⁿ</span></div><div class="tablewrap"><table class="legend"><thead><tr><th>Símbolo</th><th>Significado</th><th>Unidade</th></tr></thead><tbody><tr><td>a, b</td><td>Coeficientes (na forma normalizada ficam entre 1 e 10)</td><td>—</td></tr><tr><td>m, n</td><td>Expoentes inteiros da potência de 10</td><td>—</td></tr><tr><td>k, M, G</td><td>Prefixos de múltiplos: 10³, 10⁶, 10⁹</td><td>—</td></tr><tr><td>m, µ, n, p</td><td>Prefixos de submúltiplos: 10⁻³, 10⁻⁶, 10⁻⁹, 10⁻¹²</td><td>—</td></tr></tbody></table></div></section>
+    <section class="study" aria-label="Estudo"><h2>Entenda antes de calcular</h2><h3>Como ler a fórmula</h3><ul><li>Expoente positivo indica número grande: a vírgula anda para a direita. Negativo indica número pequeno.</li><li>Na multiplicação, multiplique os coeficientes e some os expoentes. Na divisão, divida os coeficientes e subtraia os expoentes.</li><li>Na soma e na subtração, primeiro iguale os expoentes e só depois some ou subtraia os coeficientes.</li></ul><h3>Exemplo resolvido</h3><p>4,7 kΩ = 4,7 × 10³ Ω = <strong>4.700 Ω</strong>. O prefixo quilo (k) vale 10³.</p><h3>Pratique</h3><ol><li>Calcule (2 × 10³) · (3 × 10⁴).<details><summary>Ver resposta</summary><p>Coeficientes: 2 · 3 = 6. Expoentes: 3 + 4 = 7. Resultado: <strong>6 × 10⁷</strong>.</p></details></li><li>Converta 250 mA para ampères.<details><summary>Ver resposta</summary><p>Mili (m) vale 10⁻³: 250 × 10⁻³ = <strong>0,25 A</strong>.</p></details></li></ol></section>
+    <h2>Calculadora</h2>
+    <p class="lead">Soma, subtrai, multiplica e divide números em notação científica, com o passo a passo.</p>
+    <div class="about"><p><strong>O que é:</strong> uma forma de escrever números muito grandes ou muito pequenos como um coeficiente vezes 10 elevado a um expoente, como 4,7 × 10⁶.</p><p><strong>Para que serve:</strong> fazer contas com valores como 0,000015 ou 4.700.000 sem errar a quantidade de zeros, comum em eletrônica e eletricidade. Mais abaixo, converta valores com prefixos como kΩ, mA e µF.</p></div>
+    <div class="grid">
+      <div class="field">
+        <label for="s-a1"><span>Coeficiente a</span></label>
+        <div class="wrap"><input id="s-a1" type="text" inputmode="decimal" value="6,8"></div>
+      </div>
+      <div class="field">
+        <label for="s-e1"><span>Expoente m (de 10)</span></label>
+        <div class="wrap"><input id="s-e1" type="text" inputmode="decimal" value="3"></div>
+      </div>
+      <div class="field wide">
+        <label for="s-op"><span>Operação</span></label>
+        <select id="s-op">
+          <option value="mul">Multiplicação ( × )</option>
+          <option value="div">Divisão ( ÷ )</option>
+          <option value="add">Soma ( + )</option>
+          <option value="sub">Subtração ( − )</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="s-a2"><span>Coeficiente b</span></label>
+        <div class="wrap"><input id="s-a2" type="text" inputmode="decimal" value="1,2"></div>
+      </div>
+      <div class="field">
+        <label for="s-e2"><span>Expoente n (de 10)</span></label>
+        <div class="wrap"><input id="s-e2" type="text" inputmode="decimal" value="3"></div>
+      </div>
+    </div>
+    <p id="s-status" class="status" role="status" aria-live="polite"></p>
+    <section id="s-result" class="result" hidden aria-live="polite"></section>
+    <section id="s-steps" class="steps" hidden></section>
+    <p class="note">Um número sem potência de 10 tem expoente 0 (270 = 270 × 10⁰). Expoente vazio vale 0.</p>
+
+    <section class="table-card" aria-label="Conversão de prefixos">
+      <h2>Conversão para grandezas elétricas</h2>
+      <div class="panel">
+        <p class="lead">Troque o prefixo de um valor, como de kΩ para Ω ou de mA para A.</p>
+        <div class="grid">
+          <div class="field wide">
+            <label for="c-v"><span>Valor</span></label>
+            <div class="wrap"><input id="c-v" type="text" inputmode="decimal" value="4,7"></div>
+          </div>
+          <div class="field">
+            <label for="c-from"><span>De</span></label>
+            <select id="c-from"></select>
+          </div>
+          <div class="field">
+            <label for="c-to"><span>Para</span></label>
+            <select id="c-to"></select>
+          </div>
+          <div class="field wide">
+            <label for="c-unit"><span>Grandeza</span></label>
+            <select id="c-unit"></select>
+          </div>
+        </div>
+        <p id="c-status" class="status" role="status" aria-live="polite"></p>
+        <section id="c-result" class="result" hidden aria-live="polite"></section>
+        <div class="tablewrap">
+          <table>
+            <thead><tr><th>Prefixo</th><th>Símbolo</th><th class="num">Potência</th><th class="num">Valor</th></tr></thead>
+            <tbody id="ptable"></tbody>
+          </table>
+        </div>
+        <p class="note">Toque numa linha da tabela para usar o prefixo em "De". Para somar ou multiplicar valores com prefixos diferentes, converta tudo para a unidade base antes.</p>
+      </div>
+    </section>
+  </section>
+</main>
+
+<script>
+/* ---------- utilitários e dados compartilhados ---------- */
+var MATERIALS = [
+  {id:'cobre', name:'Cobre', rho:0.0173, alpha:0.004},
+  {id:'aluminio', name:'Alumínio', rho:0.0278, alpha:0.0032},
+  {id:'prata', name:'Prata', rho:0.0159, alpha:0.0038},
+  {id:'ouro', name:'Ouro', rho:0.0244, alpha:0.0034},
+  {id:'tungstenio', name:'Tungstênio', rho:0.056, alpha:0.0045},
+  {id:'zinco', name:'Zinco', rho:0.059, alpha:0.0037},
+  {id:'niquel', name:'Níquel', rho:0.0699, alpha:0.006},
+  {id:'latao', name:'Latão', rho:0.07, alpha:0.0015},
+  {id:'ferro', name:'Ferro', rho:0.0971, alpha:0.005},
+  {id:'estanho', name:'Estanho', rho:0.115, alpha:0.0042},
+  {id:'chumbo', name:'Chumbo', rho:0.208, alpha:0.0039},
+  {id:'constantan', name:'Constantan', rho:0.49, alpha:0.00001},
+  {id:'nicromo', name:'Nicromo', rho:1.1, alpha:0.0004}
+];
+var SECTIONS = [0.5, 0.75, 1, 1.5, 2.5, 4, 6, 10, 16, 25, 35, 50, 70, 95, 120, 150, 185, 240, 300];
+var SUP = {'0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹','-':'⁻'};
+
+function br(n, d){ return n.toLocaleString('pt-BR', {maximumSignificantDigits: d || 4}); }
+function fieldFmt(n){ return n.toLocaleString('pt-BR', {maximumSignificantDigits: 5, useGrouping: false}); }
+var PFX = {T:1e12, G:1e9, M:1e6, k:1e3, K:1e3, m:1e-3, 'µ':1e-6, 'μ':1e-6, u:1e-6, n:1e-9, p:1e-12};
+var ENG = {'12':'T', '9':'G', '6':'M', '3':'k', '-3':'m', '-6':'µ', '-9':'n', '-12':'p'};
+function clean(x){ return Number(x.toPrecision(12)); }
+/* Aceita número simples, número com prefixo (4,7k  250m  10µ  2M) e código 4k7 (= 4,7k). */
+function parse(s){
+  s = s.trim().replace(',', '.');
+  if (s === '') return null;
+  var mm = s.match(/^([+-]?\d*\.?\d+)\s*([TGMkKmµμunp])$/);
+  if (mm) return clean(Number(mm[1]) * PFX[mm[2]]);
+  var rk = s.match(/^(\d+)([TGMkKmµμunp])(\d+)$/);
+  if (rk) return clean(Number(rk[1] + '.' + rk[3]) * PFX[rk[2]]);
+  var n = Number(s);
+  return isFinite(n) ? n : NaN;
+}
+/* Valor com o prefixo mais conveniente (ex.: 0,0025 A vira 2,5 mA). Vazio se já está na unidade base. */
+function eng(x, unit){
+  if (!isFinite(x) || x === 0) return '';
+  var e = Math.floor(Math.log10(Math.abs(x)) / 3) * 3;
+  e = Math.max(-12, Math.min(12, e));
+  if (e === 0) return '';
+  return br(clean(x / Math.pow(10, e)), 4) + ' ' + ENG[String(e)] + unit;
+}
+function sup(n){ return String(n).split('').map(function(c){ return SUP[c] || c; }).join(''); }
+function setStatus(el, text, bad){
+  el.textContent = text;
+  el.className = 'status' + (bad ? ' bad' : '');
+}
+function fmtOhm(x){
+  var a = Math.abs(x);
+  if (a >= 1e6) return br(x / 1e6, 4) + ' MΩ';
+  if (a >= 1e3) return br(x / 1e3, 4) + ' kΩ';
+  if (a >= 1 || a === 0) return br(x, 4) + ' Ω';
+  return br(x * 1e3, 4) + ' mΩ';
+}
+function fillMaterialSelect(sel, onlyIds){
+  MATERIALS.forEach(function(m){
+    if (onlyIds && onlyIds.indexOf(m.id) < 0) return;
+    var o = document.createElement('option');
+    o.value = m.id; o.textContent = m.name;
+    sel.appendChild(o);
+  });
+}
+
+/* ---------- abas ---------- */
+(function(){
+  var names = ['ohm', 'cabo', 'queda', 'equivalente', 'notacao'];
+  var tabs = names.map(function(n){ return document.getElementById('t-' + n); });
+  var panels = names.map(function(n){ return document.getElementById('tab-' + n); });
+  function show(name){
+    if (names.indexOf(name) < 0) name = 'ohm';
+    names.forEach(function(n, i){
+      var on = n === name;
+      tabs[i].setAttribute('aria-selected', on ? 'true' : 'false');
+      tabs[i].tabIndex = on ? 0 : -1;
+      panels[i].hidden = !on;
+    });
+  }
+  tabs.forEach(function(t, i){
+    t.addEventListener('click', function(){
+      show(names[i]);
+      try { location.hash = names[i]; } catch (e) {}
+    });
+    t.addEventListener('keydown', function(e){
+      var j = -1;
+      if (e.key === 'ArrowRight') j = (i + 1) % names.length;
+      if (e.key === 'ArrowLeft') j = (i + names.length - 1) % names.length;
+      if (j < 0) return;
+      e.preventDefault();
+      show(names[j]);
+      tabs[j].focus();
+      try { location.hash = names[j]; } catch (err) {}
+    });
+  });
+  window.addEventListener('hashchange', function(){ show(location.hash.slice(1)); });
+  show(location.hash.slice(1));
+})();
+
+/* ---------- aba: resistência do cabo ---------- */
+(function(){
+  var KEYS = ['L','A','T','R','rho','alpha'];
+  var NAME = {L:'Comprimento', A:'Seção', T:'Temperatura', R:'Resistência', rho:'Resistividade a 20 °C', alpha:'Coeficiente α'};
+  var UNIT = {L:'m', A:'mm²', T:'°C', R:'Ω', rho:'Ω·mm²/m', alpha:'/°C'};
+  var POSITIVE = {L:1, A:1, R:1, rho:1};
+
+  var input = {}, box = {};
+  KEYS.forEach(function(k){
+    input[k] = document.getElementById(k);
+    box[k] = input[k].closest('.field');
+  });
+  var statusEl = document.getElementById('status');
+  var resultEl = document.getElementById('result');
+  var stepsEl = document.getElementById('steps');
+  var matSel = document.getElementById('mat');
+  var rows = [];
+  var auto = null;
+
+  function setSt(text, bad){ setStatus(statusEl, text, bad); }
+  function hideOutputs(){ resultEl.hidden = true; stepsEl.hidden = true; }
+  function clearAuto(){
+    if (auto){
+      input[auto].value = '';
+      box[auto].classList.remove('auto');
+      auto = null;
+    }
+  }
+  function guess(rho){
+    var names = MATERIALS.filter(function(m){ return Math.abs(rho - m.rho) / m.rho <= 0.05; })
+                         .map(function(m){ return m.name.toLowerCase(); });
+    return names.length ? names.join(' ou ') : null;
+  }
+  function markMat(){
+    var r = parse(input.rho.value), a = parse(input.alpha.value), id = 'custom';
+    MATERIALS.forEach(function(m){
+      if (r !== null && a !== null && Math.abs(r - m.rho) < 1e-9 && Math.abs(a - m.alpha) < 1e-9) id = m.id;
+    });
+    matSel.value = id;
+    rows.forEach(function(tr){ tr.classList.toggle('on', tr.dataset.id === id); });
+  }
+
+  function solve(t, v){
+    var f = 1 + v.alpha * (v.T - 20);
+    var ff;
+    switch (t){
+      case 'R': return v.rho * f * v.L / v.A;
+      case 'L': return v.R * v.A / (v.rho * f);
+      case 'A': return v.rho * f * v.L / v.R;
+      case 'rho': return v.R * v.A / (v.L * f);
+      case 'T': ff = v.R * v.A / (v.rho * v.L); return 20 + (ff - 1) / v.alpha;
+      case 'alpha':
+        if (v.T === 20) return NaN;
+        ff = v.R * v.A / (v.rho * v.L);
+        return (ff - 1) / (v.T - 20);
+    }
+    return NaN;
+  }
+
+  function showResult(t, val, v){
+    var extra = '';
+    if (t === 'R' && val < 1) extra = br(val * 1000, 4) + ' mΩ';
+    if (t === 'rho'){
+      var g = guess(val);
+      extra = g ? 'Material provável: ' + g : 'Não bate com nenhum material da lista';
+    }
+    var html = '<span class="r-label">' + NAME[t] + '</span>' +
+               '<span class="r-value big">' + br(val, 4) + ' ' + UNIT[t] + '</span>';
+    if (extra) html += '<span class="r-extra">' + extra + '</span>';
+    resultEl.innerHTML = html;
+    resultEl.hidden = false;
+
+    var fac = 1 + v.alpha * (v.T - 20);
+    var rT = v.rho * fac;
+    var R = rT * v.L / v.A;
+    stepsEl.innerHTML =
+      '<h2>Passo a passo</h2><ol>' +
+      '<li><span>Fator de temperatura</span><code>1 + ' + br(v.alpha) + ' · (' + br(v.T) + ' − 20) = ' + br(fac) + '</code></li>' +
+      '<li><span>Resistividade na temperatura</span><code>' + br(v.rho) + ' · ' + br(fac) + ' = ' + br(rT) + ' Ω·mm²/m</code></li>' +
+      '<li><span>Resistência</span><code>' + br(rT) + ' · ' + br(v.L) + ' / ' + br(v.A) + ' = ' + br(R) + ' Ω</code></li>' +
+      '</ol>';
+    stepsEl.hidden = false;
+  }
+
+  function update(){
+    clearAuto();
+    markMat();
+    var v = {}, bad = false;
+    KEYS.forEach(function(k){
+      v[k] = parse(input[k].value);
+      if (Number.isNaN(v[k])) bad = true;
+    });
+    hideOutputs();
+    if (bad){ setSt('Use apenas números, por exemplo 0,0173.', true); return; }
+
+    var empty = KEYS.filter(function(k){ return v[k] === null; });
+    if (empty.length === 0){ setSt('Todos os campos estão preenchidos. Apague o que quer calcular.'); return; }
+    if (empty.length > 1){
+      setSt('Deixe só um campo vazio. Ainda faltam ' + (empty.length - 1) + ' para preencher.');
+      return;
+    }
+
+    var t = empty[0];
+    var val = solve(t, v);
+    var invalid = !isFinite(val) || (POSITIVE[t] && val <= 0);
+    if (invalid){
+      var msg = (t === 'alpha' && v.T === 20)
+        ? 'Com T = 20 °C não dá para achar α. Use outra temperatura.'
+        : 'Esses valores não fecham a conta. Confira os números digitados.';
+      setSt(msg, true);
+      return;
+    }
+
+    input[t].value = fieldFmt(val);
+    box[t].classList.add('auto');
+    auto = t;
+    markMat();
+    setSt('Calculando: ' + NAME[t].toLowerCase() + '.');
+    var w = {};
+    KEYS.forEach(function(k){ w[k] = parse(input[k].value); });
+    w[t] = val;
+    showResult(t, val, w);
+  }
+
+  KEYS.forEach(function(k){
+    input[k].addEventListener('input', function(){
+      if (k === auto){ auto = null; box[k].classList.remove('auto'); }
+      update();
+    });
+  });
+  document.getElementById('form').addEventListener('submit', function(e){ e.preventDefault(); });
+
+  var custom = document.createElement('option');
+  custom.value = 'custom'; custom.textContent = 'Personalizado';
+  matSel.appendChild(custom);
+  MATERIALS.forEach(function(m){
+    var o = document.createElement('option');
+    o.value = m.id; o.textContent = m.name;
+    matSel.appendChild(o);
+    var tr = document.createElement('tr');
+    tr.dataset.id = m.id;
+    tr.innerHTML = '<td>' + m.name + '</td><td class="num">' + fieldFmt(m.rho) + '</td><td class="num">' + fieldFmt(m.alpha) + '</td>';
+    tr.addEventListener('click', function(){
+      matSel.value = m.id;
+      matSel.dispatchEvent(new Event('change'));
+    });
+    document.querySelector('#mtable tbody').appendChild(tr);
+    rows.push(tr);
+  });
+  matSel.addEventListener('change', function(){
+    var m = MATERIALS.filter(function(x){ return x.id === matSel.value; })[0];
+    if (!m) return;
+    clearAuto();
+    input.rho.value = fieldFmt(m.rho);
+    input.alpha.value = fieldFmt(m.alpha);
+    update();
+  });
+
+  document.getElementById('clear').addEventListener('click', function(){
+    auto = null;
+    KEYS.forEach(function(k){ input[k].value = ''; box[k].classList.remove('auto'); });
+    update();
+  });
+
+  // Estado inicial: exemplo da conversa (cobre, 150 m, 4 mm², 2 °C), resistência calculada.
+  input.L.value = '150';
+  input.A.value = '4';
+  input.T.value = '2';
+  input.rho.value = fieldFmt(MATERIALS[0].rho);
+  input.alpha.value = fieldFmt(MATERIALS[0].alpha);
+  update();
+})();
+
+/* ---------- aba: Lei de Ohm e potência ---------- */
+(function(){
+  var K = ['V','I','R','P'];
+  var UN = {V:'V', I:'A', R:'Ω', P:'W'};
+  var NM = {V:'Tensão', I:'Corrente', R:'Resistência', P:'Potência'};
+  var inp = {}, box = {};
+  K.forEach(function(k){
+    inp[k] = document.getElementById('o-' + k);
+    box[k] = inp[k].closest('.field');
+  });
+  var st = document.getElementById('o-status');
+  var res = document.getElementById('o-result');
+  var autoSet = [];
+
+  function clearAuto(){
+    autoSet.forEach(function(k){ inp[k].value = ''; box[k].classList.remove('auto'); });
+    autoSet = [];
+  }
+  function solveOhm(v){
+    var V = v.V, I = v.I, R = v.R, P = v.P;
+    if (V !== null && I !== null) return {out:{R:V / I, P:V * I}, how:{R:'V / I', P:'V · I'}};
+    if (V !== null && R !== null) return {out:{I:V / R, P:V * V / R}, how:{I:'V / R', P:'V² / R'}};
+    if (V !== null && P !== null) return {out:{I:P / V, R:V * V / P}, how:{I:'P / V', R:'V² / P'}};
+    if (I !== null && R !== null) return {out:{V:I * R, P:I * I * R}, how:{V:'I · R', P:'I² · R'}};
+    if (I !== null && P !== null) return {out:{V:P / I, R:P / (I * I)}, how:{V:'P / I', R:'P / I²'}};
+    return {out:{V:Math.sqrt(P * R), I:Math.sqrt(P / R)}, how:{V:'√(P · R)', I:'√(P / R)'}};
+  }
+  function update(){
+    clearAuto();
+    res.hidden = true;
+    var v = {}, bad = false, known = [];
+    K.forEach(function(k){
+      var n = parse(inp[k].value);
+      v[k] = n;
+      if (Number.isNaN(n)) bad = true;
+      else if (n !== null) known.push(k);
+    });
+    if (bad){ setStatus(st, 'Use apenas números, por exemplo 12,5.', true); return; }
+    if (known.some(function(k){ return v[k] <= 0; })){ setStatus(st, 'Use valores maiores que zero.', true); return; }
+    if (known.length < 2){ setStatus(st, 'Preencha dois campos e a calculadora acha os outros dois.'); return; }
+    if (known.length > 2){ setStatus(st, 'Deixe só dois campos preenchidos. Apague ' + (known.length - 2) + ' para calcular.'); return; }
+
+    var s = solveOhm(v);
+    var keys = Object.keys(s.out);
+    var ok = keys.every(function(k){ return isFinite(s.out[k]) && s.out[k] > 0; });
+    if (!ok){ setStatus(st, 'Esses valores não fecham a conta. Confira os números digitados.', true); return; }
+
+    var html = '<div class="r-pair">';
+    keys.forEach(function(k){
+      inp[k].value = fieldFmt(s.out[k]);
+      box[k].classList.add('auto');
+      autoSet.push(k);
+      html += '<div><span class="r-label">' + NM[k] + '</span>' +
+              '<span class="r-value">' + br(s.out[k], 4) + ' ' + UN[k] + '</span>' +
+              '<span class="r-extra">' + k + ' = ' + s.how[k] + '</span>' +
+              (eng(s.out[k], UN[k]) ? '<span class="r-extra">= ' + eng(s.out[k], UN[k]) + '</span>' : '') + '</div>';
+    });
+    html += '</div>';
+    res.innerHTML = html;
+    res.hidden = false;
+    setStatus(st, 'Calculando: ' + keys.map(function(k){ return NM[k].toLowerCase(); }).join(' e ') + '.');
+  }
+  K.forEach(function(k){
+    inp[k].addEventListener('input', function(){
+      var i = autoSet.indexOf(k);
+      if (i >= 0){ autoSet.splice(i, 1); box[k].classList.remove('auto'); }
+      update();
+    });
+  });
+  document.getElementById('o-clear').addEventListener('click', function(){
+    autoSet = [];
+    K.forEach(function(k){ inp[k].value = ''; box[k].classList.remove('auto'); });
+    update();
+  });
+  inp.V.value = '12';
+  inp.R.value = '6';
+  update();
+})();
+
+/* ---------- aba: queda de tensão ---------- */
+(function(){
+  var ids = ['V','I','L','S','T','lim'];
+  var el = {};
+  ids.forEach(function(k){ el[k] = document.getElementById('q-' + k); });
+  var circSel = document.getElementById('q-circ');
+  var matSel = document.getElementById('q-mat');
+  var st = document.getElementById('q-status');
+  var out = document.getElementById('q-result');
+  var stepsEl = document.getElementById('q-steps');
+  fillMaterialSelect(matSel, ['cobre', 'aluminio']);
+
+  function update(){
+    out.hidden = true; stepsEl.hidden = true;
+    var v = {}, bad = false, miss = false;
+    ids.forEach(function(k){
+      var n = parse(el[k].value);
+      v[k] = n;
+      if (Number.isNaN(n)) bad = true;
+      else if (n === null) miss = true;
+    });
+    if (bad){ setStatus(st, 'Use apenas números, por exemplo 12,5.', true); return; }
+    if (miss){ setStatus(st, 'Preencha todos os campos.'); return; }
+    if (v.V <= 0 || v.I <= 0 || v.L <= 0 || v.S <= 0 || v.lim <= 0){
+      setStatus(st, 'Tensão, corrente, comprimento, seção e limite precisam ser maiores que zero.', true);
+      return;
+    }
+    var m = MATERIALS.filter(function(x){ return x.id === matSel.value; })[0];
+    var tri = circSel.value === 'tri';
+    var k = tri ? Math.sqrt(3) : 2;
+    var kTxt = tri ? '√3' : '2';
+    var f = 1 + m.alpha * (v.T - 20);
+    if (f <= 0){ setStatus(st, 'Temperatura fora da faixa para este material.', true); return; }
+
+    var rho = m.rho * f;
+    var dV = k * rho * v.L * v.I / v.S;
+    var pct = dV / v.V * 100;
+    var sMin = k * rho * v.L * v.I / (v.lim / 100 * v.V);
+    var com = SECTIONS.filter(function(s){ return s >= sMin; })[0];
+    var okLim = pct <= v.lim;
+
+    out.innerHTML =
+      '<div class="r-pair">' +
+        '<div><span class="r-label">Queda de tensão</span>' +
+        '<span class="r-value">' + br(dV, 3) + ' V</span>' +
+        '<span class="r-extra">' + br(pct, 3) + ' % de ' + br(v.V) + ' V' +
+        '<span class="pill ' + (okLim ? 'ok' : 'bad') + '">' + (okLim ? 'dentro do limite' : 'acima do limite') + '</span></span></div>' +
+        '<div><span class="r-label">Seção para ' + br(v.lim) + ' %</span>' +
+        '<span class="r-value">' + (com ? br(com) + ' mm²' : '> 300 mm²') + '</span>' +
+        '<span class="r-extra">cálculo: ' + br(sMin, 3) + ' mm²</span></div>' +
+      '</div>';
+    out.hidden = false;
+
+    stepsEl.innerHTML =
+      '<h2>Passo a passo</h2><ol>' +
+      '<li><span>Resistividade do ' + m.name.toLowerCase() + ' na temperatura</span><code>' + br(m.rho) + ' · [1 + ' + br(m.alpha) + ' · (' + br(v.T) + ' − 20)] = ' + br(rho) + ' Ω·mm²/m</code></li>' +
+      '<li><span>Queda de tensão</span><code>' + kTxt + ' · ' + br(rho) + ' · ' + br(v.L) + ' · ' + br(v.I) + ' / ' + br(v.S) + ' = ' + br(dV, 4) + ' V</code></li>' +
+      '<li><span>Percentual</span><code>' + br(dV, 4) + ' / ' + br(v.V) + ' · 100 = ' + br(pct, 3) + ' %</code></li>' +
+      '<li><span>Seção mínima para o limite</span><code>' + kTxt + ' · ' + br(rho) + ' · ' + br(v.L) + ' · ' + br(v.I) + ' / (' + br(v.lim) + ' % · ' + br(v.V) + ') = ' + br(sMin, 3) + ' mm²</code></li>' +
+      '</ol>';
+    stepsEl.hidden = false;
+    setStatus(st, okLim ? 'A seção informada respeita o limite.' : 'A seção informada passa do limite. Aumente a seção ou reduza o comprimento.', !okLim);
+  }
+  ids.forEach(function(k){ el[k].addEventListener('input', update); });
+  circSel.addEventListener('change', update);
+  matSel.addEventListener('change', update);
+  update();
+})();
+
+/* ---------- aba: resistência equivalente ---------- */
+(function(){
+  var mode = 'serie';
+  var rowsEl = document.getElementById('eq-rows');
+  var st = document.getElementById('eq-status');
+  var res = document.getElementById('eq-result');
+  var stepsEl = document.getElementById('eq-steps');
+  var fsec = document.getElementById('eq-formulas');
+  var fitDois = document.getElementById('f-dois');
+  var fitIguais = document.getElementById('f-iguais');
+  var segBtns = Array.prototype.slice.call(document.querySelectorAll('#eq-mode button'));
+  var rows = [];
+  var counter = 0;
+
+  function renumber(){
+    rows.forEach(function(r, i){
+      r.label.textContent = 'R' + (i + 1);
+      r.input.setAttribute('aria-label', 'Resistor ' + (i + 1) + ' em ohms');
+      r.remove.setAttribute('aria-label', 'Remover resistor ' + (i + 1));
+      r.remove.disabled = rows.length <= 2;
+    });
+  }
+  function addRow(value){
+    counter += 1;
+    var div = document.createElement('div');
+    div.className = 'rrow';
+    var label = document.createElement('span');
+    label.className = 'rlabel';
+    var wrap = document.createElement('div');
+    wrap.className = 'wrap';
+    var inputEl = document.createElement('input');
+    inputEl.type = 'text';
+    inputEl.id = 'eq-in-' + counter;
+    inputEl.setAttribute('inputmode', 'decimal');
+    inputEl.value = value || '';
+    var unit = document.createElement('span');
+    unit.className = 'unit';
+    unit.textContent = 'Ω';
+    wrap.appendChild(inputEl);
+    wrap.appendChild(unit);
+    var remove = document.createElement('button');
+    remove.type = 'button';
+    remove.className = 'btn';
+    remove.textContent = '×';
+    div.appendChild(label);
+    div.appendChild(wrap);
+    div.appendChild(remove);
+    rowsEl.appendChild(div);
+    var rec = {div: div, label: label, input: inputEl, remove: remove};
+    rows.push(rec);
+    inputEl.addEventListener('input', update);
+    remove.addEventListener('click', function(){
+      if (rows.length <= 2) return;
+      rows.splice(rows.indexOf(rec), 1);
+      rowsEl.removeChild(div);
+      renumber();
+      update();
+    });
+    renumber();
+  }
+
+  function update(){
+    res.hidden = true; stepsEl.hidden = true;
+    fitDois.classList.remove('fit'); fitIguais.classList.remove('fit');
+    fsec.hidden = mode !== 'paralelo';
+    var vals = [], bad = false, neg = false;
+    rows.forEach(function(r){
+      var n = parse(r.input.value);
+      if (Number.isNaN(n)) bad = true;
+      else if (n !== null){ if (n < 0) neg = true; vals.push(n); }
+    });
+    if (bad){ setStatus(st, 'Use apenas números, por exemplo 4,7.', true); return; }
+    if (neg){ setStatus(st, 'Use valores maiores ou iguais a zero.', true); return; }
+    if (vals.length < 2){ setStatus(st, 'Preencha pelo menos dois resistores.'); return; }
+
+    var req, html;
+    if (mode === 'serie'){
+      req = vals.reduce(function(a, b){ return a + b; }, 0);
+      html = '<h2>Passo a passo</h2><ol>' +
+        '<li><span>Some os resistores</span><code>' + vals.map(function(x){ return br(x); }).join(' + ') + ' = ' + br(req, 5) + ' Ω</code></li></ol>';
+    } else {
+      if (vals.some(function(x){ return x === 0; })){
+        req = 0;
+        html = '<h2>Passo a passo</h2><ol><li><span>Um resistor de 0 Ω em paralelo</span><code>curto-circuito: Req = 0 Ω</code></li></ol>';
+      } else {
+        var inv = vals.reduce(function(a, b){ return a + 1 / b; }, 0);
+        req = 1 / inv;
+        var two = vals.length === 2;
+        var same = vals.every(function(x){ return x === vals[0]; });
+        var extra = '';
+        if (two) extra += '<li><span>Atalho para 2 resistores (produto pela soma)</span><code>(' + br(vals[0]) + ' · ' + br(vals[1]) + ') / (' + br(vals[0]) + ' + ' + br(vals[1]) + ') = ' + br(vals[0] * vals[1] / (vals[0] + vals[1]), 5) + ' Ω</code></li>';
+        if (same) extra += '<li><span>Atalho para resistores iguais (R / N)</span><code>' + br(vals[0]) + ' / ' + vals.length + ' = ' + br(vals[0] / vals.length, 5) + ' Ω</code></li>';
+        fitDois.classList.toggle('fit', two);
+        fitIguais.classList.toggle('fit', same);
+        html = '<h2>Passo a passo</h2><ol>' +
+          '<li><span>Some os inversos (condutâncias)</span><code>' + vals.map(function(x){ return '1/' + br(x); }).join(' + ') + ' = ' + br(inv, 5) + ' S</code></li>' +
+          '<li><span>Inverta o resultado</span><code>Req = 1 / ' + br(inv, 5) + ' = ' + br(req, 5) + ' Ω</code></li>' + extra + '</ol>';
+      }
+    }
+    res.innerHTML = '<span class="r-label">Resistência equivalente (' + (mode === 'serie' ? 'série' : 'paralelo') + ')</span>' +
+      '<span class="r-value big">' + fmtOhm(req) + '</span>' +
+      '<span class="r-extra">' + br(req, 5) + ' Ω</span>';
+    res.hidden = false;
+    stepsEl.innerHTML = html;
+    stepsEl.hidden = false;
+    setStatus(st, vals.length + ' resistores em ' + (mode === 'serie' ? 'série' : 'paralelo') + '.');
+  }
+
+  segBtns.forEach(function(b){
+    b.addEventListener('click', function(){
+      mode = b.dataset.m;
+      segBtns.forEach(function(x){ x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+      document.getElementById('fig-serie').classList.toggle('on', mode === 'serie');
+      document.getElementById('fig-paralelo').classList.toggle('on', mode === 'paralelo');
+      update();
+    });
+  });
+  document.getElementById('eq-add').addEventListener('click', function(){
+    addRow('');
+    rows[rows.length - 1].input.focus();
+    update();
+  });
+  document.getElementById('eq-clear').addEventListener('click', function(){
+    rows.forEach(function(r){ r.input.value = ''; });
+    update();
+  });
+
+  addRow('100'); addRow('220'); addRow('330');
+  update();
+})();
+
+/* ---------- aba: notação científica ---------- */
+(function(){
+  var a1 = document.getElementById('s-a1'), e1 = document.getElementById('s-e1');
+  var a2 = document.getElementById('s-a2'), e2 = document.getElementById('s-e2');
+  var opSel = document.getElementById('s-op');
+  var st = document.getElementById('s-status');
+  var res = document.getElementById('s-result');
+  var stepsEl = document.getElementById('s-steps');
+
+  function clean(x){ return Number(x.toPrecision(12)); }
+  function normalize(c, E){
+    if (c === 0) return {c:0, E:0};
+    var parts = c.toExponential(9).split('e');
+    return {c:Number(parts[0]), E:E + Number(parts[1])};
+  }
+  function sci(c, E){ return br(c, 8) + ' × 10' + sup(E); }
+
+  function update(){
+    res.hidden = true; stepsEl.hidden = true;
+    var a = parse(a1.value), b = parse(a2.value);
+    var m = parse(e1.value), n = parse(e2.value);
+    if ([a, b, m, n].some(function(x){ return Number.isNaN(x); })){ setStatus(st, 'Use apenas números, por exemplo 6,8.', true); return; }
+    if (a === null || b === null){ setStatus(st, 'Preencha os dois coeficientes.'); return; }
+    m = m === null ? 0 : m;
+    n = n === null ? 0 : n;
+    if (Math.round(m) !== m || Math.round(n) !== n){ setStatus(st, 'Use expoentes inteiros.', true); return; }
+
+    var op = opSel.value, c, E, steps = '';
+    if (op === 'mul'){
+      c = clean(a * b); E = m + n;
+      steps = '<li><span>Multiplique os coeficientes</span><code>' + br(a, 8) + ' · ' + br(b, 8) + ' = ' + br(c, 8) + '</code></li>' +
+              '<li><span>Some os expoentes</span><code>' + m + ' + ' + (n < 0 ? '(' + n + ')' : n) + ' = ' + E + '</code></li>';
+    } else if (op === 'div'){
+      if (b === 0){ setStatus(st, 'Não dá para dividir por zero.', true); return; }
+      c = clean(a / b); E = m - n;
+      steps = '<li><span>Divida os coeficientes</span><code>' + br(a, 8) + ' / ' + br(b, 8) + ' = ' + br(c, 8) + '</code></li>' +
+              '<li><span>Subtraia os expoentes</span><code>' + m + ' − ' + (n < 0 ? '(' + n + ')' : n) + ' = ' + E + '</code></li>';
+    } else {
+      E = Math.max(m, n);
+      var a2c = clean(a * Math.pow(10, m - E)), b2c = clean(b * Math.pow(10, n - E));
+      c = clean(op === 'add' ? a2c + b2c : a2c - b2c);
+      steps = '<li><span>Iguale os expoentes (use 10' + sup(E) + ')</span><code>' + sci(a, m) + ' = ' + sci(a2c, E) + '</code><code>' + sci(b, n) + ' = ' + sci(b2c, E) + '</code></li>' +
+              '<li><span>' + (op === 'add' ? 'Some' : 'Subtraia') + ' os coeficientes</span><code>' + br(a2c, 8) + (op === 'add' ? ' + ' : ' − ') + br(b2c, 8) + ' = ' + br(c, 8) + '</code></li>';
+    }
+    var nz = normalize(c, E);
+    if (nz.c !== c || nz.E !== E){
+      steps += '<li><span>Normalize (coeficiente entre 1 e 10)</span><code>' + sci(c, E) + ' = ' + (nz.c === 0 ? '0' : sci(nz.c, nz.E)) + '</code></li>';
+    }
+
+    var main = nz.c === 0 ? '0' : br(nz.c, 8) + ' × 10' + sup(nz.E);
+    var dec = '';
+    if (nz.c !== 0 && Math.abs(nz.E) <= 12){
+      dec = Number(nz.c + 'e' + nz.E).toLocaleString('pt-BR', {maximumSignificantDigits: 10});
+    }
+    res.innerHTML = '<span class="r-label">Resultado</span><span class="r-value big">' + main + '</span>' +
+      (dec && nz.E !== 0 ? '<span class="r-extra">= ' + dec + '</span>' : '');
+    res.hidden = false;
+    stepsEl.innerHTML = '<h2>Passo a passo</h2><ol>' + steps + '</ol>';
+    stepsEl.hidden = false;
+    setStatus(st, '');
+  }
+  [a1, e1, a2, e2].forEach(function(x){ x.addEventListener('input', update); });
+  opSel.addEventListener('change', update);
+  update();
+})();
+
+/* ---------- conversão de prefixos ---------- */
+(function(){
+  var PREFIXES = [
+    {n:'tera', s:'T', e:12}, {n:'giga', s:'G', e:9}, {n:'mega', s:'M', e:6}, {n:'quilo', s:'k', e:3},
+    {n:'unidade base', s:'', e:0},
+    {n:'mili', s:'m', e:-3}, {n:'micro', s:'µ', e:-6}, {n:'nano', s:'n', e:-9}, {n:'pico', s:'p', e:-12}
+  ];
+  var UNITS = [
+    {s:'Ω', n:'Ω (resistência)'}, {s:'V', n:'V (tensão)'}, {s:'A', n:'A (corrente)'}, {s:'W', n:'W (potência)'},
+    {s:'F', n:'F (capacitância)'}, {s:'H', n:'H (indutância)'}, {s:'Hz', n:'Hz (frequência)'}, {s:'', n:'Sem unidade'}
+  ];
+  var vEl = document.getElementById('c-v');
+  var fSel = document.getElementById('c-from'), tSel = document.getElementById('c-to'), uSel = document.getElementById('c-unit');
+  var st = document.getElementById('c-status'), res = document.getElementById('c-result');
+  var ptable = document.getElementById('ptable');
+
+  function symOf(e){ return PREFIXES.filter(function(p){ return p.e === e; })[0].s; }
+  function clean(x){ return Number(x.toPrecision(12)); }
+  function sciTxt(x){
+    if (x === 0) return '0';
+    var parts = x.toExponential(9).split('e');
+    return br(Number(parts[0]), 8) + ' × 10' + sup(Number(parts[1]));
+  }
+  function numTxt(x){
+    if (x === 0) return '0';
+    var a = Math.abs(x);
+    if (a >= 1e-12 && a < 1e15) return x.toLocaleString('pt-BR', {maximumSignificantDigits: 10});
+    return sciTxt(x);
+  }
+
+  PREFIXES.forEach(function(p){
+    [fSel, tSel].forEach(function(sel){
+      var o = document.createElement('option');
+      o.value = String(p.e);
+      o.textContent = p.s ? p.n + ' (' + p.s + ') · 10' + sup(p.e) : 'unidade base · 10⁰';
+      sel.appendChild(o);
+    });
+    var tr = document.createElement('tr');
+    tr.innerHTML = '<td>' + p.n + '</td><td>' + (p.s || '—') + '</td><td class="num">10' + sup(p.e) + '</td><td class="num">' + numTxt(Math.pow(10, p.e)) + '</td>';
+    tr.addEventListener('click', function(){ fSel.value = String(p.e); update(); });
+    ptable.appendChild(tr);
+  });
+  UNITS.forEach(function(u){
+    var o = document.createElement('option');
+    o.value = u.s; o.textContent = u.n;
+    uSel.appendChild(o);
+  });
+  fSel.value = '3';
+  tSel.value = '0';
+  uSel.value = 'Ω';
+
+  function update(){
+    res.hidden = true;
+    var v = parse(vEl.value);
+    if (Number.isNaN(v)){ setStatus(st, 'Use apenas números, por exemplo 4,7.', true); return; }
+    if (v === null){ setStatus(st, 'Digite o valor.'); return; }
+    var eF = Number(fSel.value), eT = Number(tSel.value), u = uSel.value;
+    var out = clean(v * Math.pow(10, eF - eT));
+    var base = clean(v * Math.pow(10, eF));
+    var sF = symOf(eF), sT = symOf(eT);
+    var html = '<span class="r-label">' + br(v, 8) + ' ' + sF + u + ' equivale a</span>' +
+      '<span class="r-value big">' + numTxt(out) + ' ' + sT + u + '</span>';
+    if (eF !== 0 && eT !== 0){
+      html += '<span class="r-extra">Na unidade base: ' + numTxt(base) + ' ' + u + '</span>';
+    }
+    html += '<span class="r-extra">Em notação científica: ' + sciTxt(base) + ' ' + u + '</span>';
+    res.innerHTML = html;
+    res.hidden = false;
+    setStatus(st, '');
+  }
+  vEl.addEventListener('input', update);
+  [fSel, tSel, uSel].forEach(function(x){ x.addEventListener('change', update); });
+  update();
+})();
+</script>
+</body>
+</html>
