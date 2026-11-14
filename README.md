@@ -8,6 +8,7 @@ Página única (HTML + JavaScript, sem dependências) para estudar e testar cál
 - **2ª Lei de Ohm (resistividade):** R = ρ · L / A, com correção por temperatura. Inclui tabela de materiais.
 - **Queda de tensão:** ΔV = k · ρ(T) · L · I / S, com seção mínima para o limite escolhido.
 - **Equivalente:** resistência equivalente em série e em paralelo, com desenhos e fórmulas de atalho.
+- **Circuito:** grade para montar um circuito de resistores (com diagonais e fios) entre A e B, e animação passo a passo da redução por série e paralelo até a resistência equivalente. Na animação, o circuito aparece ampliado e uma lousa ao lado vai escrevendo as contas de cada passo. Pontes que não reduzem são resolvidas por análise nodal. Tem desfazer/refazer, troca do número dos resistores (R1 ↔ R2), atalhos de teclado e tela cheia para dar aula. O circuito fica salvo no navegador.
 - **Notação:** operações em notação científica e conversão de prefixos (T, G, M, k, m, µ, n, p).
 - **Matemática:** contas com frações (soma, subtração, multiplicação e divisão, com simplificação), regra de três direta e inversa e porcentagem.
 
