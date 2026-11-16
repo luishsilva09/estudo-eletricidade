@@ -116,6 +116,7 @@ header .lead{color:var(--hi-ink);font-size:.95rem;max-width:34ch}
 }
 .tab .sym{font-family:var(--font-mono);font-size:1.1rem;font-weight:500;line-height:1.3}
 .tab .tl{font-family:var(--font-cond);font-size:.72rem;font-weight:500;line-height:1.2;white-space:nowrap}
+.tab .tl-s{display:none}
 .tab[aria-selected="true"]{color:var(--hi);box-shadow:inset 0 3px 0 var(--hi);background:rgba(255,194,14,.09)}
 .tab[aria-selected="true"] .sym{font-weight:600}
 .tab[aria-selected="true"] .tl{font-weight:700}
@@ -455,6 +456,8 @@ tbody tr.on{background:var(--accent-soft);box-shadow:inset 4px 0 0 var(--hi)}
 .kf-arc{fill:none;stroke:var(--accent);stroke-width:2;stroke-linecap:round}
 .kf-ah{fill:var(--accent)}
 @media (min-width:360px) and (max-width:420px){.tab .tl{font-size:.64rem}}
+/* telas estreitas: rótulos longos viram abreviações (o nome completo fica no aria-label) */
+@media (max-width:420px){.tab .tl-f{display:none}.tab .tl-s{display:inline}}
 </style>
 </head>
 <body>
@@ -469,11 +472,11 @@ tbody tr.on{background:var(--accent-soft);box-shadow:inset 4px 0 0 var(--hi)}
     <button type="button" class="tab" role="tab" id="t-ohm" aria-controls="tab-ohm" aria-selected="true" aria-label="1ª Lei de Ohm"><span class="sym" aria-hidden="true">Ω</span><span class="tl">1ª Lei</span></button>
     <button type="button" class="tab" role="tab" id="t-cabo" aria-controls="tab-cabo" aria-selected="false" aria-label="2ª Lei de Ohm"><span class="sym" aria-hidden="true">ρ</span><span class="tl">2ª Lei</span></button>
     <button type="button" class="tab" role="tab" id="t-queda" aria-controls="tab-queda" aria-selected="false" aria-label="Queda de tensão"><span class="sym" aria-hidden="true">ΔV</span><span class="tl">Queda</span></button>
-    <button type="button" class="tab" role="tab" id="t-equivalente" aria-controls="tab-equivalente" aria-selected="false"><span class="sym" aria-hidden="true">Req</span><span class="tl">Equivalente</span></button>
+    <button type="button" class="tab" role="tab" id="t-equivalente" aria-controls="tab-equivalente" aria-selected="false" aria-label="Equivalente"><span class="sym" aria-hidden="true">Req</span><span class="tl"><span class="tl-f">Equivalente</span><span class="tl-s" aria-hidden="true">Equiv.</span></span></button>
     <button type="button" class="tab" role="tab" id="t-circuito" aria-controls="tab-circuito" aria-selected="false"><span class="sym" aria-hidden="true">⊞</span><span class="tl">Circuito</span></button>
     <button type="button" class="tab" role="tab" id="t-kirchhoff" aria-controls="tab-kirchhoff" aria-selected="false"><span class="sym" aria-hidden="true">ΣI</span><span class="tl">Kirchhoff</span></button>
     <button type="button" class="tab" role="tab" id="t-notacao" aria-controls="tab-notacao" aria-selected="false"><span class="sym" aria-hidden="true">10ⁿ</span><span class="tl">Notação</span></button>
-    <button type="button" class="tab" role="tab" id="t-matematica" aria-controls="tab-matematica" aria-selected="false"><span class="sym" aria-hidden="true">½</span><span class="tl">Matemática</span></button>
+    <button type="button" class="tab" role="tab" id="t-matematica" aria-controls="tab-matematica" aria-selected="false" aria-label="Matemática"><span class="sym" aria-hidden="true">½</span><span class="tl"><span class="tl-f">Matemática</span><span class="tl-s" aria-hidden="true">Matem.</span></span></button>
   </nav>
 
   <p class="note top">Nos campos de valor você pode digitar prefixos: 4k7 ou 4,7k = 4.700, 250m = 0,25, 10µ ou 10u = 0,00001, 2M = 2.000.000. Atenção: m minúsculo é mili e M maiúsculo é mega.</p>
@@ -970,8 +973,8 @@ tbody tr.on{background:var(--accent-soft);box-shadow:inset 4px 0 0 var(--hi)}
             <li>Se D = 0, o sistema não tem solução única: ou é impossível (equações que se contradizem) ou indeterminado (equações repetidas, infinitas soluções).</li>
           </ul>
           <h3>Exemplo resolvido: duas malhas</h3>
-          <p>Fonte de 12 V, R₁ = 2 Ω, R₂ = 3 Ω (compartilhado pelas duas malhas) e R₃ = 6 Ω. Malha 1: 12 − 2·I₁ − 3·(I₁ − I₂) = 0, que vira 5·I₁ − 3·I₂ = 12. Malha 2: −3·(I₂ − I₁) − 6·I₂ = 0, que vira 3·I₁ − 9·I₂ = 0 e, multiplicando tudo por −1, −3·I₁ + 9·I₂ = 0.</p>
-          <p>D = 5 · 9 − (−3) · (−3) = 45 − 9 = 36. Dx = 12 · 9 − (−3) · 0 = 108. Dy = 5 · 0 − (−3) · 12 = 36. Logo I₁ = <span class="frac"><span>108</span><span class="sl"> / </span><span>36</span></span> = <strong>3 A</strong> e I₂ = <span class="frac"><span>36</span><span class="sl"> / </span><span>36</span></span> = <strong>1 A</strong>.</p>
+          <p>Duas fontes, E₁ = 18 V e E₂ = 9 V (ambas com o + em cima), R₁ = 2 Ω, R₂ = 3 Ω e R₃ = 6 Ω (compartilhado pelas duas malhas). Correntes I₁ e I₂ no sentido horário. Malha 1: 18 − 2·I₁ − 6·(I₁ − I₂) = 0, que vira 8·I₁ − 6·I₂ = 18. Malha 2: a fonte E₂, com o + em cima, empurra a corrente no sentido anti-horário, então entra com sinal negativo: −9 − 3·I₂ − 6·(I₂ − I₁) = 0, que vira 6·I₁ − 9·I₂ = 9 e, multiplicando tudo por −1, −6·I₁ + 9·I₂ = −9.</p>
+          <p>D = 8 · 9 − (−6) · (−6) = 72 − 36 = 36. Dx = 18 · 9 − (−6) · (−9) = 162 − 54 = 108. Dy = 8 · (−9) − (−6) · 18 = −72 + 108 = 36. Logo I₁ = <span class="frac"><span>108</span><span class="sl"> / </span><span>36</span></span> = <strong>3 A</strong> e I₂ = <span class="frac"><span>36</span><span class="sl"> / </span><span>36</span></span> = <strong>1 A</strong>. É o mesmo circuito da aba Kirchhoff.</p>
           <h3>Pratique</h3>
           <ol>
             <li>Resolva 2x + 3y = 12 e x − y = 1.<details><summary>Ver resposta</summary><p>D = 2 · (−1) − 1 · 3 = −5. Dx = 12 · (−1) − 3 · 1 = −15. Dy = 2 · 1 − 1 · 12 = −10. x = <span class="frac"><span>−15</span><span class="sl"> / </span><span>−5</span></span> = <strong>3</strong> e y = <span class="frac"><span>−10</span><span class="sl"> / </span><span>−5</span></span> = <strong>2</strong>. Conferindo: 2 · 3 + 3 · 2 = 12 e 3 − 2 = 1.</p></details></li>
@@ -1028,7 +1031,7 @@ tbody tr.on{background:var(--accent-soft);box-shadow:inset 4px 0 0 var(--hi)}
             <li>Se no fim a corrente der <strong>negativa</strong>, ela circula no sentido contrário ao que você escolheu. A conta está certa, só a seta do desenho estava invertida.</li>
           </ul>
           <h3>Exemplo resolvido</h3>
-          <p>Malha com fonte de 12 V: 12 − 2·I₁ − 3·(I₁ − I₂) = 0. O − na frente do parêntese troca os sinais de dentro: 12 − 2·I₁ − 3·I₁ + 3·I₂ = 0. Juntando: 12 − 5·I₁ + 3·I₂ = 0. Passando os termos com I para o outro lado, trocando o sinal: 12 = 5·I₁ − 3·I₂.</p>
+          <p>Malha com fonte de 18 V: 18 − 2·I₁ − 6·(I₁ − I₂) = 0. O − na frente do parêntese troca os sinais de dentro: 18 − 2·I₁ − 6·I₁ + 6·I₂ = 0. Juntando: 18 − 8·I₁ + 6·I₂ = 0. Passando os termos com I para o outro lado, trocando o sinal: 18 = 8·I₁ − 6·I₂.</p>
           <h3>Pratique</h3>
           <ol>
             <li>Calcule (−4) + (−6) e 3 − 8.<details><summary>Ver resposta</summary><p>Sinais iguais: 4 + 6 = 10, com sinal −: <strong>−10</strong>. Em 3 − 8, subtraia 8 − 3 = 5 e fique com o sinal do maior: <strong>−5</strong>.</p></details></li>
@@ -2222,6 +2225,9 @@ function fillMaterialSelect(sel, onlyIds){
       act.forEach(function(e, k){ I[e.id] = Math.abs(sol.i[k]) <= tolI ? 0 : sol.i[k]; inC[e.id] = 1; });
       G0.edges.forEach(function(e){ if (!(e.id in I)) I[e.id] = 0; });
       spreadV(V, G0.edges, tolV);
+      /* escala natural de corrente (V / menor R): base da tolerância da 1ª lei, mesmo quando I_T é minúscula */
+      var minRk = Math.min.apply(null, cur0.filter(function(e){ return e.kind === 'r'; }).map(function(e){ return e.val; }));
+      var iNoise = Math.max(Math.abs(IT), isFinite(minRk) && minRk > 0 ? Vs / minRk : 0);
 
       /* nomes dos nós: A, B e letras C, D, E... na ordem de leitura da grade */
       var gp = gridPts(G0.edges), NN = {};
@@ -2255,7 +2261,7 @@ function fillMaterialSelect(sel, onlyIds){
         loops.push([{e:e, from:f, to:t}].concat(tr.path(t, f)));
       });
       var nBr = act.length, nNo = Object.keys(tr.dep).length;
-      var laws = kirLaws({act:act, I:I, V:V, NN:NN, order:order, loops:loops, sI:sI, sV:sV, iRef:IT, vRef:Vs, tolV:tolV, iName:iName,
+      var laws = kirLaws({act:act, I:I, V:V, NN:NN, order:order, loops:loops, sI:sI, sV:sV, iRef:iNoise, vRef:Vs, tolV:tolV, iName:iName,
         vName:function(e){ return e.kind === 'ab' ? 'V' : 'V<sub>' + e.name + '</sub>'; },
         loopLabel:function(j, seq, viaAB){ return 'Laço ' + seq + (viaAB ? ' (pela fonte)' : ''); }});
 
@@ -2485,7 +2491,7 @@ function fillMaterialSelect(sel, onlyIds){
       function sum(l){ return l.reduce(function(s, x){ return s + x.v; }, 0); }
       function syms(l){ return l.length ? l.map(function(x){ return x.s; }).join(' + ') : '0'; }
       function nums(l){ return l.length ? l.map(function(x){ return br(x.v * sI.f, 4); }).join(' + ') : '0'; }
-      var si = sum(inn), so = sum(outt), ok = Math.abs(si - so) <= 1e-9 * Math.max(si, so, Math.abs(o.iRef));
+      var si = sum(inn), so = sum(outt), ok = Math.abs(si - so) <= Math.max(1e-9 * Math.max(si, so), 1e-6 * Math.abs(o.iRef));
       hw[n] = 1;
       return {n:n, ids:ids, hlW:hw, ok:ok, inn:inn, outt:outt, k:'Nó ' + NN[n],
         sym:syms(inn) + ' = ' + syms(outt), num:nums(inn) + ' = ' + nums(outt) + ' ' + sI.u + 'A' + (ok ? OK : BAD)};
@@ -2688,9 +2694,9 @@ function fillMaterialSelect(sel, onlyIds){
     var okEq = meshes.map(function(m, k){
       var lhs = 0, mag = 0;
       for (j = 0; j < L; j++){ lhs += Z[k][j] * Jm[j]; mag += Math.abs(Z[k][j] * Jm[j]); }
-      return Math.abs(lhs - Ev[k]) <= 1e-9 * Math.max(Math.abs(Ev[k]), mag, maxE);
+      return Math.abs(lhs - Ev[k]) <= 1e-7 * Math.max(Math.abs(Ev[k]), mag, maxE);
     });
-    var okJ = J.map(function(x, k){ return Math.abs(x - Jm[k]) <= 1e-9 * Math.max(Math.abs(Jm[k]), iSc); });
+    var okJ = J.map(function(x, k){ return Math.abs(x - Jm[k]) <= 1e-7 * Math.max(Math.abs(Jm[k]), iSc); });
     var allOk = okEq.concat(okJ).every(function(x){ return x; });
     var OK = ' <b class="lz-ok">✓</b>', BAD = ' <b>✗</b>', sI = scale(maxI), sV = scale(Math.max.apply(null, order.map(function(n){ return Math.abs(V[n]); }).concat([maxE])));
     function Iname(k){ return 'I' + (k + 1); }
@@ -2789,7 +2795,7 @@ function fillMaterialSelect(sel, onlyIds){
         pw.push({k:e.name, sym:'P<sub>' + e.name + '</sub> = ' + e.name + '·' + iN(e) + '²', num:'= ' + fm(e.val) + '·' + fm(Math.abs(I[e.id])) + '² = <b>' + qty(pr, 'W', 4) + '</b>'});
       }
     });
-    var sP = scale(Math.max(sup, diss)), okP = Math.abs(sup - absb - diss) <= 1e-9 * Math.max(sup, diss, 1e-300);
+    var sP = scale(Math.max(sup, diss)), okP = Math.abs(sup - absb - diss) <= Math.max(1e-9 * Math.max(sup, diss), 1e-12 * maxE * iSc);
     if (!sup && !diss) okP = true;
     pw.push({k:'Balanço', sym:absb ? 'fornecida = recebida pelas fontes + dissipada' : 'fornecida = dissipada',
       num:br(sup * sP.f, 4) + ' = ' + (absb ? br(absb * sP.f, 4) + ' + ' : '') + br(diss * sP.f, 4) + ' ' + sP.u + 'W' + (okP ? OK : BAD)});
@@ -3658,7 +3664,7 @@ function fillMaterialSelect(sel, onlyIds){
     var e = eng(x, 'A').replace('-', '−');
     return num(x) + ' A' + (e ? ' (' + e + ')' : '');
   }
-  function zero(x, scale){ return Math.abs(x) <= 1e-9 * Math.max(1, scale); }
+  function zero(x, scale){ return Math.abs(x) <= 1e-9 * scale; }
 
   /* placa longa e fina = lado +; placa curta e grossa = lado − */
   function drawBat(n){
@@ -3692,7 +3698,7 @@ function fillMaterialSelect(sel, onlyIds){
     var e2 = (pol[2] === 'top' ? -1 : 1) * v.E2;
     var a11 = v.R1 + v.R3, a12 = -v.R3, a21 = -v.R3, a22 = v.R2 + v.R3;
     var D = a11 * a22 - a12 * a21;
-    if (zero(D, a11 * a22)){
+    if (zero(D, Math.abs(a11 * a22) + Math.abs(a12 * a21))){
       setStatus(st, 'Determinante zero: o sistema não tem solução única. Isso acontece, por exemplo, com duas resistências nulas. Ajuste os resistores.', true);
       return;
     }
@@ -3815,7 +3821,7 @@ function fillMaterialSelect(sel, onlyIds){
   /* cada linha guarda [coef 1, coef 2, coef 3, termo independente] como texto digitado */
   var EX2 = [['2', '3', '', '12'], ['1', '-1', '', '1']];
   var EX3 = [['1', '1', '1', '4'], ['2', '-1', '1', '8'], ['1', '2', '-1', '-3']];
-  var MESH = [['5', '-3', '', '12'], ['-3', '9', '', '0']];
+  var MESH = [['8', '-6', '', '18'], ['-6', '9', '', '-9']];
   var vals = [['', '', '', ''], ['', '', '', ''], ['', '', '', '']];
 
   /* SOLVER-START */
@@ -3825,6 +3831,17 @@ function fillMaterialSelect(sel, onlyIds){
          - M[0][2] * M[1][1] * M[2][0] - M[0][0] * M[1][2] * M[2][1] - M[0][1] * M[1][0] * M[2][2];
   }
   function detN(M){ return M.length === 2 ? det2(M) : det3(M); }
+  /* soma dos módulos dos produtos do determinante: escala para saber o que é resíduo de ponto flutuante */
+  function detScale(M){
+    if (M.length === 2) return Math.abs(M[0][0] * M[1][1]) + Math.abs(M[0][1] * M[1][0]);
+    return Math.abs(M[0][0] * M[1][1] * M[2][2]) + Math.abs(M[0][1] * M[1][2] * M[2][0]) + Math.abs(M[0][2] * M[1][0] * M[2][1])
+         + Math.abs(M[0][2] * M[1][1] * M[2][0]) + Math.abs(M[0][0] * M[1][2] * M[2][1]) + Math.abs(M[0][1] * M[1][0] * M[2][2]);
+  }
+  /* determinante sem resíduo: abaixo de 1e-14 da escala dos produtos vale zero */
+  function detZ(M){
+    var d = detN(M);
+    return Math.abs(d) <= 1e-14 * detScale(M) ? 0 : clean(d);
+  }
   /* matriz com a coluna k trocada pelos termos independentes */
   function swapCol(M, c, k){ return M.map(function(row, i){ return row.map(function(v, j){ return j === k ? c[i] : v; }); }); }
   /* posto por eliminação (tolerância relativa) */
@@ -3847,11 +3864,10 @@ function fillMaterialSelect(sel, onlyIds){
   }
   /* M: coeficientes (n×n), c: termos independentes. Devolve {type, D, Ds, sol} */
   function solveSys(M, c){
-    var N = M.length, D = clean(detN(M)), norm = 1;
-    M.forEach(function(row){ norm *= Math.max.apply(null, row.map(Math.abs)); });
-    if (norm !== 0 && Math.abs(D) > 1e-9 * norm){
+    var N = M.length, D = detZ(M);
+    if (D !== 0){
       var Ds = [], sol = [];
-      for (var k = 0; k < N; k++){ Ds.push(clean(detN(swapCol(M, c, k)))); sol.push(clean(Ds[k] / D)); }
+      for (var k = 0; k < N; k++){ Ds.push(detZ(swapCol(M, c, k))); sol.push(clean(Ds[k] / D)); }
       return {type: 'unique', D: D, Ds: Ds, sol: sol};
     }
     var aug = M.map(function(row, i){ return row.concat([c[i]]); });
@@ -3859,9 +3875,12 @@ function fillMaterialSelect(sel, onlyIds){
   }
   /* SOLVER-END */
 
-  function fmt(x){ return br(clean(x), 6).replace(/-/g, '−'); }
+  function fmt(x){ return br(clean(x), Number.isInteger(x) && Math.abs(x) < 1e15 ? 15 : 6).replace(/-/g, '−'); }
+  /* valores digitados e contas feitas só com eles: sem arredondar (até 12 algarismos) */
+  function fmtIn(x){ return br(clean(x), 12).replace(/-/g, '−'); }
   function P(x){ return x < 0 ? '(' + fmt(x) + ')' : fmt(x); }
-  function approx(x){ return Number(x.toPrecision(6)) !== clean(x); }
+  function PI(x){ return x < 0 ? '(' + fmtIn(x) + ')' : fmtIn(x); }
+  function approx(x){ return !(Number.isInteger(x) && Math.abs(x) < 1e15) && Number(x.toPrecision(6)) !== clean(x); }
   function li(label, codes){ return '<li><span>' + label + '</span>' + codes.map(function(c){ return '<code>' + c + '</code>'; }).join('') + '</li>'; }
   function hide(){ res.hidden = true; stepsEl.hidden = true; altEl.hidden = true; }
   function nm(){ return NAMES[nameSet]; }
@@ -3876,28 +3895,28 @@ function fillMaterialSelect(sel, onlyIds){
     var names = nm(), s = '';
     coefs.forEach(function(a, j){
       if (a === 0) return;
-      var mag = Math.abs(a) === 1 ? names[j] : fmt(Math.abs(a)) + '·' + names[j];
+      var mag = Math.abs(a) === 1 ? names[j] : fmtIn(Math.abs(a)) + '·' + names[j];
       s += s === '' ? (a < 0 ? '−' : '') + mag : (a < 0 ? ' − ' : ' + ') + mag;
     });
-    return (s || '0') + ' = ' + fmt(d);
+    return (s || '0') + ' = ' + fmtIn(d);
   }
   function mat(M){ return '[' + M.map(function(r){ return r.map(fmt).join('  '); }).join(' | ') + ']'; }
 
   /* determinante com as contas à mostra */
   function det2li(label, M){
     var p = M[0][0] * M[1][1], q = M[0][1] * M[1][0];
-    return li(label, [label.split(' ')[0] + ' = ' + P(M[0][0]) + '·' + P(M[1][1]) + ' − ' + P(M[0][1]) + '·' + P(M[1][0]),
-      label.split(' ')[0] + ' = ' + P(p) + ' − ' + P(q) + ' = ' + fmt(det2(M))]);
+    return li(label, [label.split(' ')[0] + ' = ' + PI(M[0][0]) + '·' + PI(M[1][1]) + ' − ' + PI(M[0][1]) + '·' + PI(M[1][0]),
+      label.split(' ')[0] + ' = ' + PI(p) + ' − ' + PI(q) + ' = ' + fmtIn(detZ(M))]);
   }
   function det3li(label, M){
     var d = [[0, 0, 1, 1, 2, 2], [0, 1, 1, 2, 2, 0], [0, 2, 1, 0, 2, 1]], u = [[0, 2, 1, 1, 2, 0], [0, 0, 1, 2, 2, 1], [0, 1, 1, 0, 2, 2]];
     function prod(t){ return M[t[0]][t[1]] * M[t[2]][t[3]] * M[t[4]][t[5]]; }
-    function txt(t){ return P(M[t[0]][t[1]]) + '·' + P(M[t[2]][t[3]]) + '·' + P(M[t[4]][t[5]]); }
+    function txt(t){ return PI(M[t[0]][t[1]]) + '·' + PI(M[t[2]][t[3]]) + '·' + PI(M[t[4]][t[5]]); }
     var nmz = label.split(' ')[0];
     return li(label, [
       nmz + ' = ' + d.map(txt).join(' + ') + ' − ' + u.map(txt).join(' − '),
-      nmz + ' = ' + d.map(function(t){ return P(prod(t)); }).join(' + ') + ' − ' + u.map(function(t){ return P(prod(t)); }).join(' − '),
-      nmz + ' = ' + fmt(det3(M))]);
+      nmz + ' = ' + d.map(function(t){ return PI(prod(t)); }).join(' + ') + ' − ' + u.map(function(t){ return PI(prod(t)); }).join(' − '),
+      nmz + ' = ' + fmtIn(detZ(M))]);
   }
   function detLi(label, M){ return M.length === 2 ? det2li(label, M) : det3li(label, M); }
 
@@ -3981,7 +4000,7 @@ function fillMaterialSelect(sel, onlyIds){
       steps += detLi('D' + names[k] + ' (troque a coluna de ' + names[k] + ' pelos termos independentes)', swapCol(M, c, k));
     }
     for (k = 0; k < n; k++){
-      steps += li('Divida: ' + names[k] + ' = D' + names[k] + ' / D', [names[k] + ' = ' + fr(fmt(s.Ds[k]), fmt(s.D)) + ' ' + (approx(s.Ds[k] / s.D) ? '≈' : '=') + ' ' + fmt(s.sol[k])]);
+      steps += li('Divida: ' + names[k] + ' = D' + names[k] + ' / D', [names[k] + ' = ' + fr(fmtIn(s.Ds[k]), fmtIn(s.D)) + ' ' + (approx(s.Ds[k] / s.D) ? '≈' : '=') + ' ' + fmt(s.sol[k])]);
     }
     steps += li('Confira nas equações originais', M.map(function(r, i){
       var terms = r.map(function(a, j){ return P(a) + '·' + P(s.sol[j]); }).join(' + ');
@@ -4052,6 +4071,7 @@ function fillMaterialSelect(sel, onlyIds){
   };
   function f(x){ return br(clean(x), 6).replace(/-/g, '−'); }
   function li(label, code){ return '<li><span>' + label + '</span><code>' + code + '</code></li>'; }
+  function pf(x){ return x < 0 ? '(' + f(x) + ')' : f(x); }
   function hide(){ res.hidden = true; stepsEl.hidden = true; }
   function show(label, value, unit, steps){
     res.innerHTML = '<span class="r-label">' + label + '</span><span class="r-value big">' + value + ' ' + unit + '</span>';
@@ -4067,15 +4087,20 @@ function fillMaterialSelect(sel, onlyIds){
     if (Number.isNaN(A) || Number.isNaN(B)){ setStatus(st, 'Use apenas números, por exemplo 2,5.', true); hide(); return; }
     if (A === null || B === null){ setStatus(st, 'Preencha os dois campos.'); hide(); return; }
     var s = '', v;
+    if (B !== null && A !== null){
+      var rv = mode === 'pri' ? A : B;
+      if (rv <= 0){ setStatus(st, 'R precisa ser maior que zero.', true); hide(); return; }
+      if ((mode === 'irp' || mode === 'vpr') && A < 0){ setStatus(st, 'P não pode ser negativa: P = R · I² nunca dá menos que zero.', true); hide(); return; }
+    }
     if (mode === 'pri'){
       var q = clean(B * B); v = clean(A * q);
-      s += li('Eleve a corrente ao quadrado', 'I² = I · I = ' + f(B) + ' · ' + f(B) + ' = ' + f(q));
+      s += li('Eleve a corrente ao quadrado', 'I² = I · I = ' + pf(B) + ' · ' + pf(B) + ' = ' + f(q));
       s += li('Multiplique pela resistência', 'P = R · I² = ' + f(A) + ' · ' + f(q) + ' = ' + f(v));
       show('Potência P', f(v), 'W', s);
     } else if (mode === 'pvr'){
       if (B === 0){ setStatus(st, 'R não pode ser zero.', true); hide(); return; }
       var q2 = clean(A * A); v = clean(q2 / B);
-      s += li('Eleve a tensão ao quadrado', 'V² = V · V = ' + f(A) + ' · ' + f(A) + ' = ' + f(q2));
+      s += li('Eleve a tensão ao quadrado', 'V² = V · V = ' + pf(A) + ' · ' + pf(A) + ' = ' + f(q2));
       s += li('Divida pela resistência', 'P = ' + fr('V²', 'R') + ' = ' + fr(f(q2), f(B)) + ' = ' + f(v));
       show('Potência P', f(v), 'W', s);
     } else {
@@ -4133,13 +4158,16 @@ function fillMaterialSelect(sel, onlyIds){
     if (x === null || k === null){ setStatus(st, 'Preencha os dois campos.'); hide(); return; }
     if (k !== Math.floor(k) || k < (mode === 'dec' ? 0 : 1) || k > 12){ setStatus(st, mode === 'dec' ? 'Use de 0 a 12 casas decimais.' : 'Use de 1 a 12 algarismos significativos.', true); hide(); return; }
     var dec = k, steps = '';
+    if (clean(x) !== x){ setStatus(st, 'O valor tem mais de 12 algarismos significativos; use no máximo 12 para o resultado não sair errado.', true); hide(); return; }
     if (mode === 'sig') dec = x === 0 ? 0 : k - 1 - expo(x);
-    var out = x === 0 ? 0 : rnd(x, dec);
-    if (mode === 'sig' && x !== 0 && expo(out) !== expo(x)){ dec -= 1; out = rnd(x, dec); }
-    var p = Math.pow(10, dec), kept = Math.sign(x) * Math.floor(clean(Math.abs(x) * p)) / p;
+    if (x !== 0 && Math.abs(x) * Math.pow(10, Math.max(dec, 0)) >= 1e14){ setStatus(st, 'O número fica grande demais para arredondar com essa precisão. Use menos casas ou um valor menor.', true); hide(); return; }
+    var dec0 = dec, out = x === 0 ? 0 : rnd(x, dec);
+    var prop = false;
+    if (mode === 'sig' && x !== 0 && expo(out) !== expo(x)){ dec -= 1; out = rnd(x, dec); prop = true; }
+    var p = Math.pow(10, dec0), kept = Math.sign(x) * Math.floor(clean(Math.abs(x) * p)) / p;
     var next = Math.floor(clean(Math.abs(x) * p * 10)) % 10;
-    steps += li('Guarde até a posição escolhida', txt(clean(kept), dec) + ' (o resto é cortado)');
-    steps += li('Olhe o dígito seguinte: ' + next + (next >= 5 ? ', que é 5 ou mais, então o último dígito sobe um' : ', que é menor que 5, então o último dígito fica'), txt(out, dec));
+    steps += li('Guarde até a posição escolhida', txt(clean(kept), dec0) + ' (o resto é cortado)');
+    steps += li('Olhe o dígito seguinte: ' + next + (next >= 5 ? ', que é 5 ou mais, então o último dígito sobe um' : ', que é menor que 5, então o último dígito fica'), prop ? txt(rnd(x, dec0), dec0) + ' → o número ganhou um dígito; com ' + k + ' algarismos significativos fica ' + txt(out, dec) : txt(out, dec0));
     res.innerHTML = '<span class="r-label">' + (mode === 'dec' ? k + (k === 1 ? ' casa decimal' : ' casas decimais') : k + ' algarismo' + (k === 1 ? '' : 's') + ' significativo' + (k === 1 ? '' : 's')) + '</span><span class="r-value big">' + txt(out, dec) + '</span>';
     res.hidden = false;
     stepsEl.innerHTML = '<h2>Passo a passo</h2><ol>' + steps + '</ol>';
