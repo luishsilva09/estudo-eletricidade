@@ -262,6 +262,29 @@ tbody tr.on{background:var(--accent-soft);box-shadow:inset 4px 0 0 var(--hi)}
 .ops button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .tool{display:flex;flex-direction:column;gap:12px}
 .tool h2{margin:0}
+/* aba Matemática: ferramentas em seções recolhíveis */
+.msec-nav{display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center;font-size:.9rem}
+.msec-nav span{color:var(--muted)}
+.msec-nav a{color:var(--accent);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:6px 12px;min-height:44px;display:inline-flex;align-items:center;text-decoration:none;touch-action:manipulation}
+.msec-nav a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.msec{border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+.msec > summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;min-height:52px;padding:8px 16px;touch-action:manipulation}
+.msec > summary::-webkit-details-marker{display:none}
+.msec > summary::before{content:"▸";color:var(--accent);font-size:1rem}
+.msec[open] > summary::before{content:"▾"}
+.msec > summary h2{margin:0;flex:1;min-width:0}
+.msec > summary:focus-visible{outline:2px solid var(--accent);outline-offset:-2px;border-radius:10px}
+.msec-body{display:flex;flex-direction:column;gap:16px;padding:0 4px 12px}
+.msec .study,.msec .table-card{border:0;padding:8px 12px}
+.sysgrid{display:grid;gap:8px;align-items:center}
+.sysgrid .gh{font-family:var(--font-mono);font-size:.9rem;color:var(--muted);text-align:center}
+.sysgrid .wrap{padding:0 6px}
+.sysgrid .wrap input{text-align:center;font-size:1rem}
+.seg.q button{padding:8px 6px;font-size:.88rem}
+.seg.q button:nth-child(even){border-left:1px solid var(--line)}
+.seg.q button:nth-child(n+3){border-top:1px solid var(--line)}
+.steps summary{cursor:pointer;color:var(--accent);font-weight:500;padding:10px 0;touch-action:manipulation}
+.steps details ol{margin-top:4px}
 /* divisão empilhada (numerador sobre denominador) */
 .frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;position:relative;margin:2px .2em;line-height:1.25;font-size:.94em;white-space:nowrap}
 .frac > span:first-child{border-bottom:1.5px solid currentColor;padding:0 .35em 1px;align-self:stretch;text-align:center}
@@ -821,7 +844,15 @@ tbody tr.on{background:var(--accent-soft);box-shadow:inset 4px 0 0 var(--hi)}
 
   <!-- ABA: MATEMÁTICA BÁSICA -->
   <section id="tab-matematica" class="panel" role="tabpanel" aria-labelledby="t-matematica" hidden>
-    <section class="fcard" aria-label="Fórmula e legenda"><h2>Matemática básica: frações</h2><div class="fbig"><span><small>Soma</small><span class="frac"><span>a</span><span class="sl"> / </span><span>b</span></span> + <span class="frac"><span>c</span><span class="sl"> / </span><span>d</span></span> = <span class="frac"><span>a · d + c · b</span><span class="sl"> / </span><span>b · d</span></span></span><span><small>Multiplicação</small><span class="frac"><span>a</span><span class="sl"> / </span><span>b</span></span> · <span class="frac"><span>c</span><span class="sl"> / </span><span>d</span></span> = <span class="frac"><span>a · c</span><span class="sl"> / </span><span>b · d</span></span></span><span><small>Divisão</small><span class="frac"><span>a</span><span class="sl"> / </span><span>b</span></span> ÷ <span class="frac"><span>c</span><span class="sl"> / </span><span>d</span></span> = <span class="frac"><span>a</span><span class="sl"> / </span><span>b</span></span> · <span class="frac"><span>d</span><span class="sl"> / </span><span>c</span></span></span><span><small>Regra de três</small><span class="frac"><span>a</span><span class="sl"> / </span><span>b</span></span> = <span class="frac"><span>c</span><span class="sl"> / </span><span>x</span></span>  →  x = <span class="frac"><span>b · c</span><span class="sl"> / </span><span>a</span></span></span></div><div class="tablewrap"><table class="legend"><thead><tr><th>Termo</th><th>Significado</th><th>Exemplo</th></tr></thead><tbody><tr><td>Numerador</td><td>Número de cima: quantas partes você tem</td><td>o 3 de <span class="frac"><span>3</span><span class="sl"> / </span><span>4</span></span></td></tr><tr><td>Denominador</td><td>Número de baixo: em quantas partes o inteiro foi dividido (nunca é zero)</td><td>o 4 de <span class="frac"><span>3</span><span class="sl"> / </span><span>4</span></span></td></tr><tr><td>MMC</td><td>Menor múltiplo comum: o menor número que aparece na tabuada dos dois denominadores</td><td>MMC(4, 6) = 12</td></tr><tr><td>MDC</td><td>Maior divisor comum: o maior número que divide os dois sem sobrar resto</td><td>MDC(8, 12) = 4</td></tr></tbody></table></div></section>
+    <section class="fcard" aria-label="Fórmula e legenda"><h2>Matemática básica: frações e ferramentas</h2><div class="fbig"><span><small>Soma</small><span class="frac"><span>a</span><span class="sl"> / </span><span>b</span></span> + <span class="frac"><span>c</span><span class="sl"> / </span><span>d</span></span> = <span class="frac"><span>a · d + c · b</span><span class="sl"> / </span><span>b · d</span></span></span><span><small>Multiplicação</small><span class="frac"><span>a</span><span class="sl"> / </span><span>b</span></span> · <span class="frac"><span>c</span><span class="sl"> / </span><span>d</span></span> = <span class="frac"><span>a · c</span><span class="sl"> / </span><span>b · d</span></span></span><span><small>Divisão</small><span class="frac"><span>a</span><span class="sl"> / </span><span>b</span></span> ÷ <span class="frac"><span>c</span><span class="sl"> / </span><span>d</span></span> = <span class="frac"><span>a</span><span class="sl"> / </span><span>b</span></span> · <span class="frac"><span>d</span><span class="sl"> / </span><span>c</span></span></span><span><small>Sistema 2×2 (Cramer)</small>x = <span class="frac"><span>Dx</span><span class="sl"> / </span><span>D</span></span>  e  y = <span class="frac"><span>Dy</span><span class="sl"> / </span><span>D</span></span>  com  D = a₁ · b₂ − a₂ · b₁</span><span><small>Isolar a letra</small>V = R · I  →  I = <span class="frac"><span>V</span><span class="sl"> / </span><span>R</span></span></span><span><small>Potência e raiz</small>P = R · I²  →  I = √(<span class="frac"><span>P</span><span class="sl"> / </span><span>R</span></span>)</span><span><small>Regra de três</small><span class="frac"><span>a</span><span class="sl"> / </span><span>b</span></span> = <span class="frac"><span>c</span><span class="sl"> / </span><span>x</span></span>  →  x = <span class="frac"><span>b · c</span><span class="sl"> / </span><span>a</span></span></span></div><div class="tablewrap"><table class="legend"><thead><tr><th>Termo</th><th>Significado</th><th>Exemplo</th></tr></thead><tbody><tr><td>Numerador</td><td>Número de cima: quantas partes você tem</td><td>o 3 de <span class="frac"><span>3</span><span class="sl"> / </span><span>4</span></span></td></tr><tr><td>Denominador</td><td>Número de baixo: em quantas partes o inteiro foi dividido (nunca é zero)</td><td>o 4 de <span class="frac"><span>3</span><span class="sl"> / </span><span>4</span></span></td></tr><tr><td>MMC</td><td>Menor múltiplo comum: o menor número que aparece na tabuada dos dois denominadores</td><td>MMC(4, 6) = 12</td></tr><tr><td>MDC</td><td>Maior divisor comum: o maior número que divide os dois sem sobrar resto</td><td>MDC(8, 12) = 4</td></tr><tr><td>D, Dx, Dy</td><td>Determinantes do sistema: D usa os coeficientes; Dx e Dy trocam uma coluna pelos termos independentes</td><td>D = 2 · (−1) − 1 · 3 = −5</td></tr><tr><td>Incógnita</td><td>A letra que você quer descobrir</td><td>o I de V = R · I</td></tr><tr><td>Algarismo significativo</td><td>Dígito que conta, a partir do primeiro que não é zero</td><td>0,0173 tem 3</td></tr></tbody></table></div></section>
+    <nav class="msec-nav" aria-label="Ir para uma ferramenta">
+      <span>Ir para:</span>
+      <a href="#ms-sist" data-go="ms-sist">Sistemas</a>
+      <a href="#ms-sinais" data-go="ms-sinais">Sinais</a>
+      <a href="#ms-isolar" data-go="ms-isolar">Isolar a letra</a>
+      <a href="#ms-pot" data-go="ms-pot">Potências e raízes</a>
+      <a href="#ms-arred" data-go="ms-arred">Arredondar</a>
+    </nav>
     <section class="study" aria-label="Estudo"><h2>Entenda antes de calcular</h2><h3>Como ler uma fração</h3><ul><li>A barra da fração é uma divisão: <span class="frac"><span>3</span><span class="sl"> / </span><span>4</span></span> é o mesmo que 3 dividido por 4, ou 0,75.</li><li>Para somar ou subtrair, os denominadores precisam ser iguais. Se não forem, reescreva as duas frações com o MMC embaixo.</li><li>Para multiplicar, é direto: de cima com de cima, de baixo com de baixo.</li><li>Para dividir, mantenha a primeira fração, inverta a segunda e multiplique.</li><li>No final, simplifique: divida o de cima e o de baixo pelo mesmo número (o MDC) até não dar mais.</li></ul><h3>Exemplo resolvido</h3><p><span class="frac"><span>1</span><span class="sl"> / </span><span>2</span></span> + <span class="frac"><span>1</span><span class="sl"> / </span><span>3</span></span>: o MMC de 2 e 3 é 6. Então <span class="frac"><span>1</span><span class="sl"> / </span><span>2</span></span> = <span class="frac"><span>3</span><span class="sl"> / </span><span>6</span></span> e <span class="frac"><span>1</span><span class="sl"> / </span><span>3</span></span> = <span class="frac"><span>2</span><span class="sl"> / </span><span>6</span></span>. Somando os numeradores: <span class="frac"><span>3</span><span class="sl"> / </span><span>6</span></span> + <span class="frac"><span>2</span><span class="sl"> / </span><span>6</span></span> = <strong><span class="frac"><span>5</span><span class="sl"> / </span><span>6</span></span></strong>.</p><h3>Pratique</h3><ol><li>Resistores de 6 Ω e 3 Ω em paralelo: quanto dá <span class="frac"><span>1</span><span class="sl"> / </span><span>6</span></span> + <span class="frac"><span>1</span><span class="sl"> / </span><span>3</span></span>? E a Req?<details><summary>Ver resposta</summary><p>MMC de 6 e 3 é 6: <span class="frac"><span>1</span><span class="sl"> / </span><span>6</span></span> + <span class="frac"><span>2</span><span class="sl"> / </span><span>6</span></span> = <span class="frac"><span>3</span><span class="sl"> / </span><span>6</span></span> = <strong><span class="frac"><span>1</span><span class="sl"> / </span><span>2</span></span></strong>. A Req é o inverso: <strong>2 Ω</strong>.</p></details></li><li>Calcule <span class="frac"><span>3</span><span class="sl"> / </span><span>4</span></span> ÷ <span class="frac"><span>3</span><span class="sl"> / </span><span>8</span></span>.<details><summary>Ver resposta</summary><p>Inverta a segunda e multiplique: <span class="frac"><span>3</span><span class="sl"> / </span><span>4</span></span> · <span class="frac"><span>8</span><span class="sl"> / </span><span>3</span></span> = <span class="frac"><span>24</span><span class="sl"> / </span><span>12</span></span> = <strong>2</strong>.</p></details></li><li>Se 100 m de cabo têm 0,692 Ω, quanto têm 250 m?<details><summary>Ver resposta</summary><p>Regra de três direta: x = <span class="frac"><span>0,692 · 250</span><span class="sl"> / </span><span>100</span></span> = <strong>1,73 Ω</strong>.</p></details></li></ol></section>
 
     <h2>Calculadora de frações</h2>
@@ -882,6 +913,224 @@ tbody tr.on{background:var(--accent-soft);box-shadow:inset 4px 0 0 var(--hi)}
       <section id="pc-result" class="result" hidden aria-live="polite"></section>
       <section id="pc-steps" class="steps" hidden></section>
     </section>
+
+    <!-- ===== Sistemas de equações ===== -->
+    <details class="msec" id="ms-sist" open>
+      <summary><h2>Sistemas de equações 2×2 e 3×3</h2></summary>
+      <div class="msec-body">
+        <section class="study" aria-label="Estudo de sistemas">
+          <h3>Por que isso aparece na eletricidade</h3>
+          <ul>
+            <li>Nas leis de Kirchhoff, cada malha e cada nó dá uma equação com as correntes desconhecidas. Com 2 ou 3 correntes, você tem um sistema para resolver.</li>
+            <li>Um sistema 2×2 tem duas equações e duas incógnitas (x e y). O 3×3 tem três e três (x, y e z).</li>
+            <li>Escreva cada equação na forma <strong>a · x + b · y = c</strong>. Termo que não aparece tem coeficiente 0. Sinal negativo vai junto do número.</li>
+          </ul>
+          <h3>Regra de Cramer</h3>
+          <ul>
+            <li>O determinante <strong>D</strong> usa só os coeficientes. No 2×2: D = a₁ · b₂ − a₂ · b₁ (diagonal principal menos a secundária).</li>
+            <li>Para achar <strong>Dx</strong>, troque a coluna do x pela coluna dos termos independentes (os números depois do igual). Para o Dy, troque a coluna do y.</li>
+            <li>Então x = <span class="frac"><span>Dx</span><span class="sl"> / </span><span>D</span></span> e y = <span class="frac"><span>Dy</span><span class="sl"> / </span><span>D</span></span>.</li>
+            <li>No 3×3, o determinante sai pela regra de Sarrus: some os produtos das 3 diagonais que descem e subtraia os das 3 que sobem.</li>
+            <li>Se D = 0, o sistema não tem solução única: ou é impossível (equações que se contradizem) ou indeterminado (equações repetidas, infinitas soluções).</li>
+          </ul>
+          <h3>Exemplo resolvido: duas malhas</h3>
+          <p>Fonte de 12 V, R₁ = 2 Ω, R₂ = 3 Ω (compartilhado pelas duas malhas) e R₃ = 6 Ω. Malha 1: 12 − 2·I₁ − 3·(I₁ − I₂) = 0, que vira 5·I₁ − 3·I₂ = 12. Malha 2: −3·(I₂ − I₁) − 6·I₂ = 0, que vira 3·I₁ − 9·I₂ = 0 e, multiplicando tudo por −1, −3·I₁ + 9·I₂ = 0.</p>
+          <p>D = 5 · 9 − (−3) · (−3) = 45 − 9 = 36. Dx = 12 · 9 − (−3) · 0 = 108. Dy = 5 · 0 − (−3) · 12 = 36. Logo I₁ = <span class="frac"><span>108</span><span class="sl"> / </span><span>36</span></span> = <strong>3 A</strong> e I₂ = <span class="frac"><span>36</span><span class="sl"> / </span><span>36</span></span> = <strong>1 A</strong>.</p>
+          <h3>Pratique</h3>
+          <ol>
+            <li>Resolva 2x + 3y = 12 e x − y = 1.<details><summary>Ver resposta</summary><p>D = 2 · (−1) − 1 · 3 = −5. Dx = 12 · (−1) − 3 · 1 = −15. Dy = 2 · 1 − 1 · 12 = −10. x = <span class="frac"><span>−15</span><span class="sl"> / </span><span>−5</span></span> = <strong>3</strong> e y = <span class="frac"><span>−10</span><span class="sl"> / </span><span>−5</span></span> = <strong>2</strong>. Conferindo: 2 · 3 + 3 · 2 = 12 e 3 − 2 = 1.</p></details></li>
+            <li>Resolva x + y + z = 4, 2x − y + z = 8 e x + 2y − z = −3.<details><summary>Ver resposta</summary><p>D = 7, Dx = 14, Dy = −7 e Dz = 21, então x = <strong>2</strong>, y = <strong>−1</strong> e z = <strong>3</strong>. Confira na calculadora abaixo (botão Exemplo no 3×3), que mostra cada Sarrus.</p></details></li>
+            <li>2x + 4y = 6 e x + 2y = 5 têm solução?<details><summary>Ver resposta</summary><p>D = 2 · 2 − 1 · 4 = 0. A primeira equação, dividida por 2, vira x + 2y = 3, que contradiz x + 2y = 5. O sistema é <strong>impossível</strong>.</p></details></li>
+          </ol>
+        </section>
+
+        <section class="table-card tool" aria-label="Calculadora de sistemas">
+          <h2>Calculadora de sistemas</h2>
+          <p class="lead">Digite os coeficientes de cada equação. Aceita negativos (−3 ou -3) e decimais com vírgula. Termo que não aparece vale 0.</p>
+          <div class="seg" id="sy-size" role="group" aria-label="Tamanho do sistema">
+            <button type="button" data-n="2" aria-pressed="true">2×2</button>
+            <button type="button" data-n="3" aria-pressed="false">3×3</button>
+          </div>
+          <div class="seg" id="sy-names" role="group" aria-label="Nome das incógnitas">
+            <button type="button" data-v="xyz" aria-pressed="true">x, y, z</button>
+            <button type="button" data-v="i" aria-pressed="false">I₁, I₂, I₃</button>
+          </div>
+          <div class="sysgrid" id="sy-grid" role="group" aria-label="Coeficientes do sistema"></div>
+          <p class="note" id="sy-eqs"></p>
+          <div class="actions">
+            <button type="button" id="sy-ex" class="btn">Exemplo</button>
+            <button type="button" id="sy-ex2" class="btn">Exemplo de malhas</button>
+            <button type="button" id="sy-clear" class="btn">Limpar</button>
+          </div>
+          <p id="sy-status" class="status" role="status" aria-live="polite"></p>
+          <section id="sy-result" class="result" hidden aria-live="polite"></section>
+          <section id="sy-steps" class="steps" hidden></section>
+          <section id="sy-alt" class="steps" hidden></section>
+        </section>
+      </div>
+    </details>
+
+    <!-- ===== Regra de sinais ===== -->
+    <details class="msec" id="ms-sinais">
+      <summary><h2>Regra de sinais e números negativos</h2></summary>
+      <div class="msec-body">
+        <section class="study" aria-label="Estudo de sinais">
+          <h3>As regras</h3>
+          <div class="tablewrap"><table class="legend"><thead><tr><th>Conta</th><th>Regra</th><th>Exemplo</th></tr></thead><tbody>
+            <tr><td>Soma, sinais iguais</td><td>Some e mantenha o sinal</td><td>(−3) + (−5) = −8</td></tr>
+            <tr><td>Soma, sinais diferentes</td><td>Subtraia e fique com o sinal do maior</td><td>7 + (−10) = −3</td></tr>
+            <tr><td>Subtração</td><td>Subtrair é somar o oposto: menos com menos dá mais</td><td>5 − (−3) = 5 + 3 = 8</td></tr>
+            <tr><td>Multiplicação e divisão</td><td>Sinais iguais dão +, diferentes dão −</td><td>(−2) · (−5) = 10; (−12) ÷ 4 = −3</td></tr>
+            <tr><td>Parêntese com +</td><td>Tire e mantenha os sinais de dentro</td><td>+(a − b) = a − b</td></tr>
+            <tr><td>Parêntese com −</td><td>Tire e troque todos os sinais de dentro</td><td>−(a − b) = −a + b</td></tr>
+            <tr><td>Número vezes parêntese</td><td>Multiplique cada termo, com a regra de sinais</td><td>−3 · (x − y) = −3x + 3y</td></tr>
+          </tbody></table></div>
+          <h3>Sinais em malhas</h3>
+          <ul>
+            <li>Ao percorrer a malha, a fonte que você atravessa do − para o + entra com sinal <strong>+</strong>. Um resistor percorrido no mesmo sentido da corrente é uma queda e entra com sinal <strong>−</strong> (−R · I).</li>
+            <li>No resistor compartilhado, a corrente que passa é a diferença das duas. O sinal na frente do parêntese manda em tudo que está dentro.</li>
+            <li>Se no fim a corrente der <strong>negativa</strong>, ela circula no sentido contrário ao que você escolheu. A conta está certa, só a seta do desenho estava invertida.</li>
+          </ul>
+          <h3>Exemplo resolvido</h3>
+          <p>Malha com fonte de 12 V: 12 − 2·I₁ − 3·(I₁ − I₂) = 0. O − na frente do parêntese troca os sinais de dentro: 12 − 2·I₁ − 3·I₁ + 3·I₂ = 0. Juntando: 12 − 5·I₁ + 3·I₂ = 0. Passando os termos com I para o outro lado, trocando o sinal: 12 = 5·I₁ − 3·I₂.</p>
+          <h3>Pratique</h3>
+          <ol>
+            <li>Calcule (−4) + (−6) e 3 − 8.<details><summary>Ver resposta</summary><p>Sinais iguais: 4 + 6 = 10, com sinal −: <strong>−10</strong>. Em 3 − 8, subtraia 8 − 3 = 5 e fique com o sinal do maior: <strong>−5</strong>.</p></details></li>
+            <li>Calcule (−2) · (−5) · (−3).<details><summary>Ver resposta</summary><p>(−2) · (−5) = +10. Depois 10 · (−3) = <strong>−30</strong>. Três sinais negativos dão negativo.</p></details></li>
+            <li>Tire os parênteses: 20 − 2 · (I₁ − I₂).<details><summary>Ver resposta</summary><p>O −2 multiplica os dois termos: −2 · I₁ e −2 · (−I₂) = +2 · I₂. Fica <strong>20 − 2·I₁ + 2·I₂</strong>.</p></details></li>
+            <li>Um resistor de 5 Ω tem corrente de −2 A (no sentido adotado). Qual o valor de R · I e o que o sinal diz?<details><summary>Ver resposta</summary><p>5 · (−2) = <strong>−10 V</strong>. A corrente real tem 2 A e vai no sentido contrário ao da seta que você desenhou.</p></details></li>
+          </ol>
+        </section>
+      </div>
+    </details>
+
+    <!-- ===== Isolar a incógnita ===== -->
+    <details class="msec" id="ms-isolar">
+      <summary><h2>Isolar a incógnita em uma fórmula</h2></summary>
+      <div class="msec-body">
+        <section class="study" aria-label="Estudo de isolar a incógnita">
+          <h3>A ideia</h3>
+          <ul>
+            <li>Uma fórmula é uma balança: o que você faz de um lado, faz do outro. Isolar a letra é deixá-la sozinha de um lado do igual.</li>
+            <li>O que está <strong>multiplicando</strong> a letra passa <strong>dividindo</strong> para o outro lado, e o contrário. Soma vira subtração e subtração vira soma.</li>
+            <li>Letra que está embaixo de uma divisão: multiplique os dois lados por ela, e só depois isole.</li>
+          </ul>
+          <h3>Fórmula e como isolar cada letra</h3>
+          <div class="tablewrap"><table class="legend"><thead><tr><th>Fórmula</th><th>Isolando</th></tr></thead><tbody>
+            <tr><td>V = R · I</td><td>R = <span class="frac"><span>V</span><span class="sl"> / </span><span>I</span></span> &nbsp; e &nbsp; I = <span class="frac"><span>V</span><span class="sl"> / </span><span>R</span></span></td></tr>
+            <tr><td>P = V · I</td><td>V = <span class="frac"><span>P</span><span class="sl"> / </span><span>I</span></span> &nbsp; e &nbsp; I = <span class="frac"><span>P</span><span class="sl"> / </span><span>V</span></span></td></tr>
+            <tr><td>R = <span class="frac"><span>ρ · L</span><span class="sl"> / </span><span>A</span></span></td><td>ρ = <span class="frac"><span>R · A</span><span class="sl"> / </span><span>L</span></span> &nbsp; L = <span class="frac"><span>R · A</span><span class="sl"> / </span><span>ρ</span></span> &nbsp; A = <span class="frac"><span>ρ · L</span><span class="sl"> / </span><span>R</span></span></td></tr>
+            <tr><td>ΔV = <span class="frac"><span>k · ρ · L · I</span><span class="sl"> / </span><span>S</span></span></td><td>S = <span class="frac"><span>k · ρ · L · I</span><span class="sl"> / </span><span>ΔV</span></span> &nbsp; L = <span class="frac"><span>ΔV · S</span><span class="sl"> / </span><span>k · ρ · I</span></span> &nbsp; I = <span class="frac"><span>ΔV · S</span><span class="sl"> / </span><span>k · ρ · L</span></span></td></tr>
+            <tr><td>Req = R₁ + R₂</td><td>R₂ = Req − R₁</td></tr>
+            <tr><td>Req = <span class="frac"><span>R₁ · R₂</span><span class="sl"> / </span><span>R₁ + R₂</span></span></td><td>R₂ = <span class="frac"><span>Req · R₁</span><span class="sl"> / </span><span>R₁ − Req</span></span></td></tr>
+          </tbody></table></div>
+          <h3>Exemplo resolvido</h3>
+          <p>Que seção A tem um cabo de cobre de 150 m com resistência de 0,65 Ω? Parta de R = <span class="frac"><span>ρ · L</span><span class="sl"> / </span><span>A</span></span>. Multiplique os dois lados por A: R · A = ρ · L. Divida os dois por R: A = <span class="frac"><span>ρ · L</span><span class="sl"> / </span><span>R</span></span>. Agora troque pelos números: A = <span class="frac"><span>0,0173 · 150</span><span class="sl"> / </span><span>0,65</span></span> = <span class="frac"><span>2,595</span><span class="sl"> / </span><span>0,65</span></span> ≈ <strong>3,99 mm²</strong>.</p>
+          <h3>Pratique</h3>
+          <ol>
+            <li>Um chuveiro de 1.200 W em 120 V: qual a corrente? (P = V · I)<details><summary>Ver resposta</summary><p>I = <span class="frac"><span>P</span><span class="sl"> / </span><span>V</span></span> = <span class="frac"><span>1200</span><span class="sl"> / </span><span>120</span></span> = <strong>10 A</strong>.</p></details></li>
+            <li>Qual o comprimento de um fio de cobre de 2,5 mm² com 0,5 Ω? (R = <span class="frac"><span>ρ · L</span><span class="sl"> / </span><span>A</span></span>, ρ = 0,0173)<details><summary>Ver resposta</summary><p>L = <span class="frac"><span>R · A</span><span class="sl"> / </span><span>ρ</span></span> = <span class="frac"><span>0,5 · 2,5</span><span class="sl"> / </span><span>0,0173</span></span> = <span class="frac"><span>1,25</span><span class="sl"> / </span><span>0,0173</span></span> ≈ <strong>72,3 m</strong>.</p></details></li>
+            <li>Queda de 3 V, 20 A, 50 m, cobre (ρ = 0,0173) e k = 2: qual a seção mínima? (ΔV = <span class="frac"><span>k · ρ · L · I</span><span class="sl"> / </span><span>S</span></span>)<details><summary>Ver resposta</summary><p>S = <span class="frac"><span>k · ρ · L · I</span><span class="sl"> / </span><span>ΔV</span></span> = <span class="frac"><span>2 · 0,0173 · 50 · 20</span><span class="sl"> / </span><span>3</span></span> = <span class="frac"><span>34,6</span><span class="sl"> / </span><span>3</span></span> ≈ <strong>11,5 mm²</strong>. Na prática, escolha a seção comercial seguinte (16 mm²).</p></details></li>
+            <li>Dois resistores em paralelo dão Req = 2 Ω e um deles é R₁ = 6 Ω. Quanto vale o outro?<details><summary>Ver resposta</summary><p>R₂ = <span class="frac"><span>Req · R₁</span><span class="sl"> / </span><span>R₁ − Req</span></span> = <span class="frac"><span>2 · 6</span><span class="sl"> / </span><span>6 − 2</span></span> = <span class="frac"><span>12</span><span class="sl"> / </span><span>4</span></span> = <strong>3 Ω</strong>. Conferindo: 6 e 3 em paralelo dão <span class="frac"><span>6 · 3</span><span class="sl"> / </span><span>6 + 3</span></span> = 2 Ω.</p></details></li>
+          </ol>
+        </section>
+      </div>
+    </details>
+
+    <!-- ===== Potências e raízes ===== -->
+    <details class="msec" id="ms-pot">
+      <summary><h2>Potências e raízes</h2></summary>
+      <div class="msec-body">
+        <section class="study" aria-label="Estudo de potências e raízes">
+          <h3>O que é elevar ao quadrado</h3>
+          <ul>
+            <li>I² quer dizer I · I (a corrente multiplicada por ela mesma). Com I = 3 A, I² = 9.</li>
+            <li>Número negativo ao quadrado fica positivo: (−3)² = 9. Por isso a potência P = R · I² nunca é negativa.</li>
+            <li>A raiz quadrada desfaz o quadrado: √9 = 3, porque 3 · 3 = 9. Não existe raiz quadrada real de número negativo.</li>
+            <li>Quadrados que ajudam: 1, 4, 9, 16, 25, 36, 49, 64, 81, 100 (raízes de 1 a 10) e 121, 144, 169, 196, 225 (raízes de 11 a 15).</li>
+          </ul>
+          <h3>Onde aparece</h3>
+          <div class="tablewrap"><table class="legend"><thead><tr><th>Quero</th><th>Fórmula</th></tr></thead><tbody>
+            <tr><td>Potência (R e I)</td><td>P = R · I²</td></tr>
+            <tr><td>Potência (V e R)</td><td>P = <span class="frac"><span>V²</span><span class="sl"> / </span><span>R</span></span></td></tr>
+            <tr><td>Corrente (P e R)</td><td>I = √(<span class="frac"><span>P</span><span class="sl"> / </span><span>R</span></span>)</td></tr>
+            <tr><td>Tensão (P e R)</td><td>V = √(P · R)</td></tr>
+          </tbody></table></div>
+          <p class="note">Para chegar nas duas últimas, isole: de P = R · I² vem I² = <span class="frac"><span>P</span><span class="sl"> / </span><span>R</span></span>, e a raiz dos dois lados dá I = √(<span class="frac"><span>P</span><span class="sl"> / </span><span>R</span></span>). De P = <span class="frac"><span>V²</span><span class="sl"> / </span><span>R</span></span> vem V² = P · R.</p>
+          <h3>Exemplo resolvido</h3>
+          <p>Um resistor de 15 Ω dissipa 1.500 W. Qual a corrente? I = √(<span class="frac"><span>1500</span><span class="sl"> / </span><span>15</span></span>) = √100 = <strong>10 A</strong>.</p>
+          <h3>Pratique</h3>
+          <ol>
+            <li>Um resistor de 4 Ω com 5 A: qual a potência?<details><summary>Ver resposta</summary><p>P = R · I² = 4 · 5² = 4 · 25 = <strong>100 W</strong>.</p></details></li>
+            <li>Um resistor de 25 Ω dissipa 100 W. Qual a corrente?<details><summary>Ver resposta</summary><p>I = √(<span class="frac"><span>100</span><span class="sl"> / </span><span>25</span></span>) = √4 = <strong>2 A</strong>.</p></details></li>
+            <li>Se a corrente num resistor dobra, o que acontece com a potência?<details><summary>Ver resposta</summary><p>Como P = R · I², dobrar I multiplica por 2² = 4. A potência fica <strong>4 vezes maior</strong>. É por isso que sobrecorrente esquenta tanto.</p></details></li>
+            <li>Um resistor de 48,4 Ω em 220 V: qual a potência?<details><summary>Ver resposta</summary><p>P = <span class="frac"><span>220²</span><span class="sl"> / </span><span>48,4</span></span> = <span class="frac"><span>48400</span><span class="sl"> / </span><span>48,4</span></span> = <strong>1.000 W</strong>.</p></details></li>
+          </ol>
+        </section>
+
+        <section class="table-card tool" aria-label="Calculadora de potências e raízes">
+          <h2>Potência e raiz, passo a passo</h2>
+          <p class="lead">Escolha a fórmula e preencha os dois valores.</p>
+          <div class="seg q" id="pw-mode" role="group" aria-label="Fórmula">
+            <button type="button" data-m="pri" aria-pressed="true">P = R · I²</button>
+            <button type="button" data-m="pvr" aria-pressed="false">P = V² / R</button>
+            <button type="button" data-m="irp" aria-pressed="false">I = √(P / R)</button>
+            <button type="button" data-m="vpr" aria-pressed="false">V = √(P · R)</button>
+          </div>
+          <div class="grid">
+            <div class="field"><label for="pw-a"><span id="pw-la">R</span></label><div class="wrap"><input id="pw-a" type="text" inputmode="decimal" value="10"><span class="unit" id="pw-ua">Ω</span></div></div>
+            <div class="field"><label for="pw-b"><span id="pw-lb">I</span></label><div class="wrap"><input id="pw-b" type="text" inputmode="decimal" value="3"><span class="unit" id="pw-ub">A</span></div></div>
+          </div>
+          <p id="pw-status" class="status" role="status" aria-live="polite"></p>
+          <section id="pw-result" class="result" hidden aria-live="polite"></section>
+          <section id="pw-steps" class="steps" hidden></section>
+        </section>
+      </div>
+    </details>
+
+    <!-- ===== Arredondamento ===== -->
+    <details class="msec" id="ms-arred">
+      <summary><h2>Arredondamento e algarismos significativos</h2></summary>
+      <div class="msec-body">
+        <section class="study" aria-label="Estudo de arredondamento">
+          <h3>Como arredondar</h3>
+          <ul>
+            <li>Olhe o dígito logo depois do último que você vai guardar. Se for 0 a 4, o último fica como está. Se for 5 a 9, o último sobe um.</li>
+            <li>3,14159 com 2 casas: o próximo dígito é 1, então fica <strong>3,14</strong>. 2,675 com 2 casas: o próximo é 5, então fica <strong>2,68</strong>.</li>
+            <li><strong>Algarismos significativos</strong> são os dígitos que contam, a partir do primeiro que não é zero. 0,0173 tem 3; 4,70 tem 3; 1.200 tem 4 (se os zeros foram medidos).</li>
+          </ul>
+          <h3>Quando arredondar</h3>
+          <ul>
+            <li><strong>No meio da conta, não arredonde</strong>, ou guarde pelo menos 2 dígitos a mais do que vai precisar. Use a memória da calculadora em vez de digitar de novo o valor curto.</li>
+            <li><strong>No final</strong>, arredonde para 3 algarismos significativos (ou menos, se os dados que você tem são menos precisos). Não passe da precisão do dado mais fraco.</li>
+            <li>Quando o resultado é um <strong>mínimo</strong> (seção de cabo, disjuntor), arredonde para cima, até o valor comercial seguinte, e não para o mais próximo.</li>
+          </ul>
+          <h3>Exemplo resolvido</h3>
+          <p>Cabo de cobre: R = <span class="frac"><span>0,0173 · 150</span><span class="sl"> / </span><span>4</span></span> = 0,64875 Ω. Se alguém arredonda para 0,65 Ω no meio da conta, a corrente em 12 V sai I = <span class="frac"><span>12</span><span class="sl"> / </span><span>0,65</span></span> = 18,46 A. Com o valor completo, I = <span class="frac"><span>12</span><span class="sl"> / </span><span>0,64875</span></span> = 18,50 A. A diferença é pequena, mas cresce a cada passo arredondado.</p>
+          <h3>Pratique</h3>
+          <ol>
+            <li>Arredonde 18,4971 A para 3 algarismos significativos.<details><summary>Ver resposta</summary><p>Os 3 primeiros são 1, 8 e 4; o próximo é 9, então o 4 sobe: <strong>18,5 A</strong>.</p></details></li>
+            <li>Quantos algarismos significativos tem 0,0173?<details><summary>Ver resposta</summary><p>Os zeros do começo não contam. Valem 1, 7 e 3: <strong>3 algarismos</strong>.</p></details></li>
+            <li>A seção mínima calculada deu 11,53 mm². Qual cabo comercial usar (…, 10, 16, 25 …)?<details><summary>Ver resposta</summary><p>10 mm² é menor que o mínimo, então não serve. Use <strong>16 mm²</strong>.</p></details></li>
+          </ol>
+        </section>
+
+        <section class="table-card tool" aria-label="Calculadora de arredondamento">
+          <h2>Arredondar um número</h2>
+          <div class="seg" id="ar-mode" role="group" aria-label="Tipo de arredondamento">
+            <button type="button" data-m="dec" aria-pressed="true">Casas decimais</button>
+            <button type="button" data-m="sig" aria-pressed="false">Significativos</button>
+          </div>
+          <div class="grid">
+            <div class="field"><label for="ar-v"><span>Número</span></label><div class="wrap"><input id="ar-v" type="text" value="18,4971"></div></div>
+            <div class="field"><label for="ar-n"><span id="ar-ln">Casas decimais</span></label><div class="wrap"><input id="ar-n" type="text" inputmode="numeric" value="2"></div></div>
+          </div>
+          <p id="ar-status" class="status" role="status" aria-live="polite"></p>
+          <section id="ar-result" class="result" hidden aria-live="polite"></section>
+          <section id="ar-steps" class="steps" hidden></section>
+        </section>
+      </div>
+    </details>
   </section>
 </main>
 
@@ -2650,6 +2899,372 @@ function fillMaterialSelect(sel, onlyIds){
   document.getElementById('kf-clear').addEventListener('click', function(){
     ids.forEach(function(k){ el[k].value = ''; });
     update();
+  });
+  update();
+})();
+
+/* ---------- matemática: atalhos para as ferramentas ---------- */
+(function(){
+  document.querySelectorAll('.msec-nav a').forEach(function(a){
+    a.addEventListener('click', function(e){
+      var d = document.getElementById(a.dataset.go);
+      if (!d) return;
+      e.preventDefault();
+      d.open = true;
+      d.scrollIntoView({block: 'start'});
+    });
+  });
+})();
+
+/* ---------- matemática: sistemas de equações 2×2 e 3×3 ---------- */
+(function(){
+  var grid = document.getElementById('sy-grid'), eqsEl = document.getElementById('sy-eqs'), st = document.getElementById('sy-status');
+  var res = document.getElementById('sy-result'), stepsEl = document.getElementById('sy-steps'), altEl = document.getElementById('sy-alt');
+  var sizeBox = document.getElementById('sy-size'), namesBox = document.getElementById('sy-names');
+  var n = 2, nameSet = 'xyz';
+  var NAMES = {xyz: ['x', 'y', 'z'], i: ['I₁', 'I₂', 'I₃']};
+  /* cada linha guarda [coef 1, coef 2, coef 3, termo independente] como texto digitado */
+  var EX2 = [['2', '3', '', '12'], ['1', '-1', '', '1']];
+  var EX3 = [['1', '1', '1', '4'], ['2', '-1', '1', '8'], ['1', '2', '-1', '-3']];
+  var MESH = [['5', '-3', '', '12'], ['-3', '9', '', '0']];
+  var vals = [['', '', '', ''], ['', '', '', ''], ['', '', '', '']];
+
+  /* SOLVER-START */
+  function det2(M){ return M[0][0] * M[1][1] - M[0][1] * M[1][0]; }
+  function det3(M){
+    return M[0][0] * M[1][1] * M[2][2] + M[0][1] * M[1][2] * M[2][0] + M[0][2] * M[1][0] * M[2][1]
+         - M[0][2] * M[1][1] * M[2][0] - M[0][0] * M[1][2] * M[2][1] - M[0][1] * M[1][0] * M[2][2];
+  }
+  function detN(M){ return M.length === 2 ? det2(M) : det3(M); }
+  /* matriz com a coluna k trocada pelos termos independentes */
+  function swapCol(M, c, k){ return M.map(function(row, i){ return row.map(function(v, j){ return j === k ? c[i] : v; }); }); }
+  /* posto por eliminação (tolerância relativa) */
+  function rankOf(rows){
+    var m = rows.map(function(r){ return r.slice(); }), mx = 0, rank = 0, cols = m[0].length;
+    m.forEach(function(r){ r.forEach(function(v){ mx = Math.max(mx, Math.abs(v)); }); });
+    var eps = 1e-9 * (mx || 1);
+    for (var c = 0; c < cols && rank < m.length; c++){
+      var p = rank;
+      for (var i = rank + 1; i < m.length; i++) if (Math.abs(m[i][c]) > Math.abs(m[p][c])) p = i;
+      if (Math.abs(m[p][c]) <= eps) continue;
+      var t = m[p]; m[p] = m[rank]; m[rank] = t;
+      for (var r = rank + 1; r < m.length; r++){
+        var f = m[r][c] / m[rank][c];
+        for (var k = c; k < cols; k++) m[r][k] -= f * m[rank][k];
+      }
+      rank++;
+    }
+    return rank;
+  }
+  /* M: coeficientes (n×n), c: termos independentes. Devolve {type, D, Ds, sol} */
+  function solveSys(M, c){
+    var N = M.length, D = clean(detN(M)), norm = 1;
+    M.forEach(function(row){ norm *= Math.max.apply(null, row.map(Math.abs)); });
+    if (norm !== 0 && Math.abs(D) > 1e-9 * norm){
+      var Ds = [], sol = [];
+      for (var k = 0; k < N; k++){ Ds.push(clean(detN(swapCol(M, c, k)))); sol.push(clean(Ds[k] / D)); }
+      return {type: 'unique', D: D, Ds: Ds, sol: sol};
+    }
+    var aug = M.map(function(row, i){ return row.concat([c[i]]); });
+    return {type: rankOf(M) < rankOf(aug) ? 'impossible' : 'indet', D: 0};
+  }
+  /* SOLVER-END */
+
+  function fmt(x){ return br(clean(x), 6).replace(/-/g, '−'); }
+  function P(x){ return x < 0 ? '(' + fmt(x) + ')' : fmt(x); }
+  function approx(x){ return Number(x.toPrecision(6)) !== clean(x); }
+  function li(label, codes){ return '<li><span>' + label + '</span>' + codes.map(function(c){ return '<code>' + c + '</code>'; }).join('') + '</li>'; }
+  function hide(){ res.hidden = true; stepsEl.hidden = true; altEl.hidden = true; }
+  function nm(){ return NAMES[nameSet]; }
+
+  function num(s){
+    s = s.replace(/\s/g, '').replace('−', '-').replace(',', '.');
+    if (s === '') return null;
+    return /^[+-]?(\d+\.?\d*|\.\d+)$/.test(s) ? Number(s) : NaN;
+  }
+  /* equação em texto: 2x − y = 3 */
+  function eqTxt(coefs, d){
+    var names = nm(), s = '';
+    coefs.forEach(function(a, j){
+      if (a === 0) return;
+      var mag = Math.abs(a) === 1 ? names[j] : fmt(Math.abs(a)) + '·' + names[j];
+      s += s === '' ? (a < 0 ? '−' : '') + mag : (a < 0 ? ' − ' : ' + ') + mag;
+    });
+    return (s || '0') + ' = ' + fmt(d);
+  }
+  function mat(M){ return '[' + M.map(function(r){ return r.map(fmt).join('  '); }).join(' | ') + ']'; }
+
+  /* determinante com as contas à mostra */
+  function det2li(label, M){
+    var p = M[0][0] * M[1][1], q = M[0][1] * M[1][0];
+    return li(label, [label.split(' ')[0] + ' = ' + P(M[0][0]) + '·' + P(M[1][1]) + ' − ' + P(M[0][1]) + '·' + P(M[1][0]),
+      label.split(' ')[0] + ' = ' + P(p) + ' − ' + P(q) + ' = ' + fmt(det2(M))]);
+  }
+  function det3li(label, M){
+    var d = [[0, 0, 1, 1, 2, 2], [0, 1, 1, 2, 2, 0], [0, 2, 1, 0, 2, 1]], u = [[0, 2, 1, 1, 2, 0], [0, 0, 1, 2, 2, 1], [0, 1, 1, 0, 2, 2]];
+    function prod(t){ return M[t[0]][t[1]] * M[t[2]][t[3]] * M[t[4]][t[5]]; }
+    function txt(t){ return P(M[t[0]][t[1]]) + '·' + P(M[t[2]][t[3]]) + '·' + P(M[t[4]][t[5]]); }
+    var nmz = label.split(' ')[0];
+    return li(label, [
+      nmz + ' = ' + d.map(txt).join(' + ') + ' − ' + u.map(txt).join(' − '),
+      nmz + ' = ' + d.map(function(t){ return P(prod(t)); }).join(' + ') + ' − ' + u.map(function(t){ return P(prod(t)); }).join(' − '),
+      nmz + ' = ' + fmt(det3(M))]);
+  }
+  function detLi(label, M){ return M.length === 2 ? det2li(label, M) : det3li(label, M); }
+
+  function altMethods(M, c){
+    var names = nm(), out = '';
+    /* substituição: escolhe uma equação e uma incógnita com coeficiente não nulo (de preferência ±1) */
+    var best = null;
+    for (var i = 0; i < 2; i++) for (var j = 0; j < 2; j++){
+      if (M[i][j] === 0) continue;
+      var score = Math.abs(M[i][j]) === 1 ? 0 : 1;
+      if (!best || score < best.s) best = {i: i, j: j, s: score};
+    }
+    var p = best.i, v = best.j, w = 1 - v, q = 1 - p;
+    var mv = M[p][v], mw = M[p][w], cp = c[p];
+    var kk = clean(M[q][w] - M[q][v] * mw / mv), rr = clean(c[q] - M[q][v] * cp / mv);
+    var wv = clean(rr / kk), vv = clean((cp - mw * wv) / mv);
+    var sub = '';
+    var numer = fmt(cp) + (mw === 0 ? '' : (mw < 0 ? ' + ' : ' − ') + (Math.abs(mw) === 1 ? '' : fmt(Math.abs(mw)) + '·') + names[w]);
+    sub += li('Isole ' + names[v] + ' na equação ' + (p + 1) + ': ' + eqTxt(M[p], cp), [names[v] + ' = ' + fr(numer, fmt(mv))]);
+    sub += li('Troque ' + names[v] + ' na equação ' + (q + 1) + ' (' + eqTxt(M[q], c[q]) + ')',
+      [P(M[q][v]) + '·' + fr(numer, fmt(mv)) + ' + ' + P(M[q][w]) + '·' + names[w] + ' = ' + fmt(c[q])]);
+    sub += li('Junte os termos com ' + names[w], [fmt(kk) + '·' + names[w] + ' = ' + fmt(rr), names[w] + ' = ' + fr(fmt(rr), fmt(kk)) + ' = ' + fmt(wv)]);
+    sub += li('Volte na primeira expressão e ache ' + names[v], [names[v] + ' = ' + fr(fmt(cp) + ' − ' + P(mw) + '·' + P(wv), fmt(mv)) + ' = ' + fmt(vv)]);
+    out += '<details><summary>Método da substituição</summary><ol>' + sub + '</ol></details>';
+
+    /* adição: zera uma incógnita multiplicando as equações */
+    var e = M[0][1] !== 0 && M[1][1] !== 0 ? 1 : (M[0][0] !== 0 && M[1][0] !== 0 ? 0 : -1), add = '';
+    if (e < 0){
+      add = '<p class="note">Uma incógnita não aparece em uma das equações. Use a substituição, que já resolve direto.</p>';
+    } else {
+      var t = 1 - e, f1 = M[1][e], f2 = -M[0][e];
+      var K = clean(M[0][t] * f1 + M[1][t] * f2), R = clean(c[0] * f1 + c[1] * f2);
+      var tv = clean(R / K), ev = clean((c[0] - M[0][t] * tv) / M[0][e]);
+      add += li('Para anular ' + names[e] + ', multiplique a equação 1 por ' + P(f1) + ' e a equação 2 por ' + P(f2),
+        [eqTxt([M[0][0] * f1, M[0][1] * f1], c[0] * f1),
+         eqTxt([M[1][0] * f2, M[1][1] * f2], c[1] * f2)]);
+      add += li('Some as duas equações (os termos em ' + names[e] + ' se cancelam)', [fmt(K) + '·' + names[t] + ' = ' + fmt(R)]);
+      add += li('Ache ' + names[t], [names[t] + ' = ' + fr(fmt(R), fmt(K)) + ' = ' + fmt(tv)]);
+      add += li('Troque na equação 1 e ache ' + names[e], [names[e] + ' = ' + fr(fmt(c[0]) + ' − ' + P(M[0][t]) + '·' + P(tv), fmt(M[0][e])) + ' = ' + fmt(ev)]);
+      add = '<ol>' + add + '</ol>';
+    }
+    out += '<details><summary>Método da adição</summary>' + add + '</details>';
+    return '<h2>Outros métodos (2×2)</h2>' + out;
+  }
+
+  function update(){
+    var names = nm(), M = [], c = [], bad = false, empty = 0;
+    for (var i = 0; i < n; i++){
+      var row = [];
+      for (var j = 0; j < n; j++){
+        var a = num(vals[i][j]);
+        if (a === null) empty++; else if (a !== a) bad = true;
+        row.push(a);
+      }
+      var d = num(vals[i][3]);
+      if (d === null) empty++; else if (d !== d) bad = true;
+      M.push(row); c.push(d);
+    }
+    if (bad){ setStatus(st, 'Use apenas números, por exemplo 2, −3 ou 0,5.', true); eqsEl.textContent = ''; hide(); return; }
+    if (empty){ setStatus(st, 'Preencha todos os campos. Use 0 para o termo que não aparece.'); eqsEl.textContent = ''; hide(); return; }
+    setStatus(st, '');
+    eqsEl.textContent = 'Sistema: ' + M.map(function(r, i){ return eqTxt(r, c[i]); }).join('   |   ');
+    var s = solveSys(M, c);
+
+    var steps = '';
+    steps += li('Escreva o sistema', M.map(function(r, i){ return eqTxt(r, c[i]); }));
+    if (s.type !== 'unique'){
+      steps += detLi('D (só os coeficientes)', M);
+      steps += li('D vale zero', ['Não existe uma única solução']);
+      res.innerHTML = '<span class="r-label">Resultado</span><span class="r-value">' + (s.type === 'impossible' ? 'Sistema impossível' : 'Sistema indeterminado') + '</span>' +
+        '<span class="r-extra">' + (s.type === 'impossible'
+          ? 'As equações se contradizem: nenhum valor serve para todas.'
+          : 'Alguma equação é combinação das outras: há infinitas soluções. Falta uma equação independente.') + '</span>';
+      res.hidden = false;
+      stepsEl.innerHTML = '<h2>Passo a passo</h2><ol>' + steps + '</ol>';
+      stepsEl.hidden = false; altEl.hidden = true;
+      return;
+    }
+    steps += detLi('D (só os coeficientes)', M);
+    for (var k = 0; k < n; k++){
+      steps += detLi('D' + names[k] + ' (troque a coluna de ' + names[k] + ' pelos termos independentes)', swapCol(M, c, k));
+    }
+    for (k = 0; k < n; k++){
+      steps += li('Divida: ' + names[k] + ' = D' + names[k] + ' / D', [names[k] + ' = ' + fr(fmt(s.Ds[k]), fmt(s.D)) + ' ' + (approx(s.Ds[k] / s.D) ? '≈' : '=') + ' ' + fmt(s.sol[k])]);
+    }
+    steps += li('Confira nas equações originais', M.map(function(r, i){
+      var terms = r.map(function(a, j){ return P(a) + '·' + P(s.sol[j]); }).join(' + ');
+      var lhs = r.reduce(function(acc, a, j){ return acc + a * s.sol[j]; }, 0);
+      var ok = Math.abs(lhs - c[i]) <= 1e-6 * Math.max(1, Math.abs(c[i]));
+      return terms + ' = ' + fmt(lhs) + (ok ? ' ✓' : ' (≈ ' + fmt(c[i]) + ', arredondado)');
+    }));
+    var out = '';
+    for (k = 0; k < n; k++){
+      out += '<span><span class="r-label">' + names[k] + '</span><span class="r-value big">' + fmt(s.sol[k]) + '</span>' +
+        (approx(s.sol[k]) ? '<span class="r-extra">valor aproximado</span>' : '') + '</span>';
+    }
+    res.innerHTML = '<div class="r-pair">' + out + '</div>';
+    res.hidden = false;
+    stepsEl.innerHTML = '<h2>Por Cramer' + (n === 3 ? ' (regra de Sarrus)' : '') + '</h2><ol>' + steps + '</ol>';
+    stepsEl.hidden = false;
+    if (n === 2){ altEl.innerHTML = altMethods(M, c); altEl.hidden = false; } else altEl.hidden = true;
+  }
+
+  function build(){
+    var names = nm(), cols = n + 1, h = '';
+    grid.style.gridTemplateColumns = 'repeat(' + cols + ', minmax(0, 1fr))';
+    for (var j = 0; j < n; j++) h += '<span class="gh" aria-hidden="true">' + names[j] + '</span>';
+    h += '<span class="gh" aria-hidden="true">= termo</span>';
+    for (var i = 0; i < n; i++){
+      for (j = 0; j <= n; j++){
+        var col = j < n ? j : 3, what = j < n ? 'coeficiente de ' + names[j] : 'termo independente';
+        h += '<div class="wrap"><input type="text" autocomplete="off" autocapitalize="off" spellcheck="false" data-r="' + i + '" data-c="' + col + '" value="' + vals[i][col] + '" aria-label="Equação ' + (i + 1) + ', ' + what + '"></div>';
+      }
+    }
+    grid.innerHTML = h;
+  }
+  function load(src, size){
+    for (var i = 0; i < 3; i++) for (var j = 0; j < 4; j++) vals[i][j] = src[i] ? src[i][j] : '';
+    n = size; setBtns(sizeBox, 'n', String(n)); build(); update();
+  }
+  function setBtns(box, key, v){
+    box.querySelectorAll('button').forEach(function(b){ b.setAttribute('aria-pressed', b.dataset[key] === v ? 'true' : 'false'); });
+  }
+  grid.addEventListener('input', function(e){
+    var t = e.target;
+    if (t.dataset && t.dataset.r !== undefined) vals[+t.dataset.r][+t.dataset.c] = t.value;
+    update();
+  });
+  sizeBox.querySelectorAll('button').forEach(function(b){
+    b.addEventListener('click', function(){ n = +b.dataset.n; setBtns(sizeBox, 'n', String(n)); build(); update(); });
+  });
+  namesBox.querySelectorAll('button').forEach(function(b){
+    b.addEventListener('click', function(){ nameSet = b.dataset.v; setBtns(namesBox, 'v', nameSet); build(); update(); });
+  });
+  document.getElementById('sy-ex').addEventListener('click', function(){ load(n === 2 ? EX2 : EX3, n); });
+  document.getElementById('sy-ex2').addEventListener('click', function(){ nameSet = 'i'; setBtns(namesBox, 'v', 'i'); load(MESH, 2); });
+  document.getElementById('sy-clear').addEventListener('click', function(){ load([], n); var f = grid.querySelector('input'); if (f) f.focus(); });
+  load(EX2, 2);
+})();
+
+/* ---------- matemática: potências e raízes ---------- */
+(function(){
+  var a = document.getElementById('pw-a'), b = document.getElementById('pw-b'), modeBox = document.getElementById('pw-mode');
+  var la = document.getElementById('pw-la'), lb = document.getElementById('pw-lb'), ua = document.getElementById('pw-ua'), ub = document.getElementById('pw-ub');
+  var st = document.getElementById('pw-status'), res = document.getElementById('pw-result'), stepsEl = document.getElementById('pw-steps');
+  var mode = 'pri';
+  var MODES = {
+    pri: {la: 'R', ua: 'Ω', lb: 'I', ub: 'A', va: '10', vb: '3'},
+    pvr: {la: 'V', ua: 'V', lb: 'R', ub: 'Ω', va: '120', vb: '60'},
+    irp: {la: 'P', ua: 'W', lb: 'R', ub: 'Ω', va: '1500', vb: '15'},
+    vpr: {la: 'P', ua: 'W', lb: 'R', ub: 'Ω', va: '1000', vb: '14,4'}
+  };
+  function f(x){ return br(clean(x), 6).replace(/-/g, '−'); }
+  function li(label, code){ return '<li><span>' + label + '</span><code>' + code + '</code></li>'; }
+  function hide(){ res.hidden = true; stepsEl.hidden = true; }
+  function show(label, value, unit, steps){
+    res.innerHTML = '<span class="r-label">' + label + '</span><span class="r-value big">' + value + ' ' + unit + '</span>';
+    res.hidden = false;
+    stepsEl.innerHTML = '<h2>Passo a passo</h2><ol>' + steps + '</ol>';
+    stepsEl.hidden = false;
+    setStatus(st, '');
+  }
+  function update(){
+    var m = MODES[mode];
+    la.textContent = m.la; lb.textContent = m.lb; ua.textContent = m.ua; ub.textContent = m.ub;
+    var A = parse(a.value), B = parse(b.value);
+    if (Number.isNaN(A) || Number.isNaN(B)){ setStatus(st, 'Use apenas números, por exemplo 2,5.', true); hide(); return; }
+    if (A === null || B === null){ setStatus(st, 'Preencha os dois campos.'); hide(); return; }
+    var s = '', v;
+    if (mode === 'pri'){
+      var q = clean(B * B); v = clean(A * q);
+      s += li('Eleve a corrente ao quadrado', 'I² = I · I = ' + f(B) + ' · ' + f(B) + ' = ' + f(q));
+      s += li('Multiplique pela resistência', 'P = R · I² = ' + f(A) + ' · ' + f(q) + ' = ' + f(v));
+      show('Potência P', f(v), 'W', s);
+    } else if (mode === 'pvr'){
+      if (B === 0){ setStatus(st, 'R não pode ser zero.', true); hide(); return; }
+      var q2 = clean(A * A); v = clean(q2 / B);
+      s += li('Eleve a tensão ao quadrado', 'V² = V · V = ' + f(A) + ' · ' + f(A) + ' = ' + f(q2));
+      s += li('Divida pela resistência', 'P = ' + fr('V²', 'R') + ' = ' + fr(f(q2), f(B)) + ' = ' + f(v));
+      show('Potência P', f(v), 'W', s);
+    } else {
+      var isI = mode === 'irp', rad;
+      if (isI && B === 0){ setStatus(st, 'R não pode ser zero.', true); hide(); return; }
+      rad = isI ? clean(A / B) : clean(A * B);
+      if (rad < 0){ setStatus(st, 'Não existe raiz quadrada real de número negativo (' + f(rad) + '). Confira os sinais.', true); hide(); return; }
+      v = clean(Math.sqrt(rad));
+      s += li(isI ? 'Divida a potência pela resistência' : 'Multiplique potência e resistência',
+        isI ? 'P / R = ' + fr(f(A), f(B)) + ' = ' + f(rad) : 'P · R = ' + f(A) + ' · ' + f(B) + ' = ' + f(rad));
+      s += li('Tire a raiz quadrada (qual número vezes ele mesmo dá ' + f(rad) + '?)', (isI ? 'I' : 'V') + ' = √' + f(rad) + ' = ' + f(v));
+      s += isI ? li('Confira: R · I² deve dar P', f(B) + ' · ' + f(v) + '² = ' + f(B * v * v) + ' W')
+               : li('Confira: V² / R deve dar P', fr(f(v) + '²', f(B)) + ' = ' + f(v * v / B) + ' W');
+      show(isI ? 'Corrente I' : 'Tensão V', f(v), isI ? 'A' : 'V', s);
+    }
+  }
+  [a, b].forEach(function(x){ x.addEventListener('input', update); });
+  modeBox.querySelectorAll('button').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      mode = btn.dataset.m;
+      modeBox.querySelectorAll('button').forEach(function(x){ x.setAttribute('aria-pressed', x === btn ? 'true' : 'false'); });
+      a.value = MODES[mode].va; b.value = MODES[mode].vb;
+      update();
+    });
+  });
+  update();
+})();
+
+/* ---------- matemática: arredondamento ---------- */
+(function(){
+  var v = document.getElementById('ar-v'), nIn = document.getElementById('ar-n'), modeBox = document.getElementById('ar-mode'), ln = document.getElementById('ar-ln');
+  var st = document.getElementById('ar-status'), res = document.getElementById('ar-result'), stepsEl = document.getElementById('ar-steps');
+  var mode = 'dec';
+  function num(s){
+    s = s.replace(/\s/g, '').replace('−', '-').replace(',', '.');
+    if (s === '') return null;
+    return /^[+-]?(\d+\.?\d*|\.\d+)$/.test(s) ? Number(s) : NaN;
+  }
+  /* arredonda para cima a partir de 5 (meio sobe), com dec casas; dec pode ser negativo */
+  function rnd(x, dec){
+    var p = Math.pow(10, dec), s = x < 0 ? -1 : 1;
+    return clean(s * Math.round(clean(Math.abs(x) * p)) / p);
+  }
+  function txt(x, dec){
+    var d = Math.max(0, dec);
+    return x.toLocaleString('pt-BR', {minimumFractionDigits: d, maximumFractionDigits: d}).replace(/-/g, '−');
+  }
+  function li(label, code){ return '<li><span>' + label + '</span><code>' + code + '</code></li>'; }
+  function hide(){ res.hidden = true; stepsEl.hidden = true; }
+  function expo(x){ return Number(Math.abs(x).toExponential().split('e')[1]); }
+  function update(){
+    ln.textContent = mode === 'dec' ? 'Casas decimais' : 'Algarismos significativos';
+    var x = num(v.value), k = num(nIn.value);
+    if (x !== x || k !== k){ setStatus(st, 'Use apenas números. Em casas e algarismos, um inteiro.', true); hide(); return; }
+    if (x === null || k === null){ setStatus(st, 'Preencha os dois campos.'); hide(); return; }
+    if (k !== Math.floor(k) || k < (mode === 'dec' ? 0 : 1) || k > 12){ setStatus(st, mode === 'dec' ? 'Use de 0 a 12 casas decimais.' : 'Use de 1 a 12 algarismos significativos.', true); hide(); return; }
+    var dec = k, steps = '';
+    if (mode === 'sig') dec = x === 0 ? 0 : k - 1 - expo(x);
+    var out = x === 0 ? 0 : rnd(x, dec);
+    if (mode === 'sig' && x !== 0 && expo(out) !== expo(x)){ dec -= 1; out = rnd(x, dec); }
+    var p = Math.pow(10, dec), kept = Math.sign(x) * Math.floor(clean(Math.abs(x) * p)) / p;
+    var next = Math.floor(clean(Math.abs(x) * p * 10)) % 10;
+    steps += li('Guarde até a posição escolhida', txt(clean(kept), dec) + ' (o resto é cortado)');
+    steps += li('Olhe o dígito seguinte: ' + next + (next >= 5 ? ', que é 5 ou mais, então o último dígito sobe um' : ', que é menor que 5, então o último dígito fica'), txt(out, dec));
+    res.innerHTML = '<span class="r-label">' + (mode === 'dec' ? k + (k === 1 ? ' casa decimal' : ' casas decimais') : k + ' algarismo' + (k === 1 ? '' : 's') + ' significativo' + (k === 1 ? '' : 's')) + '</span><span class="r-value big">' + txt(out, dec) + '</span>';
+    res.hidden = false;
+    stepsEl.innerHTML = '<h2>Passo a passo</h2><ol>' + steps + '</ol>';
+    stepsEl.hidden = x === 0;
+    setStatus(st, '');
+  }
+  [v, nIn].forEach(function(x){ x.addEventListener('input', update); });
+  modeBox.querySelectorAll('button').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      mode = btn.dataset.m;
+      modeBox.querySelectorAll('button').forEach(function(x){ x.setAttribute('aria-pressed', x === btn ? 'true' : 'false'); });
+      nIn.value = mode === 'dec' ? '2' : '3';
+      update();
+    });
   });
   update();
 })();

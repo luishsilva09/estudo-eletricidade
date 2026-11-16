@@ -11,7 +11,12 @@ Página única (HTML + JavaScript, sem dependências) para estudar e testar cál
 - **Circuito:** grade para montar um circuito de resistores (com diagonais e fios) entre A e B, e animação passo a passo da redução por série e paralelo até a resistência equivalente. Na animação, o circuito aparece ampliado e uma lousa ao lado vai escrevendo as contas de cada passo. Pontes que não reduzem são resolvidas por análise nodal. Tem desfazer/refazer, troca do número dos resistores (R1 ↔ R2), atalhos de teclado e tela cheia para dar aula. O circuito fica salvo no navegador.
 - **Kirchhoff:** 1ª lei (nós) e 2ª lei (malhas), com convenção de sinais, exemplo resolvido e exercícios. A calculadora resolve o circuito clássico de duas malhas (duas fontes e três resistores): monta as equações das malhas, resolve o sistema 2×2 por Cramer e mostra as correntes de cada ramo, com a verificação das duas leis. Cada fonte tem seletor de polaridade e o desenho acompanha.
 - **Notação:** operações em notação científica e conversão de prefixos (T, G, M, k, m, µ, n, p).
-- **Matemática:** contas com frações (soma, subtração, multiplicação e divisão, com simplificação), regra de três direta e inversa e porcentagem.
+- **Matemática:** contas com frações (soma, subtração, multiplicação e divisão, com simplificação), regra de três direta e inversa e porcentagem. Também traz, em seções recolhíveis (com atalhos no topo da aba), as ferramentas de matemática que as outras abas usam:
+  - **Sistemas 2×2 e 3×3:** resolve por Cramer mostrando cada determinante (Sarrus no 3×3) e confere nas equações; no 2×2 mostra também a substituição e a adição. Aceita negativos e decimais com vírgula, trata sistema impossível e indeterminado e tem exemplo de duas malhas (I₁, I₂).
+  - **Regra de sinais** e números negativos, com exemplos de sinais em malhas.
+  - **Isolar a incógnita:** tabela com as fórmulas das outras abas e como isolar cada letra.
+  - **Potências e raízes:** P = R · I², P = V² / R, I = √(P / R) e V = √(P · R), com calculadora passo a passo.
+  - **Arredondamento e algarismos significativos:** quando arredondar e calculadora de casas decimais e significativos.
 
 As divisões aparecem como fração empilhada (numerador em cima, denominador embaixo).
 
