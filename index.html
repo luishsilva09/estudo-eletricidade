@@ -103,7 +103,7 @@ header .lead{color:var(--hi-ink);font-size:.95rem;max-width:34ch}
 /* abas: seletor de funções */
 .tabs{
   position:fixed;left:0;right:0;bottom:0;z-index:20;
-  display:grid;grid-template-columns:repeat(7,minmax(0,1fr));
+  display:grid;grid-template-columns:repeat(8,minmax(0,1fr));
   background:var(--panel);
   padding:0 max(4px, env(safe-area-inset-right)) env(safe-area-inset-bottom) max(4px, env(safe-area-inset-left));
 }
@@ -116,6 +116,7 @@ header .lead{color:var(--hi-ink);font-size:.95rem;max-width:34ch}
 }
 .tab .sym{font-family:var(--font-mono);font-size:1.1rem;font-weight:500;line-height:1.3}
 .tab .tl{font-family:var(--font-cond);font-size:.72rem;font-weight:500;line-height:1.2;white-space:nowrap}
+.tab .tl-s{display:none}
 .tab[aria-selected="true"]{color:var(--hi);box-shadow:inset 0 3px 0 var(--hi);background:rgba(255,194,14,.09)}
 .tab[aria-selected="true"] .sym{font-weight:600}
 .tab[aria-selected="true"] .tl{font-weight:700}
@@ -262,6 +263,29 @@ tbody tr.on{background:var(--accent-soft);box-shadow:inset 4px 0 0 var(--hi)}
 .ops button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .tool{display:flex;flex-direction:column;gap:12px}
 .tool h2{margin:0}
+/* aba Matemática: ferramentas em seções recolhíveis */
+.msec-nav{display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center;font-size:.9rem}
+.msec-nav span{color:var(--muted)}
+.msec-nav a{color:var(--accent);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:6px 12px;min-height:44px;display:inline-flex;align-items:center;text-decoration:none;touch-action:manipulation}
+.msec-nav a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.msec{border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+.msec > summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;min-height:52px;padding:8px 16px;touch-action:manipulation}
+.msec > summary::-webkit-details-marker{display:none}
+.msec > summary::before{content:"▸";color:var(--accent);font-size:1rem}
+.msec[open] > summary::before{content:"▾"}
+.msec > summary h2{margin:0;flex:1;min-width:0}
+.msec > summary:focus-visible{outline:2px solid var(--accent);outline-offset:-2px;border-radius:10px}
+.msec-body{display:flex;flex-direction:column;gap:16px;padding:0 4px 12px}
+.msec .study,.msec .table-card{border:0;padding:8px 12px}
+.sysgrid{display:grid;gap:8px;align-items:center}
+.sysgrid .gh{font-family:var(--font-mono);font-size:.9rem;color:var(--muted);text-align:center}
+.sysgrid .wrap{padding:0 6px}
+.sysgrid .wrap input{text-align:center;font-size:1rem}
+.seg.q button{padding:8px 6px;font-size:.88rem}
+.seg.q button:nth-child(even){border-left:1px solid var(--line)}
+.seg.q button:nth-child(n+3){border-top:1px solid var(--line)}
+.steps summary{cursor:pointer;color:var(--accent);font-weight:500;padding:10px 0;touch-action:manipulation}
+.steps details ol{margin-top:4px}
 /* divisão empilhada (numerador sobre denominador) */
 .frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;position:relative;margin:2px .2em;line-height:1.25;font-size:.94em;white-space:nowrap}
 .frac > span:first-child{border-bottom:1.5px solid currentColor;padding:0 .35em 1px;align-self:stretch;text-align:center}
@@ -270,7 +294,12 @@ tbody tr.on{background:var(--accent-soft);box-shadow:inset 4px 0 0 var(--hi)}
 .fbig{gap:8px}
 .steps code,.flist code{padding:2px 0 4px}
 /* aba Circuito: grade para montar e redução animada */
-.ck-tools{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.ck-tools{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px}
+.ck-tools button{grid-column:span 2}
+.ck-tools button.w3{grid-column:span 3}
+.ck-flip{width:100%;margin-top:8px}
+.ck-flip kbd{display:none;margin-left:6px;font-family:var(--font-mono);font-size:.7rem;font-weight:500;padding:0 4px;border:1px solid currentColor;border-radius:4px;opacity:.6}
+.note.ck-warn{color:var(--accent);font-weight:600}
 .ck-tools button{white-space:nowrap;font:inherit;font-size:.88rem;font-weight:500;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:8px 6px;min-height:44px;cursor:pointer;touch-action:manipulation}
 .ck-tools button[aria-pressed="true"]{background:var(--hi);color:var(--hi-ink);border-color:var(--hi);font-weight:600}
 .ck-tools button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
@@ -278,7 +307,7 @@ tbody tr.on{background:var(--accent-soft);box-shadow:inset 4px 0 0 var(--hi)}
 .ck-tools kbd{display:none;margin-left:6px;font-family:var(--font-mono);font-size:.7rem;font-weight:500;padding:0 4px;border:1px solid currentColor;border-radius:4px;opacity:.6}
 .ck-kbonly{display:none}
 @media (hover:hover) and (pointer:fine){
-  .ck-tools kbd{display:inline-block}
+  .ck-tools kbd,.ck-flip kbd{display:inline-block}
   .ck-kbonly{display:block}
   /* mostra o trecho ou ponto que vai receber o clique */
   .ck-ehit:hover{stroke:var(--accent);stroke-opacity:.22}
@@ -318,6 +347,8 @@ tbody tr.on{background:var(--accent-soft);box-shadow:inset 4px 0 0 var(--hi)}
 .lz-num{overflow-wrap:anywhere}
 .lz-num b{font-weight:600;white-space:nowrap}
 .lz-line.now .lz-num b{color:var(--giz2)}
+.lz-line .lz-num b.lz-ok{color:#9be7a5}
+.lz-mat{display:inline-grid;vertical-align:middle;border-left:2px solid currentColor;border-right:2px solid currentColor;border-radius:3px;padding:1px 6px;column-gap:12px;text-align:right;margin:2px 0}
 .lz-empty{margin:0;font-family:var(--font-display);font-size:.9rem;opacity:.75}
 .lz-res{border-top:2px dashed rgba(238,243,234,.45);padding-top:10px;font-size:1.35rem;font-weight:600;color:var(--giz2)}
 .lz-res small{font-size:.75rem;font-weight:500;color:var(--giz)}
@@ -349,7 +380,26 @@ tbody tr.on{background:var(--accent-soft);box-shadow:inset 4px 0 0 var(--hi)}
 .ck-new{animation:ckfade .7s ease-out}
 @keyframes ckpulse{50%{stroke-width:5.5}}
 @keyframes ckfade{from{opacity:0}to{opacity:1}}
-@media (prefers-reduced-motion:reduce){.ck-wire.hl,.ck-new{animation:none}}
+/* volta ao circuito: correntes (verde, com seta), tensões nos nós e destaque do nó ou laço verificado */
+.ck-cur,.ck-volt{font-family:var(--font-mono);font-size:10px;font-weight:600;dominant-baseline:central;pointer-events:none;paint-order:stroke;stroke:var(--surface);stroke-width:3px;stroke-linejoin:round}
+.ck-cur{fill:var(--good)}
+.ck-volt{fill:var(--ink)}
+.ck-volt .ck-vn{fill:var(--accent)}
+.ck-arr{fill:var(--good)}
+.ck-term.hl{stroke:var(--hi);stroke-width:3;animation:ckblink 1s ease-in-out infinite}
+.ck-ring{fill:none;stroke:var(--accent);stroke-width:2.4;animation:ckblink 1s ease-in-out infinite}
+@keyframes ckblink{50%{stroke-opacity:.3}}
+.ck-vfield{margin-top:12px}
+/* fonte de tensão: placa longa = +, placa curta e grossa = − */
+.ck-gap{stroke:var(--surface);stroke-width:6}
+.ck-plate{stroke:var(--ink);stroke-width:2.4}
+.ck-plate.neg{stroke-width:5}
+.ck-plate.hl{stroke:var(--accent);animation:ckblink 1s ease-in-out infinite}
+.ck-plus{fill:var(--accent);font-family:var(--font-mono);font-size:13px;font-weight:700;text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.ck-sv .ck-snm{fill:var(--ink);font-weight:600}
+.ck-mesh{fill:var(--accent);font-family:var(--font-mono);font-size:12px;font-weight:700;text-anchor:middle;dominant-baseline:central;pointer-events:none;opacity:.55;paint-order:stroke;stroke:var(--surface);stroke-width:3px;stroke-linejoin:round}
+.ck-mesh.hl{opacity:1;font-size:14px}
+@media (prefers-reduced-motion:reduce){.ck-wire.hl,.ck-new,.ck-term.hl,.ck-ring,.ck-plate.hl{animation:none}}
 .btn.primary{background:var(--hi);color:var(--hi-ink);border-color:var(--hi);font-weight:600}
 .ck-cap p{margin:0 0 6px;font-size:.95rem}
 .ck-cap code{display:block;font-family:var(--font-mono);font-size:.85rem;overflow-x:auto;white-space:nowrap;padding-bottom:2px}
@@ -398,6 +448,16 @@ tbody tr.on{background:var(--accent-soft);box-shadow:inset 4px 0 0 var(--hi)}
 @media (prefers-reduced-motion:no-preference){
   .tab{transition:color .15s,background-color .15s}
 }
+
+/* aba Kirchhoff */
+.kf-src{display:flex;flex-direction:column;gap:4px;min-width:0}
+.kf-src > span{font-size:.85rem;color:var(--muted)}
+.kf-src .seg button{padding:8px 6px;font-size:.9rem}
+.kf-arc{fill:none;stroke:var(--accent);stroke-width:2;stroke-linecap:round}
+.kf-ah{fill:var(--accent)}
+@media (min-width:360px) and (max-width:420px){.tab .tl{font-size:.64rem}}
+/* telas estreitas: rótulos longos viram abreviações (o nome completo fica no aria-label) */
+@media (max-width:420px){.tab .tl-f{display:none}.tab .tl-s{display:inline}}
 </style>
 </head>
 <body>
@@ -412,10 +472,11 @@ tbody tr.on{background:var(--accent-soft);box-shadow:inset 4px 0 0 var(--hi)}
     <button type="button" class="tab" role="tab" id="t-ohm" aria-controls="tab-ohm" aria-selected="true" aria-label="1ª Lei de Ohm"><span class="sym" aria-hidden="true">Ω</span><span class="tl">1ª Lei</span></button>
     <button type="button" class="tab" role="tab" id="t-cabo" aria-controls="tab-cabo" aria-selected="false" aria-label="2ª Lei de Ohm"><span class="sym" aria-hidden="true">ρ</span><span class="tl">2ª Lei</span></button>
     <button type="button" class="tab" role="tab" id="t-queda" aria-controls="tab-queda" aria-selected="false" aria-label="Queda de tensão"><span class="sym" aria-hidden="true">ΔV</span><span class="tl">Queda</span></button>
-    <button type="button" class="tab" role="tab" id="t-equivalente" aria-controls="tab-equivalente" aria-selected="false"><span class="sym" aria-hidden="true">Req</span><span class="tl">Equivalente</span></button>
+    <button type="button" class="tab" role="tab" id="t-equivalente" aria-controls="tab-equivalente" aria-selected="false" aria-label="Equivalente"><span class="sym" aria-hidden="true">Req</span><span class="tl"><span class="tl-f">Equivalente</span><span class="tl-s" aria-hidden="true">Equiv.</span></span></button>
     <button type="button" class="tab" role="tab" id="t-circuito" aria-controls="tab-circuito" aria-selected="false"><span class="sym" aria-hidden="true">⊞</span><span class="tl">Circuito</span></button>
+    <button type="button" class="tab" role="tab" id="t-kirchhoff" aria-controls="tab-kirchhoff" aria-selected="false"><span class="sym" aria-hidden="true">ΣI</span><span class="tl">Kirchhoff</span></button>
     <button type="button" class="tab" role="tab" id="t-notacao" aria-controls="tab-notacao" aria-selected="false"><span class="sym" aria-hidden="true">10ⁿ</span><span class="tl">Notação</span></button>
-    <button type="button" class="tab" role="tab" id="t-matematica" aria-controls="tab-matematica" aria-selected="false"><span class="sym" aria-hidden="true">½</span><span class="tl">Matemática</span></button>
+    <button type="button" class="tab" role="tab" id="t-matematica" aria-controls="tab-matematica" aria-selected="false" aria-label="Matemática"><span class="sym" aria-hidden="true">½</span><span class="tl"><span class="tl-f">Matemática</span><span class="tl-s" aria-hidden="true">Matem.</span></span></button>
   </nav>
 
   <p class="note top">Nos campos de valor você pode digitar prefixos: 4k7 ou 4,7k = 4.700, 250m = 0,25, 10µ ou 10u = 0,00001, 2M = 2.000.000. Atenção: m minúsculo é mili e M maiúsculo é mega.</p>
@@ -606,26 +667,34 @@ tbody tr.on{background:var(--accent-soft);box-shadow:inset 4px 0 0 var(--hi)}
   <section id="tab-circuito" class="panel" role="tabpanel" aria-labelledby="t-circuito" hidden>
     <h2>Montar e simplificar um circuito</h2>
     <p class="lead">Desenhe o circuito na grade e veja, passo a passo, grupos de resistores sendo trocados por um equivalente até sobrar um só.</p>
-    <details class="about ck-help"><summary>Como usar e regras</summary><p><strong>Como usar:</strong> escolha Resistor e toque nos trechos da grade (inclusive na diagonal) onde ele fica. Use Fio para ligar pontos sem resistência. Com Editar, toque num resistor para mudar o valor ou o número (trocar R1 por R2, por exemplo). Marque a Entrada A e a Saída B e toque em Simplificar. Errou? Use Desfazer.</p><p><strong>Regras da animação:</strong> série (mais nada se liga no ponto entre os dois) e paralelo (os dois ligam os mesmos dois pontos). Valores em ohms; aceita 4k7, 250m etc.</p><p class="ck-kbonly"><strong>Teclado:</strong> R resistor, E editar, F fio, X apagar, A entrada, B saída, Ctrl+Z desfazer, Ctrl+Y refazer, Enter simplificar. Na animação, ← e → trocam de passo.</p></details>
+    <details class="about ck-help"><summary>Como usar e regras</summary><p><strong>Como usar:</strong> escolha Resistor e toque nos trechos da grade (inclusive na diagonal) onde ele fica. Use Fio para ligar pontos sem resistência. Com Editar, toque num resistor para mudar o valor ou o número (trocar R1 por R2, por exemplo). Marque a Entrada A e a Saída B e toque em Simplificar. Errou? Use Desfazer.</p><p><strong>Fontes na grade:</strong> com Fonte, toque num trecho para colocar uma fonte de tensão ideal (valor em volts, pode ser 0). A placa longa e o sinal + mostram o lado positivo; com Editar dá para mudar o valor, o número (E1 ↔ E2) e inverter a polaridade. Com uma ou mais fontes, A, B e a tensão entre A e B são ignorados e a animação resolve pelas leis de Kirchhoff: nós e referência (0 V), correntes de malha com a 2ª lei em cada malha, sistema resolvido pela regra de Cramer (até 3 incógnitas; acima disso só o resultado), corrente em cada ramo, tensão em cada nó, conferência das duas leis e balanço de potência. Não vale volta só de fontes (fontes em paralelo ou em anel sem resistor), fonte em curto por fio nem circuito sem caminho fechado.</p><p><strong>Regras da animação:</strong> série (mais nada se liga no ponto entre os dois) e paralelo (os dois ligam os mesmos dois pontos). Valores em ohms; aceita 4k7, 250m etc.</p><p><strong>Tensão e Kirchhoff:</strong> se preencher a tensão entre A e B (A é o lado +, B é a referência de 0 V), depois da Req a animação volta ao circuito original: corrente total I<sub>T</sub> = V / R<sub>AB</sub>, tensão em cada nó e corrente em cada resistor (I = ΔV / R, com seta no sentido da corrente). Em seguida confere a 1ª lei (nós: o que entra é igual ao que sai) em cada nó com 3 ou mais ligações e a 2ª lei (malhas: a soma das tensões numa volta é zero) em cada laço independente, contando a fonte A–B como um ramo (laços = ramos − nós + 1). Também vale para pontes que não reduzem. Sem tensão, a animação para na Req.</p><p class="ck-kbonly"><strong>Teclado:</strong> R resistor, V fonte, E editar, F fio, X apagar, A entrada, B saída, P inverte a polaridade da fonte em edição, Ctrl+Z desfazer, Ctrl+Y refazer, Enter simplificar. Na animação, ← e → trocam de passo.</p></details>
 
     <div id="ck-top" class="panel">
       <div class="ck-tools" id="ck-tools" role="group" aria-label="Ferramentas da grade">
         <button type="button" data-t="r" aria-pressed="true" aria-keyshortcuts="R">Resistor<kbd>R</kbd></button>
-        <button type="button" data-t="e" aria-pressed="false" aria-keyshortcuts="E">Editar<kbd>E</kbd></button>
+        <button type="button" data-t="s" aria-pressed="false" aria-keyshortcuts="V">Fonte<kbd>V</kbd></button>
         <button type="button" data-t="w" aria-pressed="false" aria-keyshortcuts="F">Fio<kbd>F</kbd></button>
-        <button type="button" data-t="x" aria-pressed="false" aria-keyshortcuts="X">Apagar<kbd>X</kbd></button>
-        <button type="button" data-t="A" aria-pressed="false" aria-keyshortcuts="A">Entrada A<kbd>A</kbd></button>
-        <button type="button" data-t="B" aria-pressed="false" aria-keyshortcuts="B">Saída B<kbd>B</kbd></button>
+        <button type="button" data-t="e" class="w3" aria-pressed="false" aria-keyshortcuts="E">Editar<kbd>E</kbd></button>
+        <button type="button" data-t="x" class="w3" aria-pressed="false" aria-keyshortcuts="X">Apagar<kbd>X</kbd></button>
+        <button type="button" data-t="A" class="w3" aria-pressed="false" aria-keyshortcuts="A">Entrada A<kbd>A</kbd></button>
+        <button type="button" data-t="B" class="w3" aria-pressed="false" aria-keyshortcuts="B">Saída B<kbd>B</kbd></button>
       </div>
       <div class="ck-fields">
         <div class="field" id="ck-valbox">
           <label for="ck-val"><span id="ck-vallab">Valor do próximo resistor</span></label>
-          <div class="wrap"><input id="ck-val" type="text" inputmode="decimal" value="10"><span class="unit">Ω</span></div>
+          <div class="wrap"><input id="ck-val" type="text" inputmode="decimal" value="10"><span class="unit" id="ck-valunit">Ω</span></div>
         </div>
         <div class="field" id="ck-numbox" hidden>
           <label for="ck-num"><span>Número</span></label>
           <select id="ck-num"></select>
         </div>
+      </div>
+      <button type="button" id="ck-flip" class="btn ck-flip" hidden aria-keyshortcuts="P">⇅ Inverter polaridade<kbd>P</kbd></button>
+      <div class="field ck-vfield" id="ck-vbox">
+        <label for="ck-v"><span>Tensão entre A e B (opcional)</span></label>
+        <div class="wrap"><input id="ck-v" type="text" inputmode="decimal" autocomplete="off" placeholder="vazio: só a Req" aria-describedby="ck-vnote"><span class="unit">V</span></div>
+        <p class="note" id="ck-vnote">Com tensão, depois da Req a animação volta ao circuito com a corrente em cada resistor e as leis de Kirchhoff.</p>
+        <p class="note ck-warn" id="ck-srcnote" hidden>Há fontes na grade: A, B e esta tensão são ignorados. A animação resolve o circuito pelas leis de Kirchhoff (correntes de malha).</p>
       </div>
     </div>
 
@@ -643,9 +712,11 @@ tbody tr.on{background:var(--accent-soft);box-shadow:inset 4px 0 0 var(--hi)}
         <label for="ck-ex"><span>Exemplos</span></label>
         <select id="ck-ex">
           <option value="">Carregar um exemplo…</option>
-          <option value="b">Circuito B do exercício (resultado 4 Ω)</option>
-          <option value="sp">Série e paralelo simples (62 Ω)</option>
-          <option value="ponte">Ponte de Wheatstone (não reduz)</option>
+          <option value="b">Circuito B do exercício (4 Ω, com 12 V)</option>
+          <option value="sp">Série e paralelo simples (62 Ω, com 12 V)</option>
+          <option value="ponte">Ponte de Wheatstone (não reduz, com 10 V)</option>
+          <option value="m2">Duas fontes, duas malhas (E1 = 18 V, E2 = 9 V)</option>
+          <option value="m3">Três malhas com três fontes</option>
           <option value="blank">Grade em branco</option>
         </select>
       </div>
@@ -665,6 +736,75 @@ tbody tr.on{background:var(--accent-soft);box-shadow:inset 4px 0 0 var(--hi)}
       <p class="note ck-kbonly">No teclado: ← e → (ou o passador de slides) trocam de passo.</p>
       <section id="ck-res" class="result" hidden aria-live="polite"></section>
     </div>
+  </section>
+
+  <!-- ABA: LEIS DE KIRCHHOFF -->
+  <section id="tab-kirchhoff" class="panel" role="tabpanel" aria-labelledby="t-kirchhoff" hidden>
+    <section class="fcard" aria-label="Fórmula e legenda"><h2>Leis de Kirchhoff</h2><div class="fbig"><span><small>1ª lei (nós)</small>Σ I que entram = Σ I que saem</span><span><small>2ª lei (malhas)</small>Σ V ao longo de uma malha fechada = 0</span></div><div class="tablewrap"><table class="legend"><thead><tr><th>Símbolo</th><th>Significado</th><th>Unidade</th></tr></thead><tbody><tr><td>Nó</td><td>Ponto onde três ou mais ramos se encontram</td><td>—</td></tr><tr><td>Ramo</td><td>Trecho entre dois nós, percorrido pela mesma corrente</td><td>—</td></tr><tr><td>Malha</td><td>Caminho fechado que sai de um ponto e volta a ele sem repetir ramos</td><td>—</td></tr><tr><td>I</td><td>Corrente elétrica em um ramo</td><td>ampère (A)</td></tr><tr><td>V, E</td><td>Tensão (queda em um resistor) e força eletromotriz da fonte</td><td>volt (V)</td></tr><tr><td>R</td><td>Resistência elétrica</td><td>ohm (Ω)</td></tr></tbody></table></div></section>
+    <section class="study" aria-label="Estudo"><h2>Entenda antes de calcular</h2><h3>Como ler as leis</h3><ul><li>1ª lei (nós): a carga não se acumula em um nó. Tudo o que chega tem de sair, então a soma das correntes que entram é igual à soma das que saem.</li><li>2ª lei (malhas): saindo de um ponto e dando a volta completa até voltar a ele, o potencial volta ao valor inicial. Os ganhos das fontes e as quedas nos resistores se cancelam, e a soma das tensões é zero.</li><li>Juntas, as duas leis permitem achar todas as correntes de circuitos que não se reduzem só por série e paralelo.</li></ul><h3>Convenção de sinais</h3><ul><li>Arbitre um sentido para cada corrente. Não precisa acertar: se o resultado sair negativo, a corrente real tem o sentido contrário ao arbitrado.</li><li>Em um resistor, a queda de tensão é R · I e vale no sentido da corrente (o potencial diminui ao andar a favor dela).</li><li>Em uma fonte, passar do − para o + soma E (o potencial sobe). Passar do + para o − subtrai E.</li><li>Ao percorrer a malha, o sinal de cada termo depende do sentido da volta e do sentido da corrente. Um resistor percorrido contra a corrente tem sinal trocado.</li></ul><h3>Exemplo resolvido</h3><p>Circuito de duas malhas com E₁ = 18 V (+ em cima, ramo da esquerda), E₂ = 9 V (+ em cima, ramo da direita), R₁ = 2 Ω, R₂ = 3 Ω e R₃ = 6 Ω no ramo central. Arbitramos I₁ e I₂ no sentido horário em cada malha. A corrente em R₃ é I₁ − I₂, para baixo.</p><p>Malha 1: 2 · I₁ + 6 · (I₁ − I₂) = 18, ou seja, 8 · I₁ − 6 · I₂ = 18.<br>Malha 2: 3 · I₂ + 6 · (I₂ − I₁) = −9, ou seja, −6 · I₁ + 9 · I₂ = −9. A fonte E₂ aparece com sinal negativo porque, com o + em cima, ela empurra a corrente no sentido anti-horário.</p><p>Determinantes: D = 8 · 9 − (−6) · (−6) = 36; D₁ = 18 · 9 − (−6) · (−9) = 108; D₂ = 8 · (−9) − 18 · (−6) = 36.</p><p>I₁ = <span class="frac"><span>108</span><span class="sl"> / </span><span>36</span></span> = <strong>3 A</strong>, I₂ = <span class="frac"><span>36</span><span class="sl"> / </span><span>36</span></span> = <strong>1 A</strong> e I₃ = I₁ − I₂ = <strong>2 A</strong> (para baixo, em R₃).</p><p>Conferência: no nó de cima entram 3 A e saem 1 A + 2 A. Na malha externa, 18 − 2 · 3 − 3 · 1 − 9 = 0.</p><h3>Pratique</h3><ol><li>Em um nó chegam 5 A e 3 A. Saem dois fios: um com 2 A e outro com corrente desconhecida. Qual o valor dela?<details><summary>Ver resposta</summary><p>Entram 5 + 3 = 8 A. Saem 2 + I. Então I = 8 − 2 = <strong>6 A</strong>, saindo do nó.</p></details></li><li>Uma fonte de 12 V alimenta, em série, resistores de 100 Ω e 200 Ω. Qual a corrente e a queda no resistor de 200 Ω?<details><summary>Ver resposta</summary><p>2ª lei: 12 − 100 · I − 200 · I = 0, então I = <span class="frac"><span>12</span><span class="sl"> / </span><span>300</span></span> = <strong>0,04 A (40 mA)</strong>. Queda em 200 Ω: 200 · 0,04 = <strong>8 V</strong>. Conferência: 4 V + 8 V = 12 V.</p></details></li><li>Duas fontes iguais de 12 V (+ em cima) alimentam R₃ = 6 Ω, cada uma com um resistor de 6 Ω em série (R₁ = R₂ = 6 Ω). Qual a corrente em R₃?<details><summary>Ver resposta</summary><p>As malhas dão 12 · I₁ − 6 · I₂ = 12 e −6 · I₁ + 12 · I₂ = −12. Então D = 144 − 36 = 108, D₁ = 144 − 72 = 72 e D₂ = −144 + 72 = −72. Logo I₁ = <strong>2/3 A</strong> e I₂ = <strong>−2/3 A</strong> (o sinal negativo diz que a corrente real da direita é anti-horária). Em R₃: I₁ − I₂ = <span class="frac"><span>2</span><span class="sl"> / </span><span>3</span></span> + <span class="frac"><span>2</span><span class="sl"> / </span><span>3</span></span> = <strong><span class="frac"><span>4</span><span class="sl"> / </span><span>3</span></span> A ≈ 1,33 A</strong>, para baixo. Conferência: V₃ = 6 · <span class="frac"><span>4</span><span class="sl"> / </span><span>3</span></span> = 8 V e (12 − 8) / 6 = <span class="frac"><span>2</span><span class="sl"> / </span><span>3</span></span> A em cada ramo.</p></details></li></ol></section>
+    <h2>Calculadora</h2>
+    <p class="lead">Informe as duas fontes e os três resistores do circuito de duas malhas.</p>
+    <div class="about"><p><strong>O que é:</strong> as duas leis de Kirchhoff aplicadas ao circuito clássico de duas malhas: uma fonte e um resistor de cada lado, e um resistor comum no meio.</p><p><strong>Para que serve:</strong> achar a corrente em cada ramo quando série e paralelo não bastam, porque há duas fontes ligadas ao mesmo resistor.</p></div>
+    <figure class="fig on" id="kf-fig">
+      <svg viewBox="0 0 260 145" role="img" aria-label="Circuito de duas malhas: fonte E1 e resistor R1 à esquerda, R3 no ramo central e resistor R2 e fonte E2 à direita, com as correntes de malha I1 e I2 no sentido horário">
+        <path class="wire" d="M30 68 V30 H55 M105 30 H155 M205 30 H230 V68 M230 78 V120 H30 V78 M130 30 V55 M130 95 V120"/>
+        <rect class="rbox" x="55" y="20" width="50" height="20" rx="2"/><text class="lbl" x="80" y="30">R1</text>
+        <rect class="rbox" x="155" y="20" width="50" height="20" rx="2"/><text class="lbl" x="180" y="30">R2</text>
+        <rect class="rbox" x="117" y="55" width="26" height="40" rx="2"/><text class="lbl" x="130" y="75">R3</text>
+        <circle class="dot" cx="130" cy="30" r="3"/><circle class="dot" cx="130" cy="120" r="3"/>
+        <text class="lbl" x="130" y="10">A</text><text class="lbl" x="130" y="135">B</text>
+        <line class="bat" id="kf-b1a" x1="20" y1="68" x2="40" y2="68" stroke-width="2"/><line class="bat" id="kf-b1b" x1="25" y1="78" x2="35" y2="78" stroke-width="4"/>
+        <text class="lbl" id="kf-p1" x="14" y="62">+</text><text class="lbl" x="46" y="73">E1</text>
+        <line class="bat" id="kf-b2a" x1="220" y1="68" x2="240" y2="68" stroke-width="2"/><line class="bat" id="kf-b2b" x1="225" y1="78" x2="235" y2="78" stroke-width="4"/>
+        <text class="lbl" id="kf-p2" x="246" y="62">+</text><text class="lbl" x="214" y="73">E2</text>
+        <path class="kf-arc" d="M64 75 A16 16 0 0 1 96 75"/><polygon class="kf-ah" points="92,74 100,74 96,81"/><text class="lbl" x="80" y="92">I1</text>
+        <path class="kf-arc" d="M164 75 A16 16 0 0 1 196 75"/><polygon class="kf-ah" points="192,74 200,74 196,81"/><text class="lbl" x="180" y="92">I2</text>
+      </svg>
+      <figcaption><strong>Duas malhas.</strong> I1 e I2 são correntes de malha, arbitradas no sentido horário. No ramo central, a corrente em R3 é I1 − I2, para baixo (de A para B). Os nós são A e B.</figcaption>
+    </figure>
+    <div class="grid">
+      <div class="field">
+        <label for="kf-E1"><span>E1 (fonte da esquerda)</span></label>
+        <div class="wrap"><input id="kf-E1" type="text" inputmode="decimal"><span class="unit">V</span></div>
+      </div>
+      <div class="field">
+        <label for="kf-E2"><span>E2 (fonte da direita)</span></label>
+        <div class="wrap"><input id="kf-E2" type="text" inputmode="decimal"><span class="unit">V</span></div>
+      </div>
+      <div class="field">
+        <label for="kf-R1"><span>R1 (esquerda)</span></label>
+        <div class="wrap"><input id="kf-R1" type="text" inputmode="decimal"><span class="unit">Ω</span></div>
+      </div>
+      <div class="field">
+        <label for="kf-R2"><span>R2 (direita)</span></label>
+        <div class="wrap"><input id="kf-R2" type="text" inputmode="decimal"><span class="unit">Ω</span></div>
+      </div>
+      <div class="field wide">
+        <label for="kf-R3"><span>R3 (ramo central, comum)</span></label>
+        <div class="wrap"><input id="kf-R3" type="text" inputmode="decimal"><span class="unit">Ω</span></div>
+      </div>
+      <div class="kf-src">
+        <span id="kf-l1">Polaridade de E1</span>
+        <div class="seg" id="kf-pol1" role="group" aria-labelledby="kf-l1">
+          <button type="button" data-p="top" aria-pressed="true">+ em cima</button>
+          <button type="button" data-p="bot" aria-pressed="false">+ embaixo</button>
+        </div>
+      </div>
+      <div class="kf-src">
+        <span id="kf-l2">Polaridade de E2</span>
+        <div class="seg" id="kf-pol2" role="group" aria-labelledby="kf-l2">
+          <button type="button" data-p="top" aria-pressed="true">+ em cima</button>
+          <button type="button" data-p="bot" aria-pressed="false">+ embaixo</button>
+        </div>
+      </div>
+    </div>
+    <div class="actions">
+      <p id="kf-status" class="status" role="status" aria-live="polite"></p>
+      <button type="button" id="kf-clear" class="btn">Limpar tudo</button>
+    </div>
+    <section id="kf-result" class="result" hidden aria-live="polite"></section>
+    <section id="kf-steps" class="steps" hidden></section>
+    <p class="note">As correntes de malha são as incógnitas. Resultado negativo quer dizer que o sentido real é o contrário do desenhado. Fontes ideais, sem resistência interna.</p>
   </section>
 
   <!-- ABA: NOTAÇÃO CIENTÍFICA -->
@@ -743,7 +883,15 @@ tbody tr.on{background:var(--accent-soft);box-shadow:inset 4px 0 0 var(--hi)}
 
   <!-- ABA: MATEMÁTICA BÁSICA -->
   <section id="tab-matematica" class="panel" role="tabpanel" aria-labelledby="t-matematica" hidden>
-    <section class="fcard" aria-label="Fórmula e legenda"><h2>Matemática básica: frações</h2><div class="fbig"><span><small>Soma</small><span class="frac"><span>a</span><span class="sl"> / </span><span>b</span></span> + <span class="frac"><span>c</span><span class="sl"> / </span><span>d</span></span> = <span class="frac"><span>a · d + c · b</span><span class="sl"> / </span><span>b · d</span></span></span><span><small>Multiplicação</small><span class="frac"><span>a</span><span class="sl"> / </span><span>b</span></span> · <span class="frac"><span>c</span><span class="sl"> / </span><span>d</span></span> = <span class="frac"><span>a · c</span><span class="sl"> / </span><span>b · d</span></span></span><span><small>Divisão</small><span class="frac"><span>a</span><span class="sl"> / </span><span>b</span></span> ÷ <span class="frac"><span>c</span><span class="sl"> / </span><span>d</span></span> = <span class="frac"><span>a</span><span class="sl"> / </span><span>b</span></span> · <span class="frac"><span>d</span><span class="sl"> / </span><span>c</span></span></span><span><small>Regra de três</small><span class="frac"><span>a</span><span class="sl"> / </span><span>b</span></span> = <span class="frac"><span>c</span><span class="sl"> / </span><span>x</span></span>  →  x = <span class="frac"><span>b · c</span><span class="sl"> / </span><span>a</span></span></span></div><div class="tablewrap"><table class="legend"><thead><tr><th>Termo</th><th>Significado</th><th>Exemplo</th></tr></thead><tbody><tr><td>Numerador</td><td>Número de cima: quantas partes você tem</td><td>o 3 de <span class="frac"><span>3</span><span class="sl"> / </span><span>4</span></span></td></tr><tr><td>Denominador</td><td>Número de baixo: em quantas partes o inteiro foi dividido (nunca é zero)</td><td>o 4 de <span class="frac"><span>3</span><span class="sl"> / </span><span>4</span></span></td></tr><tr><td>MMC</td><td>Menor múltiplo comum: o menor número que aparece na tabuada dos dois denominadores</td><td>MMC(4, 6) = 12</td></tr><tr><td>MDC</td><td>Maior divisor comum: o maior número que divide os dois sem sobrar resto</td><td>MDC(8, 12) = 4</td></tr></tbody></table></div></section>
+    <section class="fcard" aria-label="Fórmula e legenda"><h2>Matemática básica: frações e ferramentas</h2><div class="fbig"><span><small>Soma</small><span class="frac"><span>a</span><span class="sl"> / </span><span>b</span></span> + <span class="frac"><span>c</span><span class="sl"> / </span><span>d</span></span> = <span class="frac"><span>a · d + c · b</span><span class="sl"> / </span><span>b · d</span></span></span><span><small>Multiplicação</small><span class="frac"><span>a</span><span class="sl"> / </span><span>b</span></span> · <span class="frac"><span>c</span><span class="sl"> / </span><span>d</span></span> = <span class="frac"><span>a · c</span><span class="sl"> / </span><span>b · d</span></span></span><span><small>Divisão</small><span class="frac"><span>a</span><span class="sl"> / </span><span>b</span></span> ÷ <span class="frac"><span>c</span><span class="sl"> / </span><span>d</span></span> = <span class="frac"><span>a</span><span class="sl"> / </span><span>b</span></span> · <span class="frac"><span>d</span><span class="sl"> / </span><span>c</span></span></span><span><small>Sistema 2×2 (Cramer)</small>x = <span class="frac"><span>Dx</span><span class="sl"> / </span><span>D</span></span>  e  y = <span class="frac"><span>Dy</span><span class="sl"> / </span><span>D</span></span>  com  D = a₁ · b₂ − a₂ · b₁</span><span><small>Isolar a letra</small>V = R · I  →  I = <span class="frac"><span>V</span><span class="sl"> / </span><span>R</span></span></span><span><small>Potência e raiz</small>P = R · I²  →  I = √(<span class="frac"><span>P</span><span class="sl"> / </span><span>R</span></span>)</span><span><small>Regra de três</small><span class="frac"><span>a</span><span class="sl"> / </span><span>b</span></span> = <span class="frac"><span>c</span><span class="sl"> / </span><span>x</span></span>  →  x = <span class="frac"><span>b · c</span><span class="sl"> / </span><span>a</span></span></span></div><div class="tablewrap"><table class="legend"><thead><tr><th>Termo</th><th>Significado</th><th>Exemplo</th></tr></thead><tbody><tr><td>Numerador</td><td>Número de cima: quantas partes você tem</td><td>o 3 de <span class="frac"><span>3</span><span class="sl"> / </span><span>4</span></span></td></tr><tr><td>Denominador</td><td>Número de baixo: em quantas partes o inteiro foi dividido (nunca é zero)</td><td>o 4 de <span class="frac"><span>3</span><span class="sl"> / </span><span>4</span></span></td></tr><tr><td>MMC</td><td>Menor múltiplo comum: o menor número que aparece na tabuada dos dois denominadores</td><td>MMC(4, 6) = 12</td></tr><tr><td>MDC</td><td>Maior divisor comum: o maior número que divide os dois sem sobrar resto</td><td>MDC(8, 12) = 4</td></tr><tr><td>D, Dx, Dy</td><td>Determinantes do sistema: D usa os coeficientes; Dx e Dy trocam uma coluna pelos termos independentes</td><td>D = 2 · (−1) − 1 · 3 = −5</td></tr><tr><td>Incógnita</td><td>A letra que você quer descobrir</td><td>o I de V = R · I</td></tr><tr><td>Algarismo significativo</td><td>Dígito que conta, a partir do primeiro que não é zero</td><td>0,0173 tem 3</td></tr></tbody></table></div></section>
+    <nav class="msec-nav" aria-label="Ir para uma ferramenta">
+      <span>Ir para:</span>
+      <a href="#ms-sist" data-go="ms-sist">Sistemas</a>
+      <a href="#ms-sinais" data-go="ms-sinais">Sinais</a>
+      <a href="#ms-isolar" data-go="ms-isolar">Isolar a letra</a>
+      <a href="#ms-pot" data-go="ms-pot">Potências e raízes</a>
+      <a href="#ms-arred" data-go="ms-arred">Arredondar</a>
+    </nav>
     <section class="study" aria-label="Estudo"><h2>Entenda antes de calcular</h2><h3>Como ler uma fração</h3><ul><li>A barra da fração é uma divisão: <span class="frac"><span>3</span><span class="sl"> / </span><span>4</span></span> é o mesmo que 3 dividido por 4, ou 0,75.</li><li>Para somar ou subtrair, os denominadores precisam ser iguais. Se não forem, reescreva as duas frações com o MMC embaixo.</li><li>Para multiplicar, é direto: de cima com de cima, de baixo com de baixo.</li><li>Para dividir, mantenha a primeira fração, inverta a segunda e multiplique.</li><li>No final, simplifique: divida o de cima e o de baixo pelo mesmo número (o MDC) até não dar mais.</li></ul><h3>Exemplo resolvido</h3><p><span class="frac"><span>1</span><span class="sl"> / </span><span>2</span></span> + <span class="frac"><span>1</span><span class="sl"> / </span><span>3</span></span>: o MMC de 2 e 3 é 6. Então <span class="frac"><span>1</span><span class="sl"> / </span><span>2</span></span> = <span class="frac"><span>3</span><span class="sl"> / </span><span>6</span></span> e <span class="frac"><span>1</span><span class="sl"> / </span><span>3</span></span> = <span class="frac"><span>2</span><span class="sl"> / </span><span>6</span></span>. Somando os numeradores: <span class="frac"><span>3</span><span class="sl"> / </span><span>6</span></span> + <span class="frac"><span>2</span><span class="sl"> / </span><span>6</span></span> = <strong><span class="frac"><span>5</span><span class="sl"> / </span><span>6</span></span></strong>.</p><h3>Pratique</h3><ol><li>Resistores de 6 Ω e 3 Ω em paralelo: quanto dá <span class="frac"><span>1</span><span class="sl"> / </span><span>6</span></span> + <span class="frac"><span>1</span><span class="sl"> / </span><span>3</span></span>? E a Req?<details><summary>Ver resposta</summary><p>MMC de 6 e 3 é 6: <span class="frac"><span>1</span><span class="sl"> / </span><span>6</span></span> + <span class="frac"><span>2</span><span class="sl"> / </span><span>6</span></span> = <span class="frac"><span>3</span><span class="sl"> / </span><span>6</span></span> = <strong><span class="frac"><span>1</span><span class="sl"> / </span><span>2</span></span></strong>. A Req é o inverso: <strong>2 Ω</strong>.</p></details></li><li>Calcule <span class="frac"><span>3</span><span class="sl"> / </span><span>4</span></span> ÷ <span class="frac"><span>3</span><span class="sl"> / </span><span>8</span></span>.<details><summary>Ver resposta</summary><p>Inverta a segunda e multiplique: <span class="frac"><span>3</span><span class="sl"> / </span><span>4</span></span> · <span class="frac"><span>8</span><span class="sl"> / </span><span>3</span></span> = <span class="frac"><span>24</span><span class="sl"> / </span><span>12</span></span> = <strong>2</strong>.</p></details></li><li>Se 100 m de cabo têm 0,692 Ω, quanto têm 250 m?<details><summary>Ver resposta</summary><p>Regra de três direta: x = <span class="frac"><span>0,692 · 250</span><span class="sl"> / </span><span>100</span></span> = <strong>1,73 Ω</strong>.</p></details></li></ol></section>
 
     <h2>Calculadora de frações</h2>
@@ -804,6 +952,224 @@ tbody tr.on{background:var(--accent-soft);box-shadow:inset 4px 0 0 var(--hi)}
       <section id="pc-result" class="result" hidden aria-live="polite"></section>
       <section id="pc-steps" class="steps" hidden></section>
     </section>
+
+    <!-- ===== Sistemas de equações ===== -->
+    <details class="msec" id="ms-sist" open>
+      <summary><h2>Sistemas de equações 2×2 e 3×3</h2></summary>
+      <div class="msec-body">
+        <section class="study" aria-label="Estudo de sistemas">
+          <h3>Por que isso aparece na eletricidade</h3>
+          <ul>
+            <li>Nas leis de Kirchhoff, cada malha e cada nó dá uma equação com as correntes desconhecidas. Com 2 ou 3 correntes, você tem um sistema para resolver.</li>
+            <li>Um sistema 2×2 tem duas equações e duas incógnitas (x e y). O 3×3 tem três e três (x, y e z).</li>
+            <li>Escreva cada equação na forma <strong>a · x + b · y = c</strong>. Termo que não aparece tem coeficiente 0. Sinal negativo vai junto do número.</li>
+          </ul>
+          <h3>Regra de Cramer</h3>
+          <ul>
+            <li>O determinante <strong>D</strong> usa só os coeficientes. No 2×2: D = a₁ · b₂ − a₂ · b₁ (diagonal principal menos a secundária).</li>
+            <li>Para achar <strong>Dx</strong>, troque a coluna do x pela coluna dos termos independentes (os números depois do igual). Para o Dy, troque a coluna do y.</li>
+            <li>Então x = <span class="frac"><span>Dx</span><span class="sl"> / </span><span>D</span></span> e y = <span class="frac"><span>Dy</span><span class="sl"> / </span><span>D</span></span>.</li>
+            <li>No 3×3, o determinante sai pela regra de Sarrus: some os produtos das 3 diagonais que descem e subtraia os das 3 que sobem.</li>
+            <li>Se D = 0, o sistema não tem solução única: ou é impossível (equações que se contradizem) ou indeterminado (equações repetidas, infinitas soluções).</li>
+          </ul>
+          <h3>Exemplo resolvido: duas malhas</h3>
+          <p>Duas fontes, E₁ = 18 V e E₂ = 9 V (ambas com o + em cima), R₁ = 2 Ω, R₂ = 3 Ω e R₃ = 6 Ω (compartilhado pelas duas malhas). Correntes I₁ e I₂ no sentido horário. Malha 1: 18 − 2·I₁ − 6·(I₁ − I₂) = 0, que vira 8·I₁ − 6·I₂ = 18. Malha 2: a fonte E₂, com o + em cima, empurra a corrente no sentido anti-horário, então entra com sinal negativo: −9 − 3·I₂ − 6·(I₂ − I₁) = 0, que vira 6·I₁ − 9·I₂ = 9 e, multiplicando tudo por −1, −6·I₁ + 9·I₂ = −9.</p>
+          <p>D = 8 · 9 − (−6) · (−6) = 72 − 36 = 36. Dx = 18 · 9 − (−6) · (−9) = 162 − 54 = 108. Dy = 8 · (−9) − (−6) · 18 = −72 + 108 = 36. Logo I₁ = <span class="frac"><span>108</span><span class="sl"> / </span><span>36</span></span> = <strong>3 A</strong> e I₂ = <span class="frac"><span>36</span><span class="sl"> / </span><span>36</span></span> = <strong>1 A</strong>. É o mesmo circuito da aba Kirchhoff.</p>
+          <h3>Pratique</h3>
+          <ol>
+            <li>Resolva 2x + 3y = 12 e x − y = 1.<details><summary>Ver resposta</summary><p>D = 2 · (−1) − 1 · 3 = −5. Dx = 12 · (−1) − 3 · 1 = −15. Dy = 2 · 1 − 1 · 12 = −10. x = <span class="frac"><span>−15</span><span class="sl"> / </span><span>−5</span></span> = <strong>3</strong> e y = <span class="frac"><span>−10</span><span class="sl"> / </span><span>−5</span></span> = <strong>2</strong>. Conferindo: 2 · 3 + 3 · 2 = 12 e 3 − 2 = 1.</p></details></li>
+            <li>Resolva x + y + z = 4, 2x − y + z = 8 e x + 2y − z = −3.<details><summary>Ver resposta</summary><p>D = 7, Dx = 14, Dy = −7 e Dz = 21, então x = <strong>2</strong>, y = <strong>−1</strong> e z = <strong>3</strong>. Confira na calculadora abaixo (botão Exemplo no 3×3), que mostra cada Sarrus.</p></details></li>
+            <li>2x + 4y = 6 e x + 2y = 5 têm solução?<details><summary>Ver resposta</summary><p>D = 2 · 2 − 1 · 4 = 0. A primeira equação, dividida por 2, vira x + 2y = 3, que contradiz x + 2y = 5. O sistema é <strong>impossível</strong>.</p></details></li>
+          </ol>
+        </section>
+
+        <section class="table-card tool" aria-label="Calculadora de sistemas">
+          <h2>Calculadora de sistemas</h2>
+          <p class="lead">Digite os coeficientes de cada equação. Aceita negativos (−3 ou -3) e decimais com vírgula. Termo que não aparece vale 0.</p>
+          <div class="seg" id="sy-size" role="group" aria-label="Tamanho do sistema">
+            <button type="button" data-n="2" aria-pressed="true">2×2</button>
+            <button type="button" data-n="3" aria-pressed="false">3×3</button>
+          </div>
+          <div class="seg" id="sy-names" role="group" aria-label="Nome das incógnitas">
+            <button type="button" data-v="xyz" aria-pressed="true">x, y, z</button>
+            <button type="button" data-v="i" aria-pressed="false">I₁, I₂, I₃</button>
+          </div>
+          <div class="sysgrid" id="sy-grid" role="group" aria-label="Coeficientes do sistema"></div>
+          <p class="note" id="sy-eqs"></p>
+          <div class="actions">
+            <button type="button" id="sy-ex" class="btn">Exemplo</button>
+            <button type="button" id="sy-ex2" class="btn">Exemplo de malhas</button>
+            <button type="button" id="sy-clear" class="btn">Limpar</button>
+          </div>
+          <p id="sy-status" class="status" role="status" aria-live="polite"></p>
+          <section id="sy-result" class="result" hidden aria-live="polite"></section>
+          <section id="sy-steps" class="steps" hidden></section>
+          <section id="sy-alt" class="steps" hidden></section>
+        </section>
+      </div>
+    </details>
+
+    <!-- ===== Regra de sinais ===== -->
+    <details class="msec" id="ms-sinais">
+      <summary><h2>Regra de sinais e números negativos</h2></summary>
+      <div class="msec-body">
+        <section class="study" aria-label="Estudo de sinais">
+          <h3>As regras</h3>
+          <div class="tablewrap"><table class="legend"><thead><tr><th>Conta</th><th>Regra</th><th>Exemplo</th></tr></thead><tbody>
+            <tr><td>Soma, sinais iguais</td><td>Some e mantenha o sinal</td><td>(−3) + (−5) = −8</td></tr>
+            <tr><td>Soma, sinais diferentes</td><td>Subtraia e fique com o sinal do maior</td><td>7 + (−10) = −3</td></tr>
+            <tr><td>Subtração</td><td>Subtrair é somar o oposto: menos com menos dá mais</td><td>5 − (−3) = 5 + 3 = 8</td></tr>
+            <tr><td>Multiplicação e divisão</td><td>Sinais iguais dão +, diferentes dão −</td><td>(−2) · (−5) = 10; (−12) ÷ 4 = −3</td></tr>
+            <tr><td>Parêntese com +</td><td>Tire e mantenha os sinais de dentro</td><td>+(a − b) = a − b</td></tr>
+            <tr><td>Parêntese com −</td><td>Tire e troque todos os sinais de dentro</td><td>−(a − b) = −a + b</td></tr>
+            <tr><td>Número vezes parêntese</td><td>Multiplique cada termo, com a regra de sinais</td><td>−3 · (x − y) = −3x + 3y</td></tr>
+          </tbody></table></div>
+          <h3>Sinais em malhas</h3>
+          <ul>
+            <li>Ao percorrer a malha, a fonte que você atravessa do − para o + entra com sinal <strong>+</strong>. Um resistor percorrido no mesmo sentido da corrente é uma queda e entra com sinal <strong>−</strong> (−R · I).</li>
+            <li>No resistor compartilhado, a corrente que passa é a diferença das duas. O sinal na frente do parêntese manda em tudo que está dentro.</li>
+            <li>Se no fim a corrente der <strong>negativa</strong>, ela circula no sentido contrário ao que você escolheu. A conta está certa, só a seta do desenho estava invertida.</li>
+          </ul>
+          <h3>Exemplo resolvido</h3>
+          <p>Malha com fonte de 18 V: 18 − 2·I₁ − 6·(I₁ − I₂) = 0. O − na frente do parêntese troca os sinais de dentro: 18 − 2·I₁ − 6·I₁ + 6·I₂ = 0. Juntando: 18 − 8·I₁ + 6·I₂ = 0. Passando os termos com I para o outro lado, trocando o sinal: 18 = 8·I₁ − 6·I₂.</p>
+          <h3>Pratique</h3>
+          <ol>
+            <li>Calcule (−4) + (−6) e 3 − 8.<details><summary>Ver resposta</summary><p>Sinais iguais: 4 + 6 = 10, com sinal −: <strong>−10</strong>. Em 3 − 8, subtraia 8 − 3 = 5 e fique com o sinal do maior: <strong>−5</strong>.</p></details></li>
+            <li>Calcule (−2) · (−5) · (−3).<details><summary>Ver resposta</summary><p>(−2) · (−5) = +10. Depois 10 · (−3) = <strong>−30</strong>. Três sinais negativos dão negativo.</p></details></li>
+            <li>Tire os parênteses: 20 − 2 · (I₁ − I₂).<details><summary>Ver resposta</summary><p>O −2 multiplica os dois termos: −2 · I₁ e −2 · (−I₂) = +2 · I₂. Fica <strong>20 − 2·I₁ + 2·I₂</strong>.</p></details></li>
+            <li>Um resistor de 5 Ω tem corrente de −2 A (no sentido adotado). Qual o valor de R · I e o que o sinal diz?<details><summary>Ver resposta</summary><p>5 · (−2) = <strong>−10 V</strong>. A corrente real tem 2 A e vai no sentido contrário ao da seta que você desenhou.</p></details></li>
+          </ol>
+        </section>
+      </div>
+    </details>
+
+    <!-- ===== Isolar a incógnita ===== -->
+    <details class="msec" id="ms-isolar">
+      <summary><h2>Isolar a incógnita em uma fórmula</h2></summary>
+      <div class="msec-body">
+        <section class="study" aria-label="Estudo de isolar a incógnita">
+          <h3>A ideia</h3>
+          <ul>
+            <li>Uma fórmula é uma balança: o que você faz de um lado, faz do outro. Isolar a letra é deixá-la sozinha de um lado do igual.</li>
+            <li>O que está <strong>multiplicando</strong> a letra passa <strong>dividindo</strong> para o outro lado, e o contrário. Soma vira subtração e subtração vira soma.</li>
+            <li>Letra que está embaixo de uma divisão: multiplique os dois lados por ela, e só depois isole.</li>
+          </ul>
+          <h3>Fórmula e como isolar cada letra</h3>
+          <div class="tablewrap"><table class="legend"><thead><tr><th>Fórmula</th><th>Isolando</th></tr></thead><tbody>
+            <tr><td>V = R · I</td><td>R = <span class="frac"><span>V</span><span class="sl"> / </span><span>I</span></span> &nbsp; e &nbsp; I = <span class="frac"><span>V</span><span class="sl"> / </span><span>R</span></span></td></tr>
+            <tr><td>P = V · I</td><td>V = <span class="frac"><span>P</span><span class="sl"> / </span><span>I</span></span> &nbsp; e &nbsp; I = <span class="frac"><span>P</span><span class="sl"> / </span><span>V</span></span></td></tr>
+            <tr><td>R = <span class="frac"><span>ρ · L</span><span class="sl"> / </span><span>A</span></span></td><td>ρ = <span class="frac"><span>R · A</span><span class="sl"> / </span><span>L</span></span> &nbsp; L = <span class="frac"><span>R · A</span><span class="sl"> / </span><span>ρ</span></span> &nbsp; A = <span class="frac"><span>ρ · L</span><span class="sl"> / </span><span>R</span></span></td></tr>
+            <tr><td>ΔV = <span class="frac"><span>k · ρ · L · I</span><span class="sl"> / </span><span>S</span></span></td><td>S = <span class="frac"><span>k · ρ · L · I</span><span class="sl"> / </span><span>ΔV</span></span> &nbsp; L = <span class="frac"><span>ΔV · S</span><span class="sl"> / </span><span>k · ρ · I</span></span> &nbsp; I = <span class="frac"><span>ΔV · S</span><span class="sl"> / </span><span>k · ρ · L</span></span></td></tr>
+            <tr><td>Req = R₁ + R₂</td><td>R₂ = Req − R₁</td></tr>
+            <tr><td>Req = <span class="frac"><span>R₁ · R₂</span><span class="sl"> / </span><span>R₁ + R₂</span></span></td><td>R₂ = <span class="frac"><span>Req · R₁</span><span class="sl"> / </span><span>R₁ − Req</span></span></td></tr>
+          </tbody></table></div>
+          <h3>Exemplo resolvido</h3>
+          <p>Que seção A tem um cabo de cobre de 150 m com resistência de 0,65 Ω? Parta de R = <span class="frac"><span>ρ · L</span><span class="sl"> / </span><span>A</span></span>. Multiplique os dois lados por A: R · A = ρ · L. Divida os dois por R: A = <span class="frac"><span>ρ · L</span><span class="sl"> / </span><span>R</span></span>. Agora troque pelos números: A = <span class="frac"><span>0,0173 · 150</span><span class="sl"> / </span><span>0,65</span></span> = <span class="frac"><span>2,595</span><span class="sl"> / </span><span>0,65</span></span> ≈ <strong>3,99 mm²</strong>.</p>
+          <h3>Pratique</h3>
+          <ol>
+            <li>Um chuveiro de 1.200 W em 120 V: qual a corrente? (P = V · I)<details><summary>Ver resposta</summary><p>I = <span class="frac"><span>P</span><span class="sl"> / </span><span>V</span></span> = <span class="frac"><span>1200</span><span class="sl"> / </span><span>120</span></span> = <strong>10 A</strong>.</p></details></li>
+            <li>Qual o comprimento de um fio de cobre de 2,5 mm² com 0,5 Ω? (R = <span class="frac"><span>ρ · L</span><span class="sl"> / </span><span>A</span></span>, ρ = 0,0173)<details><summary>Ver resposta</summary><p>L = <span class="frac"><span>R · A</span><span class="sl"> / </span><span>ρ</span></span> = <span class="frac"><span>0,5 · 2,5</span><span class="sl"> / </span><span>0,0173</span></span> = <span class="frac"><span>1,25</span><span class="sl"> / </span><span>0,0173</span></span> ≈ <strong>72,3 m</strong>.</p></details></li>
+            <li>Queda de 3 V, 20 A, 50 m, cobre (ρ = 0,0173) e k = 2: qual a seção mínima? (ΔV = <span class="frac"><span>k · ρ · L · I</span><span class="sl"> / </span><span>S</span></span>)<details><summary>Ver resposta</summary><p>S = <span class="frac"><span>k · ρ · L · I</span><span class="sl"> / </span><span>ΔV</span></span> = <span class="frac"><span>2 · 0,0173 · 50 · 20</span><span class="sl"> / </span><span>3</span></span> = <span class="frac"><span>34,6</span><span class="sl"> / </span><span>3</span></span> ≈ <strong>11,5 mm²</strong>. Na prática, escolha a seção comercial seguinte (16 mm²).</p></details></li>
+            <li>Dois resistores em paralelo dão Req = 2 Ω e um deles é R₁ = 6 Ω. Quanto vale o outro?<details><summary>Ver resposta</summary><p>R₂ = <span class="frac"><span>Req · R₁</span><span class="sl"> / </span><span>R₁ − Req</span></span> = <span class="frac"><span>2 · 6</span><span class="sl"> / </span><span>6 − 2</span></span> = <span class="frac"><span>12</span><span class="sl"> / </span><span>4</span></span> = <strong>3 Ω</strong>. Conferindo: 6 e 3 em paralelo dão <span class="frac"><span>6 · 3</span><span class="sl"> / </span><span>6 + 3</span></span> = 2 Ω.</p></details></li>
+          </ol>
+        </section>
+      </div>
+    </details>
+
+    <!-- ===== Potências e raízes ===== -->
+    <details class="msec" id="ms-pot">
+      <summary><h2>Potências e raízes</h2></summary>
+      <div class="msec-body">
+        <section class="study" aria-label="Estudo de potências e raízes">
+          <h3>O que é elevar ao quadrado</h3>
+          <ul>
+            <li>I² quer dizer I · I (a corrente multiplicada por ela mesma). Com I = 3 A, I² = 9.</li>
+            <li>Número negativo ao quadrado fica positivo: (−3)² = 9. Por isso a potência P = R · I² nunca é negativa.</li>
+            <li>A raiz quadrada desfaz o quadrado: √9 = 3, porque 3 · 3 = 9. Não existe raiz quadrada real de número negativo.</li>
+            <li>Quadrados que ajudam: 1, 4, 9, 16, 25, 36, 49, 64, 81, 100 (raízes de 1 a 10) e 121, 144, 169, 196, 225 (raízes de 11 a 15).</li>
+          </ul>
+          <h3>Onde aparece</h3>
+          <div class="tablewrap"><table class="legend"><thead><tr><th>Quero</th><th>Fórmula</th></tr></thead><tbody>
+            <tr><td>Potência (R e I)</td><td>P = R · I²</td></tr>
+            <tr><td>Potência (V e R)</td><td>P = <span class="frac"><span>V²</span><span class="sl"> / </span><span>R</span></span></td></tr>
+            <tr><td>Corrente (P e R)</td><td>I = √(<span class="frac"><span>P</span><span class="sl"> / </span><span>R</span></span>)</td></tr>
+            <tr><td>Tensão (P e R)</td><td>V = √(P · R)</td></tr>
+          </tbody></table></div>
+          <p class="note">Para chegar nas duas últimas, isole: de P = R · I² vem I² = <span class="frac"><span>P</span><span class="sl"> / </span><span>R</span></span>, e a raiz dos dois lados dá I = √(<span class="frac"><span>P</span><span class="sl"> / </span><span>R</span></span>). De P = <span class="frac"><span>V²</span><span class="sl"> / </span><span>R</span></span> vem V² = P · R.</p>
+          <h3>Exemplo resolvido</h3>
+          <p>Um resistor de 15 Ω dissipa 1.500 W. Qual a corrente? I = √(<span class="frac"><span>1500</span><span class="sl"> / </span><span>15</span></span>) = √100 = <strong>10 A</strong>.</p>
+          <h3>Pratique</h3>
+          <ol>
+            <li>Um resistor de 4 Ω com 5 A: qual a potência?<details><summary>Ver resposta</summary><p>P = R · I² = 4 · 5² = 4 · 25 = <strong>100 W</strong>.</p></details></li>
+            <li>Um resistor de 25 Ω dissipa 100 W. Qual a corrente?<details><summary>Ver resposta</summary><p>I = √(<span class="frac"><span>100</span><span class="sl"> / </span><span>25</span></span>) = √4 = <strong>2 A</strong>.</p></details></li>
+            <li>Se a corrente num resistor dobra, o que acontece com a potência?<details><summary>Ver resposta</summary><p>Como P = R · I², dobrar I multiplica por 2² = 4. A potência fica <strong>4 vezes maior</strong>. É por isso que sobrecorrente esquenta tanto.</p></details></li>
+            <li>Um resistor de 48,4 Ω em 220 V: qual a potência?<details><summary>Ver resposta</summary><p>P = <span class="frac"><span>220²</span><span class="sl"> / </span><span>48,4</span></span> = <span class="frac"><span>48400</span><span class="sl"> / </span><span>48,4</span></span> = <strong>1.000 W</strong>.</p></details></li>
+          </ol>
+        </section>
+
+        <section class="table-card tool" aria-label="Calculadora de potências e raízes">
+          <h2>Potência e raiz, passo a passo</h2>
+          <p class="lead">Escolha a fórmula e preencha os dois valores.</p>
+          <div class="seg q" id="pw-mode" role="group" aria-label="Fórmula">
+            <button type="button" data-m="pri" aria-pressed="true">P = R · I²</button>
+            <button type="button" data-m="pvr" aria-pressed="false">P = V² / R</button>
+            <button type="button" data-m="irp" aria-pressed="false">I = √(P / R)</button>
+            <button type="button" data-m="vpr" aria-pressed="false">V = √(P · R)</button>
+          </div>
+          <div class="grid">
+            <div class="field"><label for="pw-a"><span id="pw-la">R</span></label><div class="wrap"><input id="pw-a" type="text" inputmode="decimal" value="10"><span class="unit" id="pw-ua">Ω</span></div></div>
+            <div class="field"><label for="pw-b"><span id="pw-lb">I</span></label><div class="wrap"><input id="pw-b" type="text" inputmode="decimal" value="3"><span class="unit" id="pw-ub">A</span></div></div>
+          </div>
+          <p id="pw-status" class="status" role="status" aria-live="polite"></p>
+          <section id="pw-result" class="result" hidden aria-live="polite"></section>
+          <section id="pw-steps" class="steps" hidden></section>
+        </section>
+      </div>
+    </details>
+
+    <!-- ===== Arredondamento ===== -->
+    <details class="msec" id="ms-arred">
+      <summary><h2>Arredondamento e algarismos significativos</h2></summary>
+      <div class="msec-body">
+        <section class="study" aria-label="Estudo de arredondamento">
+          <h3>Como arredondar</h3>
+          <ul>
+            <li>Olhe o dígito logo depois do último que você vai guardar. Se for 0 a 4, o último fica como está. Se for 5 a 9, o último sobe um.</li>
+            <li>3,14159 com 2 casas: o próximo dígito é 1, então fica <strong>3,14</strong>. 2,675 com 2 casas: o próximo é 5, então fica <strong>2,68</strong>.</li>
+            <li><strong>Algarismos significativos</strong> são os dígitos que contam, a partir do primeiro que não é zero. 0,0173 tem 3; 4,70 tem 3; 1.200 tem 4 (se os zeros foram medidos).</li>
+          </ul>
+          <h3>Quando arredondar</h3>
+          <ul>
+            <li><strong>No meio da conta, não arredonde</strong>, ou guarde pelo menos 2 dígitos a mais do que vai precisar. Use a memória da calculadora em vez de digitar de novo o valor curto.</li>
+            <li><strong>No final</strong>, arredonde para 3 algarismos significativos (ou menos, se os dados que você tem são menos precisos). Não passe da precisão do dado mais fraco.</li>
+            <li>Quando o resultado é um <strong>mínimo</strong> (seção de cabo, disjuntor), arredonde para cima, até o valor comercial seguinte, e não para o mais próximo.</li>
+          </ul>
+          <h3>Exemplo resolvido</h3>
+          <p>Cabo de cobre: R = <span class="frac"><span>0,0173 · 150</span><span class="sl"> / </span><span>4</span></span> = 0,64875 Ω. Se alguém arredonda para 0,65 Ω no meio da conta, a corrente em 12 V sai I = <span class="frac"><span>12</span><span class="sl"> / </span><span>0,65</span></span> = 18,46 A. Com o valor completo, I = <span class="frac"><span>12</span><span class="sl"> / </span><span>0,64875</span></span> = 18,50 A. A diferença é pequena, mas cresce a cada passo arredondado.</p>
+          <h3>Pratique</h3>
+          <ol>
+            <li>Arredonde 18,4971 A para 3 algarismos significativos.<details><summary>Ver resposta</summary><p>Os 3 primeiros são 1, 8 e 4; o próximo é 9, então o 4 sobe: <strong>18,5 A</strong>.</p></details></li>
+            <li>Quantos algarismos significativos tem 0,0173?<details><summary>Ver resposta</summary><p>Os zeros do começo não contam. Valem 1, 7 e 3: <strong>3 algarismos</strong>.</p></details></li>
+            <li>A seção mínima calculada deu 11,53 mm². Qual cabo comercial usar (…, 10, 16, 25 …)?<details><summary>Ver resposta</summary><p>10 mm² é menor que o mínimo, então não serve. Use <strong>16 mm²</strong>.</p></details></li>
+          </ol>
+        </section>
+
+        <section class="table-card tool" aria-label="Calculadora de arredondamento">
+          <h2>Arredondar um número</h2>
+          <div class="seg" id="ar-mode" role="group" aria-label="Tipo de arredondamento">
+            <button type="button" data-m="dec" aria-pressed="true">Casas decimais</button>
+            <button type="button" data-m="sig" aria-pressed="false">Significativos</button>
+          </div>
+          <div class="grid">
+            <div class="field"><label for="ar-v"><span>Número</span></label><div class="wrap"><input id="ar-v" type="text" value="18,4971"></div></div>
+            <div class="field"><label for="ar-n"><span id="ar-ln">Casas decimais</span></label><div class="wrap"><input id="ar-n" type="text" inputmode="numeric" value="2"></div></div>
+          </div>
+          <p id="ar-status" class="status" role="status" aria-live="polite"></p>
+          <section id="ar-result" class="result" hidden aria-live="polite"></section>
+          <section id="ar-steps" class="steps" hidden></section>
+        </section>
+      </div>
+    </details>
   </section>
 </main>
 
@@ -877,7 +1243,7 @@ function fillMaterialSelect(sel, onlyIds){
 
 /* ---------- abas ---------- */
 (function(){
-  var names = ['ohm', 'cabo', 'queda', 'equivalente', 'circuito', 'notacao', 'matematica'];
+  var names = ['ohm', 'cabo', 'queda', 'equivalente', 'circuito', 'kirchhoff', 'notacao', 'matematica'];
   var tabs = names.map(function(n){ return document.getElementById('t-' + n); });
   var panels = names.map(function(n){ return document.getElementById('tab-' + n); });
   function show(name){
@@ -1384,15 +1750,22 @@ function fillMaterialSelect(sel, onlyIds){
     if (x < COLS - 1 && y < ROWS - 1){ KEYS.push(x + ',' + y + 'd'); KEYS.push(x + ',' + y + 'u'); }
   }
   var PRESETS = {
-    b: {A:[0,0], B:[0,2], items:[['0,0h',3],['0,0v',6],['1,0v',6],['1,0h',3],['2,0v',6],['2,0h',4],['2,1h',2],['1,1v',1],
+    b: {A:[0,0], B:[0,2], V:12, items:[['0,0h',3],['0,0v',6],['1,0v',6],['1,0h',3],['2,0v',6],['2,0h',4],['2,1h',2],['1,1v',1],
         ['1,1h','w'],['0,1h','w'],['3,0v','w'],['0,2h','w']]},
-    sp: {A:[0,0], B:[4,0], items:[['0,0h',10],['1,0h',20],['1,1h',30],['3,0h',40],['1,0v','w'],['2,0h','w'],['2,1h','w'],['3,0v','w']]},
-    ponte: {A:[0,1], B:[4,1], items:[['0,0h',10],['0,2h',20],['2,0h',30],['2,2h',40],['2,0v',50],
+    sp: {A:[0,0], B:[4,0], V:12, items:[['0,0h',10],['1,0h',20],['1,1h',30],['3,0h',40],['1,0v','w'],['2,0h','w'],['2,1h','w'],['3,0v','w']]},
+    ponte: {A:[0,1], B:[4,1], V:10, items:[['0,0h',10],['0,2h',20],['2,0h',30],['2,2h',40],['2,0v',50],
         ['0,0v','w'],['1,0h','w'],['0,1v','w'],['1,2h','w'],['3,0h','w'],['4,0v','w'],['3,2h','w'],['4,1v','w'],['2,1v','w']]},
+    /* com fontes: ['trecho', 's', volts, polaridade] (0 = + na 1ª ponta do trecho: à esquerda ou em cima) */
+    m2: {A:null, B:null, items:[['0,0h','w'],['1,0h',2],['2,0h',3],['3,0h','w'],['0,0v','w'],['0,1v','s',18,0],['2,0v',6],['2,1v','w'],
+        ['4,0v','w'],['4,1v','s',9,0],['0,2h','w'],['1,2h','w'],['2,2h','w'],['3,2h','w']]},
+    m3: {A:null, B:null, items:[['0,0h','w'],['1,0h',2],['2,0h','w'],['3,0h',4],['4,0h','w'],['5,0h',2],['0,0v','w'],['0,1v','s',20,0],
+        ['2,0v',4],['2,1v','s',4,0],['4,0v',4],['4,1v','w'],['6,0v','w'],['6,1v','s',8,0],
+        ['0,2h','w'],['1,2h','w'],['2,2h','w'],['3,2h','w'],['4,2h','w'],['5,2h','w']]},
     blank: {A:null, B:null, items:[]}
   };
 
-  var st = {e:{}, A:null, B:null, n:0};
+  /* V: tensão entre A e B (volts) ou null; sem tensão a animação para na Req */
+  var st = {e:{}, A:null, B:null, n:0, V:null};
   var tool = 'r', mode = 'edit', frames = [], fi = 0, timer = null, ctx = {wires:[]}, sel = null;
 
   /* ----- geometria ----- */
@@ -1410,13 +1783,28 @@ function fillMaterialSelect(sel, onlyIds){
     if (a >= 1e3) return br(v / 1e3, 3) + 'k';
     return br(v, 3);
   }
+  /* valor com prefixo (0,0025 A vira 2,5 mA), com d algarismos significativos */
+  function qty(x, u, d){
+    if (!x) return '0 ' + u;
+    var e = Math.max(-12, Math.min(12, Math.floor(Math.log10(Math.abs(x)) / 3) * 3));
+    return (d === 4 ? (eng(x, u) || br(x, 4) + ' ' + u) : br(clean(x / Math.pow(10, e)), d) + ' ' + (e ? ENG[String(e)] : '') + u).replace('-', '−');
+  }
   function lst(a){ return a.length < 2 ? a.join('') : a.slice(0, -1).join(', ') + ' e ' + a[a.length - 1]; }
+  /* resistores R1, R2... e fontes E1, E2..., cada tipo na ordem do número guardado */
   function names(){
-    var ks = Object.keys(st.e).filter(function(k){ return st.e[k].t === 'r'; });
-    ks.sort(function(a, b){ return st.e[a].n - st.e[b].n; });
     var o = {};
-    ks.forEach(function(k, i){ o[k] = 'R' + (i + 1); });
+    [['r', 'R'], ['s', 'E']].forEach(function(t){
+      var ks = Object.keys(st.e).filter(function(k){ return st.e[k].t === t[0]; });
+      ks.sort(function(a, b){ return st.e[a].n - st.e[b].n; });
+      ks.forEach(function(k, i){ o[k] = t[1] + (i + 1); });
+    });
     return o;
+  }
+  function fmtEl(c){ return c.t === 's' ? qty(c.v, 'V', 4) : fmtOhm(c.v); }
+  /* em que lado do trecho fica o + da fonte */
+  function plusSide(k, pos){
+    var e = ends(k), p = e[pos ? 1 : 0], o = e[pos ? 0 : 1];
+    return p[1] < o[1] ? 'em cima' : p[1] > o[1] ? 'embaixo' : p[0] < o[0] ? 'à esquerda' : 'à direita';
   }
 
   /* ----- desenho ----- */
@@ -1435,6 +1823,27 @@ function fillMaterialSelect(sel, onlyIds){
       (!ver ? '<text class="ck-val" text-anchor="middle" x="' + mx + '" y="' + (my - 11) + '">' + short(val) + '</text>'
            : '<text class="ck-val" x="' + (mx + 12) + '" y="' + my + '">' + short(val) + '</text>');
   }
+  /* fonte de tensão: placa longa (+) e placa curta e grossa (−), com o sinal + ao lado da placa longa.
+     u aponta para o lado +; n é a perpendicular (para cima, ou para a esquerda no trecho vertical) */
+  function srcGeo(p, q, pos){
+    var a = px(p), b = px(q), dx = b[0] - a[0], dy = b[1] - a[1], L = Math.sqrt(dx * dx + dy * dy);
+    var g = {mx:(a[0] + b[0]) / 2, my:(a[1] + b[1]) / 2, ux:dx / L, uy:dy / L};
+    if (!pos){ g.ux = -g.ux; g.uy = -g.uy; }
+    g.nx = -g.uy; g.ny = g.ux;
+    if (g.ny > 1e-9 || (Math.abs(g.ny) <= 1e-9 && g.nx > 0)){ g.nx = -g.nx; g.ny = -g.ny; }
+    g.at = function(t, sd){ return [Math.round((g.mx + g.ux * t + g.nx * sd) * 10) / 10, Math.round((g.my + g.uy * t + g.ny * sd) * 10) / 10]; };
+    g.an = function(pt){ var d = pt[0] - g.mx; return d > 4 ? 'start' : d < -4 ? 'end' : 'middle'; };
+    g.plus = g.at(9, 12); g.lab = g.at(0, -17);
+    return g;
+  }
+  function srcText(name, v){ return name + ' ' + short(v) + 'V'; }
+  function srcGlyph(p, q, name, v, pos, cls){
+    var g = srcGeo(p, q, pos);
+    function ln(a, b, c){ return '<line class="' + c + '" x1="' + a[0] + '" y1="' + a[1] + '" x2="' + b[0] + '" y2="' + b[1] + '"/>'; }
+    return ln(g.at(-3.5, 0), g.at(3.5, 0), 'ck-gap') + ln(g.at(3, 11), g.at(3, -11), 'ck-plate ' + cls) + ln(g.at(-3, 6), g.at(-3, -6), 'ck-plate neg ' + cls) +
+      '<text class="ck-plus" x="' + g.plus[0] + '" y="' + g.plus[1] + '">+</text>' +
+      '<text class="ck-val ck-sv" text-anchor="' + g.an(g.lab) + '" x="' + g.lab[0] + '" y="' + g.lab[1] + '"><tspan class="ck-snm">' + name + '</tspan> ' + short(v) + 'V</text>';
+  }
   function junctions(segs){
     var seen = {}, cnt = {}, out = '';
     segs.forEach(function(s){
@@ -1452,12 +1861,12 @@ function fillMaterialSelect(sel, onlyIds){
     });
     return out;
   }
-  function terms(){
+  function terms(hl){
     var o = '';
     [['A', st.A], ['B', st.B]].forEach(function(t){
       if (!t[1]) return;
       var a = px(t[1]);
-      o += '<circle class="ck-term" cx="' + a[0] + '" cy="' + a[1] + '" r="6"/>' +
+      o += '<circle class="ck-term' + (hl ? ' hl' : '') + '" cx="' + a[0] + '" cy="' + a[1] + '" r="6"/>' +
            '<text class="ck-tl" x="' + (a[0] - 11) + '" y="' + (a[1] - 11) + '" text-anchor="middle">' + t[0] + '</text>';
     });
     return o;
@@ -1475,6 +1884,7 @@ function fillMaterialSelect(sel, onlyIds){
     KEYS.forEach(function(k){
       var c = st.e[k];
       if (c && c.t === 'r'){ var e = ends(k); h += resBox(e[0], e[1], nm[k], c.v, k === sel ? 'hl' : ''); }
+      if (c && c.t === 's'){ var f = ends(k); h += srcGlyph(f[0], f[1], nm[k], c.v, c.pos, k === sel ? 'hl' : ''); }
     });
     h += terms();
     [true, false].forEach(function(diag){
@@ -1490,14 +1900,19 @@ function fillMaterialSelect(sel, onlyIds){
     }
     svg.innerHTML = h;
     svg.setAttribute('data-tool', tool);
+    syncMode();
   }
-  function drawGraph(G, hl, nw){
+  /* ov (opcional, na volta ao circuito): lab = textos de corrente, arrows = setas, tags = tensões nos nós,
+     hlW = fios do nó destacado, path = trechos de fio do laço destacado, ring = ponto do nó, term = destacar A e B,
+     noAB = não desenhar A e B (circuito com fontes), marks = correntes de malha (↻ I1) */
+  function drawGraph(G, hl, nw, ov){
+    ov = ov || {};
     var h = '', segs = [], hs = {}, hold = {}, ws = ctx.wires.filter(function(w){ return G.alive[w.node]; }), more = true;
     (hl || []).forEach(function(id){ hs[id] = 1; });
     /* pontos que seguram um fio: pontas de resistores, caminhos e terminais */
     G.edges.forEach(function(e){ e.path.forEach(function(p){ hold[pk(p)] = 1; }); });
-    if (st.A) hold[pk(st.A)] = 1;
-    if (st.B) hold[pk(st.B)] = 1;
+    if (st.A && !ov.noAB) hold[pk(st.A)] = 1;
+    if (st.B && !ov.noAB) hold[pk(st.B)] = 1;
     /* tira pedaços de fio que ficaram soltos depois das trocas */
     while (more){
       more = false;
@@ -1509,52 +1924,89 @@ function fillMaterialSelect(sel, onlyIds){
         return !dead;
       });
     }
-    ws.forEach(function(w){ h += segLine(w.p, w.q, 'ck-wire'); segs.push([w.p, w.q]); });
+    ws.forEach(function(w){ h += segLine(w.p, w.q, 'ck-wire' + (ov.hlW && ov.hlW[w.node] ? ' hl' : '')); segs.push([w.p, w.q]); });
+    (ov.path || []).forEach(function(p){ h += polyline(p, 'ck-wire hl'); });
     G.edges.forEach(function(e){
       var c = hs[e.id] ? 'hl' : '', m = Math.floor((e.path.length - 1) / 2), i;
       h += '<g class="' + (e.id === nw ? 'ck-new' : '') + '">' + polyline(e.path, 'ck-wire ' + c) +
-           resBox(e.path[m], e.path[m + 1], e.name, e.val, c) + '</g>';
+           (e.kind === 's' ? srcGlyph(e.path[0], e.path[1], e.name, e.val, e.pos, c) : resBox(e.path[m], e.path[m + 1], e.name, e.val, c)) + '</g>';
       for (i = 0; i < e.path.length - 1; i++) segs.push([e.path[i], e.path[i + 1]]);
     });
-    return h + junctions(segs) + terms();
+    h += junctions(segs) + (ov.noAB ? '' : terms(ov.term)) + (ov.arrows || []).join('');
+    (ov.marks || []).forEach(function(m){ h += '<text class="ck-mesh' + (m.hl ? ' hl' : '') + '" x="' + m.x + '" y="' + m.y + '">' + m.txt + '</text>'; });
+    (ov.lab || []).forEach(function(l){ h += '<text class="ck-cur" text-anchor="' + l.an + '" x="' + l.x + '" y="' + l.y + '">' + l.txt + '</text>'; });
+    (ov.tags || []).forEach(function(t){
+      h += '<text class="ck-volt" text-anchor="' + t.an + '" x="' + t.x + '" y="' + t.y + '">' + (t.l ? '<tspan class="ck-vn">' + t.l + '</tspan> ' : '') + t.v + '</text>';
+    });
+    if (ov.ring) h += '<circle class="ck-ring" cx="' + ov.ring[0] + '" cy="' + ov.ring[1] + '" r="11"/>';
+    return h;
   }
 
   /* ----- cálculo da redução ----- */
-  function solveNodal(edges, nA, nB){
-    var ids = [], idx = {}, n = 0, i, j, c;
-    edges.forEach(function(e){ if (ids.indexOf(e.a) < 0) ids.push(e.a); if (ids.indexOf(e.b) < 0) ids.push(e.b); });
-    ids.forEach(function(id){ if (id !== nB) idx[id] = n++; });
-    var M = [], b = [];
-    for (i = 0; i < n; i++){ M.push([]); b.push(0); for (j = 0; j < n; j++) M[i].push(0); }
-    b[idx[nA]] = 1;
-    edges.forEach(function(e){
-      var gc = 1 / e.val;
-      if (e.a !== nB) M[idx[e.a]][idx[e.a]] += gc;
-      if (e.b !== nB) M[idx[e.b]][idx[e.b]] += gc;
-      if (e.a !== nB && e.b !== nB){ M[idx[e.a]][idx[e.b]] -= gc; M[idx[e.b]][idx[e.a]] -= gc; }
+  /* Análise nodal modificada (MNA). Cada ramo liga os nós a e b e é um de:
+       {kind:'R', val:ohms}   resistor;
+       {kind:'V', val:volts}  fonte de tensão ideal, com V(a) − V(b) = val;
+       {kind:'I', val:ampères} fonte de corrente ideal, que leva val de a para b por dentro dela.
+     Incógnitas: a tensão de cada nó (o nó ref fica em 0 V) e a corrente de cada fonte de tensão.
+     Devolve {v:{nó: volts}, i:[corrente de a para b em cada ramo, na ordem recebida]}
+     ou null quando o sistema não tem solução única (parte solta, fontes em conflito). */
+  function solveMNA(branches, ref){
+    var idx = {}, n = 0, m = 0, row = [], i, j, c;
+    branches.forEach(function(e){
+      [e.a, e.b].forEach(function(k){ if (!(k in idx)) idx[k] = k === ref ? -1 : n++; });
     });
-    for (i = 0; i < n; i++){
+    branches.forEach(function(e, k){ row[k] = e.kind === 'V' ? n + m++ : -1; });
+    var N = n + m, M = [], b = [], big = 0;
+    for (i = 0; i < N; i++){ M.push([]); b.push(0); for (j = 0; j < N; j++) M[i].push(0); }
+    function add(r, col, v){ if (r >= 0 && col >= 0) M[r][col] += v; }
+    branches.forEach(function(e, k){
+      var a = idx[e.a], z = idx[e.b], r = row[k];
+      if (e.kind === 'R'){
+        var gc = 1 / e.val;
+        add(a, a, gc); add(z, z, gc); add(a, z, -gc); add(z, a, -gc);
+      } else if (e.kind === 'V'){
+        /* incógnita extra: corrente por dentro da fonte, de a para b */
+        add(a, r, 1); add(z, r, -1); add(r, a, 1); add(r, z, -1);
+        b[r] += e.val;
+      } else {
+        if (a >= 0) b[a] -= e.val;
+        if (z >= 0) b[z] += e.val;
+      }
+    });
+    M.forEach(function(rw){ rw.forEach(function(v){ big = Math.max(big, Math.abs(v)); }); });
+    for (i = 0; i < N; i++){
       var p = i, t;
-      for (j = i + 1; j < n; j++) if (Math.abs(M[j][i]) > Math.abs(M[p][i])) p = j;
+      for (j = i + 1; j < N; j++) if (Math.abs(M[j][i]) > Math.abs(M[p][i])) p = j;
       t = M[i]; M[i] = M[p]; M[p] = t; t = b[i]; b[i] = b[p]; b[p] = t;
-      if (Math.abs(M[i][i]) < 1e-18) return NaN;
-      for (j = i + 1; j < n; j++){
+      if (!(Math.abs(M[i][i]) > big * 1e-13)) return null;
+      for (j = i + 1; j < N; j++){
         var f = M[j][i] / M[i][i];
-        for (c = i; c < n; c++) M[j][c] -= f * M[i][c];
+        if (!f) continue;
+        for (c = i; c < N; c++) M[j][c] -= f * M[i][c];
         b[j] -= f * b[i];
       }
     }
-    var sol = [];
-    for (i = n - 1; i >= 0; i--){
-      var s = b[i];
-      for (j = i + 1; j < n; j++) s -= M[i][j] * sol[j];
-      sol[i] = s / M[i][i];
+    var x = [];
+    for (i = N - 1; i >= 0; i--){
+      var sm = b[i];
+      for (j = i + 1; j < N; j++) sm -= M[i][j] * x[j];
+      x[i] = sm / M[i][i];
     }
-    return sol[idx[nA]];
+    var v = {};
+    Object.keys(idx).forEach(function(k){ v[k] = idx[k] < 0 ? 0 : x[idx[k]]; });
+    return {v:v, i:branches.map(function(e, k){
+      return e.kind === 'R' ? (v[e.a] - v[e.b]) / e.val : e.kind === 'V' ? x[row[k]] : e.val;
+    })};
+  }
+  function rBranches(edges){ return edges.map(function(e){ return {kind:'R', a:e.a, b:e.b, val:e.val}; }); }
+  /* Req entre A e B: liga uma fonte de 1 V e mede a corrente que ela fornece (a corrente por dentro dela, de A para B, é −I) */
+  function reqNodal(edges, nA, nB){
+    var s = solveMNA(rBranches(edges).concat([{kind:'V', a:nA, b:nB, val:1}]), nB);
+    return s ? -1 / s.i[edges.length] : NaN;
   }
 
   function build(){
-    var nm = names(), par = {}, wadj = {}, wires = [], res = [], gx, gy;
+    var nm = names(), par = {}, wadj = {}, wires = [], res = [], srcs = [], gx, gy;
     function find(k){ while (par[k] !== k){ par[k] = par[par[k]]; k = par[k]; } return k; }
     function uni(a, b){ a = find(a); b = find(b); if (a !== b) par[b] = a; }
     for (gy = 0; gy < ROWS; gy++) for (gx = 0; gx < COLS; gx++) par[gx + ',' + gy] = gx + ',' + gy;
@@ -1567,30 +2019,25 @@ function fillMaterialSelect(sel, onlyIds){
         wires.push({p:e[0], q:e[1]});
         (wadj[a] = wadj[a] || []).push(e[1]);
         (wadj[b] = wadj[b] || []).push(e[0]);
-      } else res.push({key:k, v:c.v, p:e[0], q:e[1]});
+      } else if (c.t === 's') srcs.push({key:k, v:c.v, pos:c.pos ? 1 : 0, p:e[0], q:e[1]});
+      else res.push({key:k, v:c.v, p:e[0], q:e[1]});
     });
     wires.forEach(function(w){ w.node = find(pk(w.p)); });
-    ctx = {wires:wires};
+    ctx = {wires:wires, wadj:wadj};
+    /* com fontes na grade: A, B e a tensão A–B não entram; resolve por correntes de malha */
+    if (srcs.length){
+      var ide = 0;
+      return buildSrc(res.map(function(r){ return {id:'e' + (++ide), name:nm[r.key], kind:'r', val:r.v, a:find(pk(r.p)), b:find(pk(r.q)), path:[r.p, r.q]}; })
+        .concat(srcs.map(function(r){
+          var a = find(pk(r.p)), b = find(pk(r.q)), plus = r.pos ? b : a;
+          /* sv: V(a) − V(b), com a = ponta p do trecho */
+          return {id:'e' + (++ide), name:nm[r.key], kind:'s', val:r.v, pos:r.pos, a:a, b:b, plus:plus, sv:plus === a ? r.v : -r.v, path:[r.p, r.q]};
+        })));
+    }
     if (!st.A || !st.B) return {err:'Marque a entrada A e a saída B na grade.'};
     if (!res.length) return {err:'Coloque ao menos um resistor na grade.'};
     var nA = find(pk(st.A)), nB = find(pk(st.B));
 
-    function wirePath(from, to){
-      var a = pk(from), b = pk(to);
-      if (a === b) return [from];
-      var prev = {}, queue = [from], i, cur, nx;
-      prev[a] = null;
-      while (queue.length){
-        cur = queue.shift();
-        if (pk(cur) === b) break;
-        (wadj[pk(cur)] || []).forEach(function(n){ if (!(pk(n) in prev)){ prev[pk(n)] = cur; queue.push(n); } });
-      }
-      if (!(b in prev)) return [from, to];
-      var path = [to];
-      cur = to;
-      while (prev[pk(cur)]){ cur = prev[pk(cur)]; path.unshift(cur); }
-      return path;
-    }
     function aliveOf(edges){
       var al = {};
       edges.forEach(function(e){ al[e.a] = 1; al[e.b] = 1; });
@@ -1616,7 +2063,8 @@ function fillMaterialSelect(sel, onlyIds){
     var out = {frames:frames};
 
     if (nA === nB){
-      frames.push({G:G0, hl:[], nw:null, label:'Resultado', cap:'<p>A e B estão ligados por fio, então a resistência entre eles é zero.</p>'});
+      frames.push({G:G0, hl:[], nw:null, label:'Resultado', cap:'<p>A e B estão ligados por fio, então a resistência entre eles é zero.</p>' +
+        (st.V ? '<p>Com ' + qty(st.V, 'V', 4) + ' entre A e B isso seria um curto-circuito: a corrente seria enorme, limitada só pela fonte e pelos fios.</p>' : '')});
       out.req = 0; return out;
     }
 
@@ -1654,9 +2102,13 @@ function fillMaterialSelect(sel, onlyIds){
       frames.push({G:snap(cur), hl:[], nw:null, label:'Limpeza', cap:'<p>Sem os resistores que não conduzem, o circuito fica assim.</p>'});
     }
     if (!seen[nB]){
-      frames.push({G:snap(cur), hl:[], nw:null, label:'Resultado', cap:'<p>Não existe caminho entre A e B: o circuito está aberto e a resistência é infinita.</p>'});
+      frames.push({G:snap(cur), hl:[], nw:null, label:'Resultado', cap:'<p>Não existe caminho entre A e B: o circuito está aberto e a resistência é infinita.</p>' +
+        (st.V ? '<p>Mesmo com ' + qty(st.V, 'V', 4) + ' entre A e B, nenhuma corrente circula.</p>' : '')});
       out.open = true; return out;
     }
+
+    /* circuito limpo, antes da redução: é nele que se calculam tensões e correntes */
+    var cur0 = cur.slice();
 
     /* laço de redução */
     var ops = [], nS = 0, nP = 0, nid = 0, guard = 0, stuck = false;
@@ -1748,16 +2200,684 @@ function fillMaterialSelect(sel, onlyIds){
     out.ops = ops;
 
     if (stuck){
-      var rq = solveNodal(cur, nA, nB);
+      var rq = reqNodal(cur, nA, nB);
       frames.push({G:snap(cur), hl:[], nw:null, label:'Resultado',
         cap:'<p>Não sobrou nenhuma série nem paralelo simples (acontece em pontes, como a de Wheatstone). Só com essas duas regras não dá para continuar.</p>' +
             '<p>Pela análise nodal (equações de tensão em cada ponto) a resistência entre A e B é <strong>' + fmtOhm(rq) + '</strong>. Para reduzir à mão, use a conversão triângulo-estrela.</p>'});
-      out.req = rq; out.stuck = true; return out;
+      out.req = rq; out.stuck = true;
+    } else {
+      var last = cur[0];
+      frames.push({G:snap(cur), hl:[], nw:null, label:'Resultado',
+        cap:'<p>Sobrou um único resistor entre A e B. A resistência equivalente é <strong>' + fmtOhm(last.val) + '</strong>.</p>'});
+      out.req = last.val;
     }
-    var last = cur[0];
-    frames.push({G:snap(cur), hl:[], nw:null, label:'Resultado',
-      cap:'<p>Sobrou um único resistor entre A e B. A resistência equivalente é <strong>' + fmtOhm(last.val) + '</strong>.</p>'});
-    out.req = last.val;
+    out.resFi = frames.length - 1;
+    if (st.V && isFinite(out.req) && out.req > 0) out.kir = kirchhoff(st.V, out.req);
+    return out;
+
+    /* ----- volta ao circuito original: tensões, correntes e leis de Kirchhoff ----- */
+    function kirchhoff(Vs, req){
+      /* a fonte A–B entra como um ramo a mais (não desenhado) */
+      var ab = {id:'src', name:'V', kind:'ab', a:nA, b:nB, sv:Vs, pts:[st.A, st.B]}, act = cur0.concat([ab]);
+      var sol = solveMNA(act.map(mnaBranch), nB);
+      if (!sol) return null;
+      var V = sol.v, IT = -sol.i[cur0.length], I = {}, inC = {}, tolI = Math.abs(IT) * 1e-9, tolV = Vs * 1e-9;
+      act.forEach(function(e, k){ I[e.id] = Math.abs(sol.i[k]) <= tolI ? 0 : sol.i[k]; inC[e.id] = 1; });
+      G0.edges.forEach(function(e){ if (!(e.id in I)) I[e.id] = 0; });
+      spreadV(V, G0.edges, tolV);
+      /* escala natural de corrente (V / menor R): base da tolerância da 1ª lei, mesmo quando I_T é minúscula */
+      var minRk = Math.min.apply(null, cur0.filter(function(e){ return e.kind === 'r'; }).map(function(e){ return e.val; }));
+      var iNoise = Math.max(Math.abs(IT), isFinite(minRk) && minRk > 0 ? Vs / minRk : 0);
+
+      /* nomes dos nós: A, B e letras C, D, E... na ordem de leitura da grade */
+      var gp = gridPts(G0.edges), NN = {};
+      gp[nA] = [st.A]; gp[nB] = [st.B];
+      NN[nA] = 'A'; NN[nB] = 'B';
+      var mids = letters(Object.keys(V).filter(function(n){ return gp[n] && n !== nA && n !== nB; }), gp, 67, NN);
+      var order = [nA].concat(mids, [nB]), bare = {};
+      bare[nA] = 1; bare[nB] = 1;
+      var lb = kirLabels({G0:G0, I:I, V:V, NN:NN, order:order, gp:gp, bare:bare, terms:[st.A, st.B]});
+
+      var sI = scale(IT), sV = scale(Vs);
+      function iName(e){ return e.kind === 'ab' ? 'I<sub>T</sub>' : 'I' + e.name.slice(1); }
+      function vSub(n){ return 'V<sub>' + NN[n] + '</sub>'; }
+      var it = {k:'Corrente total', sym:'I<sub>T</sub> = V / R<sub>AB</sub>', num:'= ' + fmt(Vs) + ' / ' + fmt(req) + ' = <b>' + qty(Vs / req, 'A', 4) + '</b>', sec:'it'};
+      var volts = order.map(function(n){ return vSub(n) + ' = ' + br(V[n] * sV.f, 4); }).join(' · ') + ' ' + sV.u + 'V';
+      var named = G0.edges.slice().sort(function(a, b){ return +a.name.slice(1) - +b.name.slice(1); });
+      var curr = named.map(function(e){
+        if (!inC[e.id]) return {k:e.name, sym:iName(e) + ' = 0', num:'fora do caminho, não conduz'};
+        var f = I[e.id] >= 0 ? e.a : e.b, t = f === e.a ? e.b : e.a;
+        return {k:e.name + ' · ' + NN[f] + ' → ' + NN[t], sym:iName(e) + ' = (' + vSub(f) + ' − ' + vSub(t) + ') / ' + e.name,
+          num:'= (' + br(V[f], 4) + ' − ' + br(V[t], 4) + ') / ' + fmt(e.val) + ' = <b>' + qty(Math.abs(I[e.id]), 'A', 4) + '</b>'};
+      });
+
+      /* laços: árvore geradora só com resistores (busca em largura a partir de A); a fonte A–B e cada
+         resistor fora da árvore (corda) fecham um laço. Não depende de o desenho ser planar. */
+      var tr = spanTree(cur0, nA, function(){ return 0; });
+      var loops = [[{e:ab, from:nB, to:nA}].concat(tr.path(nA, nB))];
+      cur0.forEach(function(e){
+        if (tr.inT[e.id]) return;
+        var f = I[e.id] >= 0 ? e.a : e.b, t = otherEnd(e, f);
+        loops.push([{e:e, from:f, to:t}].concat(tr.path(t, f)));
+      });
+      var nBr = act.length, nNo = Object.keys(tr.dep).length;
+      var laws = kirLaws({act:act, I:I, V:V, NN:NN, order:order, loops:loops, sI:sI, sV:sV, iRef:iNoise, vRef:Vs, tolV:tolV, iName:iName,
+        vName:function(e){ return e.kind === 'ab' ? 'V' : 'V<sub>' + e.name + '</sub>'; },
+        loopLabel:function(j, seq, viaAB){ return 'Laço ' + seq + (viaAB ? ' (pela fonte)' : ''); }});
+
+      /* quadros */
+      var Vt = qty(Vs, 'V', 4), It = qty(IT, 'A', 4);
+      function ovx(extra){ var o = {lab:lb.lab, arrows:lb.arrows, tags:lb.tagList(order)}, k; for (k in extra) o[k] = extra[k]; return o; }
+      frames.push({G:G0, hl:[], nw:null, ph:'ret', sec:'it', label:'De volta ao circuito · corrente total',
+        ov:{tags:lb.tagList([nA, nB]), term:true},
+        cap:'<p>Agora voltamos ao circuito original, com <strong>' + Vt + '</strong> entre A (+) e B (0 V). Pela lei de Ohm no circuito todo:</p>' +
+            '<code>I<sub>T</sub> = V / R<sub>AB</sub> = ' + fmt(Vs) + ' / ' + fmt(req) + ' = ' + It + '</code>' +
+            '<p>Essa corrente sai de A, se divide pelos resistores e chega toda em B.</p>'});
+      frames.push({G:G0, hl:[], nw:null, ph:'ret', sec:'vi', label:'Tensão em cada nó e corrente em cada resistor', ov:ovx({}),
+        cap:'<p>Com B em 0 V e A em ' + Vt + ', cada nó (ponto de ligação) tem uma tensão. A corrente num resistor é a diferença de tensão entre as pontas dividida pela resistência, <strong>I = ΔV / R</strong>, e vai do lado de tensão maior para o menor (setas verdes).</p>'});
+      pushLaws(G0, laws, ovx, lb.tags, {
+        noKcl:'Aqui nenhum nó liga 3 ou mais caminhos: tudo está em série, e a mesma corrente I<sub>T</sub> = ' + It + ' passa por todos os resistores.',
+        term:function(n){ return n === nA || n === nB; },
+        count:'São ' + nBr + ' ramos (' + cur0.length + (cur0.length > 1 ? ' resistores' : ' resistor') + ' e a fonte A–B) e ' + nNo + ' nós, então há ' +
+              nBr + ' − ' + nNo + ' + 1 = <strong>' + laws.kvl.length + (laws.kvl.length > 1 ? ' laços independentes' : ' laço') + '</strong>.',
+        word:'laço'});
+      return {IT:IT, boxes:lb.boxes, V:V, I:I, NN:NN,
+        head:[{sym:'R<sub>AB</sub> = ' + fmtOhm(req)}, it],
+        secs:{
+          vi:{t:'Tensões nos nós (B = 0 V)', lines:[{sym:volts}, {h:'Correntes · I = ΔV / R'}].concat(curr)},
+          kcl:{t:'1ª lei · nós: entra = sai', empty:'Nenhum nó com 3 ou mais ligações: a mesma corrente I<sub>T</sub> passa por tudo.', lines:laws.kcl},
+          kvl:{t:'2ª lei · laços: soma = 0', pre:[{k:'laços = ramos − nós + 1', sym:nBr + ' − ' + nNo + ' + 1 = ' + laws.kvl.length}], lines:laws.kvl}
+        }, laws:laws};
+    }
+  }
+
+  /* ===== código comum da análise com Kirchhoff (volta ao circuito e fontes na grade) ===== */
+  function fm(v){ return br(v, 5).replace('-', '−'); }
+  function P(v){ return v < 0 ? '(' + fm(v) + ')' : fm(v); }
+  function r1(v){ return Math.round(v * 10) / 10; }
+  /* prefixo único para os números de uma equação (A, mA... V, mV...) */
+  function scale(x){
+    var e = x ? Math.max(-12, Math.min(12, Math.floor(Math.log10(Math.abs(x)) / 3) * 3)) : 0;
+    return {f:Math.pow(10, -e), u:e ? ENG[String(e)] : ''};
+  }
+  function otherEnd(e, n){ return e.a === n ? e.b : e.a; }
+  /* elemento → ramo do solver: fontes (da grade ou A–B) são 'V' com V(a) − V(b) = sv */
+  function mnaBranch(e){ return e.kind === 's' || e.kind === 'ab' ? {kind:'V', a:e.a, b:e.b, val:e.sv} : {kind:'R', a:e.a, b:e.b, val:e.val}; }
+  /* caminho só por fios entre dois pontos do mesmo nó */
+  function wirePath(from, to){
+    var a = pk(from), b = pk(to), wadj = ctx.wadj || {};
+    if (a === b) return [from];
+    var prev = {}, queue = [from], cur;
+    prev[a] = null;
+    while (queue.length){
+      cur = queue.shift();
+      if (pk(cur) === b) break;
+      (wadj[pk(cur)] || []).forEach(function(n){ if (!(pk(n) in prev)){ prev[pk(n)] = cur; queue.push(n); } });
+    }
+    if (!(b in prev)) return [from, to];
+    var path = [to];
+    cur = to;
+    while (prev[pk(cur)]){ cur = prev[pk(cur)]; path.unshift(cur); }
+    return path;
+  }
+  /* zera ruído numérico e passa a tensão por elementos que não conduzem (resistor: igual; fonte: soma a tensão dela) */
+  function spreadV(V, edges, tolV){
+    Object.keys(V).forEach(function(k){ if (Math.abs(V[k]) <= tolV) V[k] = 0; });
+    var more = true;
+    while (more){
+      more = false;
+      edges.forEach(function(e){
+        var ka = e.a in V, kb = e.b in V, d = e.kind === 's' ? e.sv : 0;
+        if (ka !== kb){ if (ka) V[e.b] = V[e.a] - d; else V[e.a] = V[e.b] + d; more = true; }
+      });
+    }
+  }
+  function endsOf(e){ return e.pts || [e.path[0], e.path[e.path.length - 1]]; }
+  function gridPts(edges){
+    var gp = {};
+    function addPt(n, p){ gp[n] = gp[n] || []; if (!gp[n].some(function(q){ return pk(q) === pk(p); })) gp[n].push(p); }
+    edges.forEach(function(e){ var p = endsOf(e); addPt(e.a, p[0]); addPt(e.b, p[1]); });
+    return gp;
+  }
+  /* dá letras aos nós na ordem de leitura da grade, a partir do código c (65 = A) */
+  function letters(ns, gp, c, NN){
+    function first(n){ return gp[n].reduce(function(m, p){ return p[1] < m[1] || (p[1] === m[1] && p[0] < m[0]) ? p : m; }); }
+    ns = ns.slice().sort(function(a, b){ var p = first(a), q = first(b); return p[1] - q[1] || p[0] - q[0]; });
+    ns.forEach(function(n, i){ NN[n] = c + i <= 90 ? String.fromCharCode(c + i) : 'N' + (i + 1); });
+    return ns;
+  }
+  /* árvore geradora por busca em largura a partir de root; pri(e) menor entra antes. path(x, y) = caminho na árvore */
+  function spanTree(edges, root, pri){
+    var adj = {}, tp = {}, dep = {}, inT = {}, q = [root], u;
+    edges.forEach(function(e){ (adj[e.a] = adj[e.a] || []).push(e); (adj[e.b] = adj[e.b] || []).push(e); });
+    tp[root] = null; dep[root] = 0;
+    while (q.length){
+      u = q.shift();
+      (adj[u] || []).slice().sort(function(x, y){ return pri(x) - pri(y); }).forEach(function(e){
+        var w = otherEnd(e, u);
+        if (!(w in tp)){ tp[w] = {e:e, up:u}; dep[w] = dep[u] + 1; inT[e.id] = 1; q.push(w); }
+      });
+    }
+    return {tp:tp, dep:dep, inT:inT, path:function(x, y){
+      var up = [], down = [];
+      while (x !== y){
+        if (dep[x] >= dep[y]){ up.push({e:tp[x].e, from:x, to:tp[x].up}); x = tp[x].up; }
+        else { down.unshift({e:tp[y].e, from:tp[y].up, to:y}); y = tp[y].up; }
+      }
+      return up.concat(down);
+    }};
+  }
+  /* trechos de fio que ligam um elemento ao próximo na volta (para destacar) e o polígono da volta */
+  function loopPieces(lp){
+    var ep = lp.map(function(t){ var p = endsOf(t.e); return t.from === t.e.a ? [p[0], p[1]] : [p[1], p[0]]; }), path = [], poly = [];
+    ep.forEach(function(en, j){
+      var wp = wirePath(en[1], ep[(j + 1) % ep.length][0]);
+      poly.push(px(en[0]));
+      wp.forEach(function(p){ poly.push(px(p)); });
+      if (wp.length > 1) path.push(wp);
+    });
+    return {path:path, poly:poly};
+  }
+  /* área com sinal (positiva = sentido horário na tela) e centro do polígono */
+  function polyArea(pts){
+    var s = 0, cx = 0, cy = 0, mx = 0, my = 0, i;
+    for (i = 0; i < pts.length; i++){
+      var a = pts[i], b = pts[(i + 1) % pts.length], c = a[0] * b[1] - b[0] * a[1];
+      s += c; cx += (a[0] + b[0]) * c; cy += (a[1] + b[1]) * c; mx += a[0]; my += a[1];
+    }
+    s /= 2;
+    return Math.abs(s) > 1 ? {A:s, x:cx / (6 * s), y:cy / (6 * s)} : {A:s, x:mx / pts.length, y:my / pts.length};
+  }
+
+  /* rótulos no desenho: corrente perto de cada elemento e tensão perto de cada nó,
+     escolhendo a posição que menos cobre fios, caixas e outros textos */
+  function kirLabels(o){
+    var G0 = o.G0, I = o.I, V = o.V, samples = [], occ = [], lab = [], arrows = [], tags = {}, boxes = [];
+    function sampleSeg(p, q){
+      var a = px(p), b = px(q), k, nst = Math.ceil(Math.max(Math.abs(b[0] - a[0]), Math.abs(b[1] - a[1])) / 3);
+      for (k = 0; k <= nst; k++) samples.push([a[0] + (b[0] - a[0]) * k / nst, a[1] + (b[1] - a[1]) * k / nst]);
+    }
+    function box(x, y, an, txt){
+      var w = txt.length * 6.1 + 2, x0 = an === 'end' ? x - w : an === 'middle' ? x - w / 2 : x;
+      return [x0, y - 6.5, x0 + w, y + 6.5];
+    }
+    /* custo de um texto: pontos de fio cobertos + área sobreposta a caixas e textos (com folga de 2) */
+    function cost(r){
+      var c = 0;
+      samples.forEach(function(q){ if (q[0] > r[0] - 1 && q[0] < r[2] + 1 && q[1] > r[1] - 1 && q[1] < r[3] + 1) c += 1; });
+      occ.forEach(function(b){
+        var w = Math.min(r[2], b[2] + 2) - Math.max(r[0], b[0] - 2), hh = Math.min(r[3], b[3] + 2) - Math.max(r[1], b[1] - 2);
+        if (w > 0 && hh > 0) c += w * hh / 8;
+      });
+      return c;
+    }
+    /* posição do texto: a de menor custo; a ordem dá preferência às primeiras */
+    function place(cands, txt, bias){
+      var best = null;
+      cands.forEach(function(cd, ci){
+        var r = box(cd[0], cd[1], cd[2], txt), c = cost(r) + ci * bias;
+        if (!best || c < best.c) best = {c:c, x:cd[0], y:cd[1], an:cd[2], r:r, at:cd[3]};
+      });
+      occ.push(best.r); boxes.push(best.r);
+      return best;
+    }
+    G0.edges.forEach(function(e){ var k; for (k = 0; k < e.path.length - 1; k++) sampleSeg(e.path[k], e.path[k + 1]); });
+    ctx.wires.forEach(function(w){ if (G0.alive[w.node]) sampleSeg(w.p, w.q); });
+    (o.terms || []).forEach(function(t){ if (t){ var a = px(t); occ.push([a[0] - 17, a[1] - 19, a[0] - 5, a[1] - 3]); } });
+    var mid = G0.edges.map(function(e){
+      var m = Math.floor((e.path.length - 1) / 2), a = px(e.path[m]), b = px(e.path[m + 1]);
+      var mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2, ver = a[0] === b[0], w = ver ? 17 : 22, hh = ver ? 22 : 12, sv = short(e.val);
+      if (e.kind === 's'){
+        var gg = srcGeo(e.path[0], e.path[1], e.pos), tx = srcText(e.name, e.val);
+        occ.push([mx - 12, my - 12, mx + 12, my + 12]);
+        occ.push(box(gg.plus[0], gg.plus[1], 'middle', '+'));
+        occ.push(box(gg.lab[0], gg.lab[1], gg.an(gg.lab), tx));
+        boxes.push(occ[occ.length - 1]); /* o nome e o valor da fonte também precisam caber no recorte */
+      } else {
+        occ.push([mx - w / 2, my - hh / 2, mx + w / 2, my + hh / 2]);
+        occ.push(ver ? box(mx + 12, my, 'start', sv) : box(mx, my - 11, 'middle', sv));
+      }
+      return [a, b, mx, my];
+    });
+    G0.edges.forEach(function(e, k){
+      var a = mid[k][0], b = mid[k][1], mx = mid[k][2], my = mid[k][3], dx = b[0] - a[0], dy = b[1] - a[1];
+      var i = I[e.id] || 0, t = qty(Math.abs(i), 'A', 3).replace(' ', ''), cs;
+      if (e.kind === 's'){
+        var gg = srcGeo(e.path[0], e.path[1], e.pos);
+        cs = [gg.at(0, -31), gg.at(0, 26), gg.at(-18, -14), gg.at(18, -14), gg.at(-18, 13), gg.at(18, 13)].map(function(p){ return [p[0], p[1], gg.an(p)]; });
+      }
+      /* corrente do lado oposto ao valor (diagonal: do lado que o fio não cruza); se estiver ocupado, tenta outro */
+      else if (!dx) cs = [[mx - 12, my, 'end'], [mx + 12, my + 13, 'start'], [mx - 12, my - 12, 'end'], [mx - 12, my + 12, 'end']];
+      else if (!dy) cs = [[mx, my + 13, 'middle'], [mx, my - 23, 'middle'], [mx - 13, my + 12, 'end'], [mx + 13, my + 12, 'start']];
+      else if (dx * dy > 0) cs = [[mx - 6, my + 14, 'end'], [mx + 8, my - 12, 'start'], [mx + 14, my, 'start']];
+      else cs = [[mx + 6, my + 14, 'start'], [mx - 8, my - 12, 'end'], [mx - 14, my, 'end']];
+      var pl = place(cs, t, 1.5);
+      lab.push({x:r1(pl.x), y:r1(pl.y), an:pl.an, txt:t});
+      if (i){
+        /* seta no fio, logo depois do símbolo, no sentido da corrente (de a para b quando i > 0) */
+        var L = Math.sqrt(dx * dx + dy * dy), sg = i > 0 ? 1 : -1, ux = sg * dx / L, uy = sg * dy / L, d = dx && dy ? 21 : 19;
+        var tx = mx + ux * d, ty = my + uy * d, bx = tx - ux * 7, by = ty - uy * 7, nx = -uy * 4, ny = ux * 4;
+        arrows.push('<polygon class="ck-arr" points="' + r1(tx) + ',' + r1(ty) + ' ' + r1(bx + nx) + ',' + r1(by + ny) + ' ' + r1(bx - nx) + ',' + r1(by - ny) + '"/>');
+      }
+    });
+    var CAND = [[0, -13, 'middle'], [0, 14, 'middle'], [7, -11, 'start'], [-7, -11, 'end'], [7, 12, 'start'], [-7, 12, 'end'], [10, 0, 'start'], [-10, 0, 'end']];
+    o.order.forEach(function(n){
+      var l = o.bare[n] ? '' : o.NN[n], v = qty(V[n], 'V', 3).replace(' ', ''), cs = [];
+      o.gp[n].forEach(function(p){ var a = px(p); CAND.forEach(function(cd){ cs.push([a[0] + cd[0], a[1] + cd[1], cd[2], a]); }); });
+      var best = place(cs, (l ? l + ' ' : '') + v, 0.05);
+      tags[n] = {x:best.x, y:best.y, an:best.an, l:l, v:v, at:best.at};
+    });
+    return {lab:lab, arrows:arrows, tags:tags, boxes:boxes,
+      tagList:function(ns, letterOnly, keep){
+        return ns.map(function(n){ var t = tags[n]; return letterOnly && n !== keep ? {x:t.x, y:t.y, an:t.an, l:t.l, v:''} : t; });
+      }};
+  }
+
+  /* 1ª lei em cada nó com 3 ou mais ligações e 2ª lei em cada laço, com os valores da solução */
+  function kirLaws(o){
+    var act = o.act, I = o.I, V = o.V, NN = o.NN, sI = o.sI, sV = o.sV, OK = ' <b class="lz-ok">✓</b>', BAD = ' <b>✗</b>', deg = {};
+    function ord(e){ return e.kind === 'ab' ? -1 : (e.kind === 's' ? 0 : 1000) + (+e.name.slice(1)); }
+    act.forEach(function(e){ deg[e.a] = (deg[e.a] || 0) + 1; deg[e.b] = (deg[e.b] || 0) + 1; });
+    var kcl = o.order.filter(function(n){ return deg[n] >= 3; }).map(function(n){
+      var inn = [], outt = [], ids = [], hw = {};
+      act.forEach(function(e){
+        if (e.a !== n && e.b !== n) return;
+        var lv = e.a === n ? I[e.id] : -I[e.id];
+        if (e.kind !== 'ab') ids.push(e.id);
+        (lv < 0 ? inn : outt).push({s:o.iName(e), v:Math.abs(lv), o:ord(e)});
+      });
+      function byNum(x, y){ return x.o - y.o; }
+      inn.sort(byNum); outt.sort(byNum);
+      function sum(l){ return l.reduce(function(s, x){ return s + x.v; }, 0); }
+      function syms(l){ return l.length ? l.map(function(x){ return x.s; }).join(' + ') : '0'; }
+      function nums(l){ return l.length ? l.map(function(x){ return br(x.v * sI.f, 4); }).join(' + ') : '0'; }
+      var si = sum(inn), so = sum(outt), ok = Math.abs(si - so) <= Math.max(1e-9 * Math.max(si, so), 1e-6 * Math.abs(o.iRef));
+      hw[n] = 1;
+      return {n:n, ids:ids, hlW:hw, ok:ok, inn:inn, outt:outt, k:'Nó ' + NN[n],
+        sym:syms(inn) + ' = ' + syms(outt), num:nums(inn) + ' = ' + nums(outt) + ' ' + sI.u + 'A' + (ok ? OK : BAD)};
+    });
+    var kvl = o.loops.map(function(lp, j){
+      var sy = '', nu = '', tot = 0, mag = 0, ids = [];
+      lp.forEach(function(t, q){
+        /* subida (+) quando a tensão aumenta no sentido da volta; queda (−) quando diminui */
+        var val = V[t.to] - V[t.from], sg;
+        if (t.e.kind !== 'ab') ids.push(t.e.id);
+        if (Math.abs(val) <= o.tolV) val = 0;
+        sg = val > 0 ? '+' : '−';
+        sy += (q ? ' ' + sg + ' ' : sg) + o.vName(t.e);
+        nu += (q ? ' ' + sg + ' ' : sg) + br(Math.abs(val) * sV.f, 4);
+        tot += val; mag += Math.abs(val);
+      });
+      var viaAB = lp[0].e.kind === 'ab', pc = loopPieces(lp);
+      var seq = lp.map(function(t){ return NN[viaAB ? t.to : t.from]; }), ok = Math.abs(tot) <= 1e-9 * Math.max(mag, Math.abs(o.vRef));
+      return {ids:ids, path:pc.path, src:viaAB, ok:ok, k:o.loopLabel(j, seq.concat([seq[0]]).join(' → '), viaAB),
+        sym:sy + ' = 0', num:nu + ' = 0 ' + sV.u + 'V' + (ok ? OK : BAD)};
+    });
+    return {kcl:kcl, kvl:kvl};
+  }
+  /* quadros de conferência: um por nó (1ª lei) e um por laço (2ª lei) */
+  function pushLaws(G0, laws, ovx, tags, opt){
+    var kcl = laws.kcl, kvl = laws.kvl, W = opt.word;
+    if (!kcl.length){
+      frames.push({G:G0, hl:[], nw:null, ph:'ret', sec:'kcl', k:-1, label:'1ª lei de Kirchhoff · nós', ov:ovx({}),
+        cap:'<p><strong>Lei dos nós:</strong> a soma das correntes que chegam a um nó é igual à soma das que saem.</p><p>' + opt.noKcl + '</p>'});
+    }
+    kcl.forEach(function(c, j){
+      var ins = c.inn.map(function(x){ return x.s; }), outs = c.outt.map(function(x){ return x.s; });
+      frames.push({G:G0, hl:c.ids, nw:null, ph:'ret', sec:'kcl', k:j, label:'1ª lei de Kirchhoff · nó ' + c.k.slice(3) + ' (' + (j + 1) + ' de ' + kcl.length + ')',
+        ov:ovx({hlW:c.hlW, ring:tags[c.n].at, term:opt.term(c.n)}),
+        cap:(j ? '' : '<p><strong>Lei dos nós:</strong> a soma das correntes que chegam a um nó é igual à soma das que saem (a carga não some nem se acumula).</p>') +
+            '<p>No nó <strong>' + c.k.slice(3) + '</strong> ' + (ins.length ? (ins.length > 1 ? 'chegam ' : 'chega ') + lst(ins) : 'não chega corrente') +
+            ' e ' + (outs.length > 1 ? 'saem ' : 'sai ') + lst(outs) + '.</p><code>' + c.sym + '</code><code>' + c.num + '</code>'});
+    });
+    kvl.forEach(function(c, j){
+      frames.push({G:G0, hl:c.ids, nw:null, ph:'ret', sec:'kvl', k:j, label:'2ª lei de Kirchhoff · ' + W + ' ' + (j + 1) + ' de ' + kvl.length,
+        ov:ovx({path:c.path, term:c.src, marks:opt.marks ? [opt.marks[j]] : null}),
+        cap:(j ? '' : '<p><strong>Lei das malhas:</strong> numa volta fechada, a soma das tensões é zero: o que as fontes fornecem os resistores consomem. ' +
+            'Seguindo a volta, conta + quando a tensão sobe e − quando cai (no sentido da corrente, o resistor é uma queda).</p><p>' + opt.count + '</p>') +
+            '<p>' + c.k + ':</p><code>' + c.sym + '</code><code>' + c.num + '</code>'});
+    });
+  }
+
+  /* ===== fontes de tensão na grade: análise por correntes de malha ===== */
+  function buildSrc(els){
+    var srcs = els.filter(function(e){ return e.kind === 's'; }), al = {};
+    els.forEach(function(e){ al[e.a] = 1; al[e.b] = 1; });
+    var G0 = {edges:els, alive:al}, out = {src:true};
+    function err(msg){ return {err:msg, src:true}; }
+    function nmOf(e){ return e.name; }
+    function plural(n, s, p){ return n + ' ' + (n === 1 ? s : p); }
+
+    /* fonte em curto: um fio liga os dois lados */
+    var sh = srcs.filter(function(e){ return e.a === e.b; });
+    if (sh.length) return err(lst(sh.map(nmOf)) + (sh.length > 1 ? ' estão em curto: um fio liga os dois lados de cada uma.' : ' está em curto: um fio liga os dois lados da fonte.') + ' Apague o fio ou a fonte.');
+
+    /* volta só de fontes (fontes em paralelo ou em anel, sem resistor): a corrente fica indefinida */
+    var sp = {}, sadj = {}, bad = null;
+    function sf(k){ while (sp[k] !== undefined) k = sp[k]; return k; }
+    srcs.some(function(s){
+      if (sf(s.a) === sf(s.b)){
+        var prev = {}, q = [s.b], u, n = s.a, back = [];
+        prev[s.b] = null;
+        while (q.length){
+          u = q.shift();
+          if (u === s.a) break;
+          (sadj[u] || []).forEach(function(e){ var w = otherEnd(e, u); if (!(w in prev)){ prev[w] = {e:e, u:u}; q.push(w); } });
+        }
+        while (prev[n]){ back.unshift({e:prev[n].e, from:prev[n].u, to:n}); n = prev[n].u; }
+        var lp = [{e:s, from:s.a, to:s.b}].concat(back);
+        bad = {lp:lp, rise:lp.reduce(function(t, x){ return t + (x.to === x.e.a ? x.e.sv : -x.e.sv); }, 0),
+          big:Math.max.apply(null, lp.map(function(x){ return Math.abs(x.e.sv); }))};
+        return true;
+      }
+      sp[sf(s.b)] = sf(s.a);
+      (sadj[s.a] = sadj[s.a] || []).push(s); (sadj[s.b] = sadj[s.b] || []).push(s);
+      return false;
+    });
+    if (bad){
+      var ns = bad.lp.map(function(x){ return x.e.name; }), conflict = Math.abs(bad.rise) > 1e-9 * bad.big;
+      return err((ns.length === 2 ? ns[0] + ' e ' + ns[1] + ' estão em paralelo (ligadas aos mesmos dois nós) sem resistor entre elas'
+                                  : lst(ns) + ' formam uma volta só de fontes, sem resistor') +
+        (conflict ? ': as tensões não fecham, seria um curto entre fontes (corrente infinita).' : ': a corrente nessa volta fica indefinida.') +
+        ' Coloque um resistor nessa volta ou apague uma das fontes.');
+    }
+
+    /* limpeza: resistores em curto, pontas soltas e partes sem fonte não conduzem */
+    var rem = [], txt = '';
+    var cur = els.filter(function(e){ if (e.a === e.b){ rem.push(e); txt += e.name + ' está em curto (os dois lados no mesmo nó). '; return false; } return true; });
+    var ch = true, solto = [];
+    while (ch){
+      ch = false;
+      var cnt = {};
+      cur.forEach(function(e){ cnt[e.a] = (cnt[e.a] || 0) + 1; cnt[e.b] = (cnt[e.b] || 0) + 1; });
+      cur = cur.filter(function(e){ var d = cnt[e.a] === 1 || cnt[e.b] === 1; if (d){ solto.push(e); ch = true; } return !d; });
+    }
+    if (solto.length) txt += lst(solto.map(nmOf)) + (solto.length > 1 ? ' ficam' : ' fica') + ' com uma ponta solta. ';
+    var cp = {};
+    function cf(k){ while (cp[k] !== undefined) k = cp[k]; return k; }
+    cur.forEach(function(e){ var x = cf(e.a), y = cf(e.b); if (x !== y) cp[y] = x; });
+    var parts = {}, keep = [];
+    cur.forEach(function(e){ var r = cf(e.a); (parts[r] = parts[r] || {els:[], src:false}).els.push(e); if (e.kind === 's') parts[r].src = true; });
+    Object.keys(parts).forEach(function(r){ if (parts[r].src) keep.push(parts[r]); });
+    if (!keep.length) return err('Não há caminho fechado passando por uma fonte: a corrente precisa de uma volta completa, saindo pelo + da fonte, passando por resistores e voltando pelo −.');
+    if (keep.length > 1) return err('O desenho tem ' + keep.length + ' circuitos separados com fontes. Ligue as partes ou deixe só um circuito para a animação.');
+    var semF = cur.filter(function(e){ return keep[0].els.indexOf(e) < 0; });
+    if (semF.length) txt += lst(semF.map(nmOf)) + (semF.length > 1 ? ' estão' : ' está') + ' numa parte sem fonte. ';
+    rem = rem.concat(solto, semF);
+    cur = keep[0].els;
+
+    /* nós, referência (o nó com mais ligações; empate: o mais de baixo) e solução pela MNA */
+    var deg = {}, nodes = [];
+    cur.forEach(function(e){ [e.a, e.b].forEach(function(n){ if (!(n in deg)){ deg[n] = 0; nodes.push(n); } deg[n]++; }); });
+    var gp = gridPts(els);
+    function ext(n, f){ return gp[n].reduce(function(m, p){ return f(m, p); }); }
+    var ref = nodes.slice().sort(function(a, b){
+      return deg[b] - deg[a] || ext(b, function(m, p){ return p[1] > m[1] ? p : m; })[1] - ext(a, function(m, p){ return p[1] > m[1] ? p : m; })[1] ||
+        ext(a, function(m, p){ return p[0] < m[0] ? p : m; })[0] - ext(b, function(m, p){ return p[0] < m[0] ? p : m; })[0];
+    })[0];
+    var sol = solveMNA(cur.map(mnaBranch), ref);
+    if (!sol) return err('O sistema de equações deste circuito não tem solução única (é singular). Confira se não há fontes formando uma volta sem resistor.');
+    var V = sol.v, I = {}, maxI = 0, maxE = 0;
+    cur.forEach(function(e, k){ maxI = Math.max(maxI, Math.abs(sol.i[k])); });
+    srcs.forEach(function(e){ maxE = Math.max(maxE, Math.abs(e.val)); });
+    /* escala natural de corrente (maior E / menor R): base das tolerâncias, mesmo quando as correntes são pequenas */
+    var minR = Math.min.apply(null, cur.filter(function(e){ return e.kind === 'r'; }).map(function(e){ return e.val; }));
+    var iSc = Math.max(maxI, maxE / minR), tolI = iSc * 1e-12, tolV = maxE * 1e-12;
+    /* Iraw: correntes da MNA sem arredondar (para as conferências); I: com ruído numérico zerado (para mostrar) */
+    var Iraw = {};
+    cur.forEach(function(e, k){ Iraw[e.id] = sol.i[k]; I[e.id] = Math.abs(sol.i[k]) <= tolI ? 0 : sol.i[k]; });
+    els.forEach(function(e){ if (!(e.id in I)) I[e.id] = 0; });
+    spreadV(V, els, tolV);
+    var NN = {}, order = letters(Object.keys(V).filter(function(n){ return gp[n]; }), gp, 65, NN);
+    var nCur = cur.length, nNo = nodes.length, L = nCur - nNo + 1, nS = cur.filter(function(e){ return e.kind === 's'; }).length;
+
+    /* malhas: ciclos fundamentais. Testa uma árvore por raiz (fontes entram primeiro, então as cordas
+       tendem a ser resistores) e fica com a que dá as voltas de menor área no desenho (depois, menos
+       elementos); num desenho em grade isso costuma dar as "janelas" do circuito.
+       Como não há volta só de fontes, toda malha tem resistor e o sistema tem solução única. */
+    function isR(e){ return e.kind === 's' ? 0 : 1; }
+    var best = null;
+    [ref].concat(nodes.filter(function(n){ return n !== ref; })).forEach(function(r){
+      var tr = spanTree(cur, r, isR), lps = [], score = 0;
+      cur.forEach(function(e){
+        if (tr.inT[e.id]) return;
+        var lp = [{e:e, from:e.a, to:e.b}].concat(tr.path(e.b, e.a));
+        lps.push({lp:lp, chord:e});
+        score += Math.abs(polyArea(loopPieces(lp).poly).A) + lp.length + (e.kind === 's' ? 0.01 : 0);
+      });
+      if (!best || score < best.score - 1e-9) best = {score:score, loops:lps};
+    });
+    /* sentido arbitrado: horário na tela */
+    var meshes = best.loops.map(function(m){
+      var lp = m.lp, pc = loopPieces(lp), ar = polyArea(pc.poly);
+      if (ar.A < 0){ lp = lp.slice().reverse().map(function(t){ return {e:t.e, from:t.to, to:t.from}; }); pc = loopPieces(lp); }
+      var sg = {};
+      lp.forEach(function(t){ sg[t.e.id] = t.from === t.e.a ? 1 : -1; });
+      return {lp:lp, pc:pc, c:ar, cw:Math.abs(ar.A) > 1, chord:m.chord, sg:sg};
+    });
+    meshes.sort(function(m1, m2){ return Math.round(m1.c.y / (S / 2)) - Math.round(m2.c.y / (S / 2)) || m1.c.x - m2.c.x; });
+    var Z = [], Ev = [], k, j;
+    for (k = 0; k < L; k++){
+      Z.push([]);
+      for (j = 0; j < L; j++){
+        Z[k].push(meshes[k].lp.reduce(function(s, t){
+          return t.e.kind === 'r' && meshes[j].sg[t.e.id] ? s + t.e.val * meshes[k].sg[t.e.id] * meshes[j].sg[t.e.id] : s;
+        }, 0));
+      }
+      Ev.push(meshes[k].lp.reduce(function(s, t){ return t.e.kind === 's' ? s + (t.to === t.e.plus ? t.e.val : -t.e.val) : s; }, 0));
+    }
+    /* correntes de malha pela MNA: a corda só pertence à sua malha, então Ik = corrente da corda no sentido da malha */
+    var Jm = meshes.map(function(m){ return Iraw[m.chord.id] * m.sg[m.chord.id]; });
+    function det(M){
+      if (M.length === 1) return M[0][0];
+      if (M.length === 2) return M[0][0] * M[1][1] - M[0][1] * M[1][0];
+      return M[0][0] * (M[1][1] * M[2][2] - M[1][2] * M[2][1]) - M[0][1] * (M[1][0] * M[2][2] - M[1][2] * M[2][0]) + M[0][2] * (M[1][0] * M[2][1] - M[1][1] * M[2][0]);
+    }
+    function detTxt(M){
+      if (M.length === 2) return P(M[0][0]) + '·' + P(M[1][1]) + ' − ' + P(M[0][1]) + '·' + P(M[1][0]);
+      var m1 = M[1][1] * M[2][2] - M[1][2] * M[2][1], m2 = M[1][0] * M[2][2] - M[1][2] * M[2][0], m3 = M[1][0] * M[2][1] - M[1][1] * M[2][0];
+      return P(M[0][0]) + '·' + P(m1) + ' − ' + P(M[0][1]) + '·' + P(m2) + ' + ' + P(M[0][2]) + '·' + P(m3);
+    }
+    function matH(M){
+      return '<span class="lz-mat" style="grid-template-columns:repeat(' + M.length + ',auto)">' +
+        M.map(function(r){ return r.map(function(v){ return '<span>' + fm(v) + '</span>'; }).join(''); }).join('') + '</span>';
+    }
+    var cramer = L <= 3, D = det(cramer ? Z : [[1]]), Ic = [], Dk = [];
+    if (cramer && !(Math.abs(D) > 0)) return err('O sistema das malhas é singular (determinante zero): não há solução única.');
+    if (cramer) for (k = 0; k < L; k++){
+      var Mk = Z.map(function(r, i){ return r.map(function(v, c){ return c === k ? Ev[i] : v; }); });
+      Dk.push({M:Mk, d:det(Mk)});
+      Ic.push(Dk[k].d / D);
+    }
+    var J = cramer ? Ic : Jm;
+    /* conferências: equações de malha com as correntes da MNA, e Cramer contra a MNA */
+    var okEq = meshes.map(function(m, k){
+      var lhs = 0, mag = 0;
+      for (j = 0; j < L; j++){ lhs += Z[k][j] * Jm[j]; mag += Math.abs(Z[k][j] * Jm[j]); }
+      return Math.abs(lhs - Ev[k]) <= 1e-7 * Math.max(Math.abs(Ev[k]), mag, maxE);
+    });
+    var okJ = J.map(function(x, k){ return Math.abs(x - Jm[k]) <= 1e-7 * Math.max(Math.abs(Jm[k]), iSc); });
+    var allOk = okEq.concat(okJ).every(function(x){ return x; });
+    var OK = ' <b class="lz-ok">✓</b>', BAD = ' <b>✗</b>', sI = scale(maxI), sV = scale(Math.max.apply(null, order.map(function(n){ return Math.abs(V[n]); }).concat([maxE])));
+    function Iname(k){ return 'I' + (k + 1); }
+    function vSub(n){ return 'V<sub>' + NN[n] + '</sub>'; }
+    function signed(items){
+      return items.length ? items.map(function(x, i){ return (i ? ' ' + x.s + ' ' : (x.s === '−' ? '−' : '')) + x.t; }).join('') : '0';
+    }
+    /* termos de malha que passam pelo elemento e, no sentido de ref (±1 por malha) */
+    function comb(e, dir){
+      var t = [];
+      meshes.forEach(function(m, j){ if (m.sg[e.id]) t.push({j:j, c:m.sg[e.id] * dir}); });
+      return t;
+    }
+    function combTxt(t, first){
+      t = t.slice().sort(function(x, y){ return (x.j === first ? -1 : y.j === first ? 1 : x.j - y.j); });
+      return signed(t.map(function(x){ return {s:x.c > 0 ? '+' : '−', t:Iname(x.j)}; }));
+    }
+    var marks = meshes.map(function(m, k){ return {x:r1(m.c.x), y:r1(m.c.y), txt:'↻ ' + Iname(k)}; });
+    function markList(upto, cur){ return marks.slice(0, upto + 1).map(function(m, k){ return {x:m.x, y:m.y, txt:m.txt, hl:k === cur}; }); }
+
+    /* equações das malhas */
+    var meshLines = meshes.map(function(m, k){
+      var ls = [], ln = [], rs = [], rn = [];
+      m.lp.forEach(function(t){
+        if (t.e.kind === 'r'){
+          var c = comb(t.e, m.sg[t.e.id]), ct = combTxt(c, k), w = c.length > 1 ? '(' + ct + ')' : ct;
+          ls.push(t.e.name + '·' + w); ln.push(fm(t.e.val) + '·' + w);
+        } else {
+          var up = t.to === t.e.plus, rv = up ? t.e.val : -t.e.val;
+          rs.push({s:up ? '+' : '−', t:t.e.name}); rn.push({s:rv < 0 ? '−' : '+', t:fm(Math.abs(rv))});
+        }
+      });
+      var simp = signed(Z[k].map(function(z, j){ return z ? {s:z < 0 ? '−' : '+', t:fm(Math.abs(z)) + '·' + Iname(j)} : null; }).filter(Boolean));
+      m.simp = simp + ' = ' + fm(Ev[k]);
+      m.seq = m.lp.map(function(t){ return NN[t.from]; }).concat([NN[m.lp[0].from]]).join(' → ');
+      return {k:'Malha ' + (k + 1) + ' (' + Iname(k) + ') · ' + m.seq, sym:ls.join(' + ') + ' = ' + signed(rs),
+        num:ln.join(' + ') + ' = ' + signed(rn) + ' ⇒ <b>' + m.simp + '</b>'};
+    });
+    var sysLines = meshes.map(function(m, k){ return {k:'Malha ' + (k + 1), sym:m.simp}; });
+
+    /* solução: Cramer (até 3 incógnitas) ou direto pela MNA */
+    var solLines = [], ires = J.map(function(x, k){ return Iname(k) + ' = ' + qty(x, 'A', 4); }).join(' · ');
+    if (L === 1) solLines.push({k:'Uma incógnita', sym:'I1 = ' + fm(Ev[0]) + ' / ' + fm(Z[0][0]), num:'= <b>' + qty(J[0], 'A', 4) + '</b>'});
+    else if (cramer){
+      solLines.push({k:'Determinante do sistema', sym:'Δ = ' + matH(Z), num:'= ' + detTxt(Z) + ' = <b>' + fm(D) + '</b>'});
+      Dk.forEach(function(x, k){
+        solLines.push({k:'Δ' + (k + 1) + ': coluna ' + (k + 1) + ' trocada pelos termos independentes', sym:'Δ<sub>' + (k + 1) + '</sub> = ' + matH(x.M),
+          num:'= ' + detTxt(x.M) + ' = ' + fm(x.d) + ' → ' + Iname(k) + ' = Δ<sub>' + (k + 1) + '</sub> / Δ = ' + fm(x.d) + ' / ' + fm(D) + ' = <b>' + qty(Ic[k], 'A', 4) + '</b>'});
+      });
+    } else {
+      solLines.push({k:'Sistema com ' + L + ' incógnitas', sym:'Resolvido pelo computador (análise nodal modificada)', num:'<b>' + ires + '</b>'});
+    }
+    solLines.push({k:'Conferência com a análise nodal (MNA)', sym:cramer ? ires : 'cada equação de malha com esses valores', num:allOk ? 'confere' + OK : 'não confere' + BAD});
+
+    /* corrente em cada ramo a partir das correntes de malha */
+    function named(list){ return list.slice().sort(function(a, b){ return (a.kind === 's' ? 0 : 1000) + +a.name.slice(1) - ((b.kind === 's' ? 0 : 1000) + +b.name.slice(1)); }); }
+    function iN(e){ return 'I<sub>' + e.name + '</sub>'; }
+    var brLines = named(els).map(function(e){
+      if (cur.indexOf(e) < 0) return {k:e.name, sym:iN(e) + ' = 0', num:'fora do circuito fechado, não conduz'};
+      var dir = I[e.id] < 0 ? -1 : 1, c = comb(e, dir), f = dir > 0 ? e.a : e.b, t = otherEnd(e, f);
+      if (!c.length) return {k:e.name, sym:iN(e) + ' = 0', num:'não está em nenhuma malha, não conduz'};
+      c.sort(function(x, y){ return x.j - y.j; });
+      var nums = c.map(function(x, i){ return (i ? (x.c > 0 ? ' + ' : ' − ') : (x.c > 0 ? '' : '−')) + P(J[x.j] * sI.f); }).join('');
+      return {k:e.name + ' · ' + NN[f] + ' → ' + NN[t], sym:iN(e) + ' = ' + combTxt(c, -1),
+        num:'= ' + nums + ' = <b>' + qty(Math.abs(I[e.id]), 'A', 4) + '</b>'};
+    });
+
+    /* tensão em cada nó: da referência para fora, somando a tensão de cada ramo */
+    var vt = spanTree(cur, ref, isR), vLines = [{k:'Referência', sym:vSub(ref) + ' = 0'}];
+    nodes.slice().sort(function(a, b){ return vt.dep[a] - vt.dep[b]; }).forEach(function(w){
+      if (w === ref) return;
+      var t = vt.tp[w], e = t.e, u = t.up, s, nmr;
+      if (e.kind === 's'){
+        var up = w === e.plus;
+        s = vSub(w) + ' = ' + vSub(u) + (up ? ' + ' : ' − ') + e.name;
+        nmr = '= ' + fm(V[u]) + (up ? ' + ' : ' − ') + P(e.val);
+      } else {
+        var iu = u === e.a ? I[e.id] : -I[e.id], drop = iu >= 0;
+        s = vSub(w) + ' = ' + vSub(u) + (drop ? ' − ' : ' + ') + e.name + '·' + iN(e);
+        nmr = '= ' + fm(V[u]) + (drop ? ' − ' : ' + ') + fm(e.val) + '·' + fm(Math.abs(iu));
+      }
+      vLines.push({k:'Nó ' + NN[w], sym:s, num:nmr + ' = <b>' + qty(V[w], 'V', 4) + '</b>'});
+    });
+
+    /* potência: fontes fornecem (ou recebem) E·I, resistores dissipam R·I² */
+    var pw = [], sup = 0, absb = 0, diss = 0;
+    named(cur).forEach(function(e){
+      if (e.kind === 's'){
+        var imp = e.plus === e.b ? I[e.id] : -I[e.id], p = e.val * imp;
+        if (p >= 0) sup += p; else absb -= p;
+        pw.push({k:e.name + (p > 0 ? ' · fornece' : p < 0 ? ' · recebe (carrega)' : ''), sym:'P<sub>' + e.name + '</sub> = ' + e.name + '·' + iN(e),
+          num:'= ' + fm(e.val) + '·' + P(imp) + ' = <b>' + qty(p, 'W', 4) + '</b>'});
+      } else {
+        var pr = e.val * I[e.id] * I[e.id];
+        diss += pr;
+        pw.push({k:e.name, sym:'P<sub>' + e.name + '</sub> = ' + e.name + '·' + iN(e) + '²', num:'= ' + fm(e.val) + '·' + fm(Math.abs(I[e.id])) + '² = <b>' + qty(pr, 'W', 4) + '</b>'});
+      }
+    });
+    var sP = scale(Math.max(sup, diss)), okP = Math.abs(sup - absb - diss) <= Math.max(1e-9 * Math.max(sup, diss), 1e-12 * maxE * iSc);
+    if (!sup && !diss) okP = true;
+    pw.push({k:'Balanço', sym:absb ? 'fornecida = recebida pelas fontes + dissipada' : 'fornecida = dissipada',
+      num:br(sup * sP.f, 4) + ' = ' + (absb ? br(absb * sP.f, 4) + ' + ' : '') + br(diss * sP.f, 4) + ' ' + sP.u + 'W' + (okP ? OK : BAD)});
+
+    /* rótulos e leis (reaproveitados da volta ao circuito) */
+    var lb = kirLabels({G0:G0, I:I, V:V, NN:NN, order:order, gp:gp, bare:{}});
+    var laws = kirLaws({act:cur, I:I, V:V, NN:NN, order:order, loops:meshes.map(function(m){ return m.lp; }), sI:sI, sV:sV, iRef:iSc, vRef:maxE, tolV:tolV,
+      iName:iN, vName:function(e){ return e.kind === 's' ? e.name : 'V<sub>' + e.name + '</sub>'; },
+      loopLabel:function(j, seq){ return 'Malha ' + (j + 1) + ' (' + Iname(j) + ') · ' + seq; }});
+    var letterTags = lb.tagList(order, true, ref), fullTags = lb.tagList(order);
+    function ovx(extra){ var o = {lab:lb.lab, arrows:lb.arrows, tags:fullTags, noAB:true}, q; for (q in extra) o[q] = extra[q]; return o; }
+    function fr(o){ o.G = G0; o.nw = null; o.ph = o.ph || 'ret'; o.hl = o.hl || []; frames.push(o); return frames.length - 1; }
+
+    frames = [];
+    fr({ph:'start', label:'Circuito montado', ov:{noAB:true},
+      cap:'<p>Circuito com ' + plural(srcs.length, 'fonte', 'fontes') + ' e ' + plural(els.length - srcs.length, 'resistor', 'resistores') + '. ' +
+          'Com fontes na grade, A, B e a tensão entre A e B não são usados: em vez de reduzir o circuito, vamos achar a corrente em cada ramo pelas leis de Kirchhoff, com correntes de malha.</p>'});
+    if (rem.length){
+      fr({ph:'start', hl:rem.map(function(e){ return e.id; }), label:'Limpeza', ov:{noAB:true},
+        cap:'<p>' + txt + 'Nenhuma corrente passa por ' + (rem.length > 1 ? 'eles' : 'ele') + ', então ficam de fora das equações (aparecem com 0 A no fim).</p>'});
+    }
+    fr({sec:'nos', label:'Nós e referência', ov:{tags:letterTags, ring:lb.tags[ref].at, noAB:true},
+      cap:'<p>Os <strong>nós</strong> são os pontos onde os elementos se ligam (tudo que está ligado por fio é o mesmo nó). Aqui há <strong>' + plural(nNo, 'nó', 'nós') +
+          '</strong> e <strong>' + plural(nCur, 'ramo', 'ramos') + '</strong> (fontes e resistores).</p>' +
+          '<p>O nó <strong>' + NN[ref] + '</strong> é a <strong>referência (0 V)</strong>: é o que tem mais ligações, e as outras tensões são medidas em relação a ele.</p>' +
+          '<p>Malhas independentes: ramos − nós + 1 = ' + nCur + ' − ' + nNo + ' + 1 = <strong>' + L + '</strong>.</p>'});
+    meshes.forEach(function(m, k){
+      fr({sec:'mesh', k:k, hl:m.lp.map(function(t){ return t.e.id; }), label:'Malha ' + (k + 1) + ' de ' + L + ' · 2ª lei',
+        ov:{tags:letterTags, path:m.pc.path, marks:markList(k, k), noAB:true},
+        cap:(k ? '' : '<p><strong>Correntes de malha:</strong> em cada malha arbitramos uma corrente que dá a volta inteira, aqui no sentido horário (↻). ' +
+             'Um ramo que pertence a duas malhas leva a diferença ou a soma das duas correntes. Se uma corrente der negativa, o sentido real é o contrário.</p>') +
+            '<p><strong>2ª lei na malha ' + (k + 1) + '</strong> (' + m.seq + '): seguindo ' + Iname(k) + ', cada resistor é uma queda R·I e cada fonte entra com +E quando a volta passa do − para o + (e −E ao contrário).</p>' +
+            '<code>' + meshLines[k].sym + '</code><code>' + meshLines[k].num.replace(/<\/?b>/g, '') + '</code>'});
+    });
+    fr({sec:'sys', label:'Sistema de equações', ov:{tags:letterTags, marks:markList(L - 1, -1), noAB:true},
+      cap:'<p>Juntando as equações das malhas: ' + plural(L, 'equação', 'equações') + ' e ' + plural(L, 'incógnita', 'incógnitas') + '.</p>' +
+          '<p>' + (L === 1 ? 'Com uma incógnita, basta dividir.' : cramer ? 'Vamos resolver pela <strong>regra de Cramer</strong>: I<sub>k</sub> = Δ<sub>k</sub> / Δ, onde Δ é o determinante dos coeficientes e Δ<sub>k</sub> é o mesmo determinante com a coluna k trocada pelos termos independentes.'
+            : 'Com mais de 3 incógnitas, Cramer exigiria ' + (L + 1) + ' determinantes ' + L + '×' + L + ', conta grande demais para a lousa; o resultado vem da solução do sistema pelo computador.') + '</p>'});
+    var solFirst = frames.length;
+    if (cramer && L > 1){
+      solLines.forEach(function(l, k){
+        if (k === solLines.length - 1) return;
+        fr({sec:'sol', k:k, label:k ? 'Regra de Cramer · ' + Iname(k - 1) : 'Regra de Cramer · determinante Δ', ov:{tags:letterTags, marks:markList(L - 1, k - 1), noAB:true},
+          cap:k ? '<p>Trocando a coluna ' + k + ' pelos termos independentes: Δ<sub>' + k + '</sub> = ' + fm(Dk[k - 1].d) + ', então <strong>' + Iname(k - 1) + ' = ' + qty(Ic[k - 1], 'A', 4) + '</strong>' +
+                  (Ic[k - 1] < 0 ? ' (negativa: a corrente real gira no sentido contrário ao arbitrado)' : '') + '.</p>'
+                : '<p>Determinante dos coeficientes' + (L === 3 ? ' (expandindo pela 1ª linha: a·(ei − fh) − b·(di − fg) + c·(dh − eg))' : ' (a·d − b·c)') + ': <strong>Δ = ' + fm(D) + '</strong>.</p>'});
+      });
+    }
+    fr({sec:'sol', k:L > 3 ? undefined : solLines.length - 1, label:L === 1 || L > 3 ? 'Solução' : 'Conferência', ov:{tags:letterTags, marks:markList(L - 1, -1), noAB:true},
+      cap:'<p>' + (L > 3 ? 'Resultado do sistema: ' : 'Correntes de malha: ') + '<strong>' + ires + '</strong>.</p>' +
+          '<p>O programa também resolve o circuito pela análise nodal modificada (MNA) e confere: com as correntes da MNA, cada equação de malha fecha' + (allOk ? ' ✓' : ' ✗') + '.</p>'});
+    var brFi = fr({sec:'br', label:'Corrente em cada ramo', ov:ovx({tags:letterTags}),
+      cap:'<p>A corrente num ramo é a soma das correntes de malha que passam por ele, com sinal: mesma direção soma, direção oposta subtrai. As setas verdes mostram o sentido real.</p>'});
+    fr({sec:'vn', label:'Tensão em cada nó', ov:ovx({ring:lb.tags[ref].at}),
+      cap:'<p>Partindo da referência ' + NN[ref] + ' (0 V) e andando pelos ramos: atravessar uma fonte do − para o + soma E; atravessar um resistor no sentido da corrente subtrai R·I.</p>'});
+    pushLaws(G0, laws, ovx, lb.tags, {
+      noKcl:'Aqui nenhum nó liga 3 ou mais caminhos: tudo está em série, e a mesma corrente passa por todos os elementos.',
+      term:function(){ return false; }, marks:marks.map(function(m){ return {x:m.x, y:m.y, txt:m.txt, hl:true}; }),
+      count:'Conferindo com as tensões calculadas, em cada uma das ' + plural(L, 'malha', 'malhas') + ' arbitradas.', word:'malha'});
+    fr({sec:'pow', label:'Potência', ov:ovx({}),
+      cap:'<p>Cada fonte fornece P = E·I quando a corrente sai pelo + (se entra pelo +, ela está recebendo energia, como uma bateria carregando). Cada resistor dissipa P = R·I².</p>' +
+          '<p>O que é fornecido é igual ao que é recebido e dissipado' + (okP ? ' ✓' : ' ✗') + '.</p>'});
+
+    out.frames = frames;
+    out.resFi = -1;
+    out.kir = {src:true, boxes:lb.boxes, J:J, Jm:Jm, I:I, V:V, NN:NN, Z:Z, Ev:Ev, meshes:meshes, laws:laws, ok:allOk && okP, okP:okP, ref:ref,
+      meshLines:meshLines, L:L,
+      head:[{k:'Correntes de malha', sym:ires, min:brFi}],
+      secs:{
+        nos:{t:'Nós e referência', lines:[{k:'Nós', sym:order.filter(function(n){ return n in deg; }).map(function(n){ return NN[n]; }).join(', '), num:'n = ' + nNo},
+          {k:'Ramos', sym:'r = ' + nCur, num:plural(nS, 'fonte', 'fontes') + ' e ' + plural(nCur - nS, 'resistor', 'resistores')},
+          {k:'Referência', sym:vSub(ref) + ' = 0'},
+          {k:'Malhas independentes', sym:'r − n + 1', num:'= ' + nCur + ' − ' + nNo + ' + 1 = <b>' + L + '</b>'}]},
+        mesh:{t:'2ª lei em cada malha', lines:meshLines},
+        sys:{t:'Sistema', lines:sysLines},
+        sol:{t:L === 1 || L > 3 ? 'Solução' : 'Regra de Cramer', lines:solLines},
+        br:{t:'Corrente em cada ramo', lines:brLines},
+        vn:{t:'Tensão em cada nó', lines:vLines},
+        kcl:{t:'1ª lei · nós: entra = sai', empty:'Nenhum nó com 3 ou mais ligações.', lines:laws.kcl},
+        kvl:{t:'2ª lei · malhas: soma = 0', lines:laws.kvl},
+        pow:{t:'Potência', lines:pw}
+      }};
     return out;
   }
 
@@ -1773,18 +2893,50 @@ function fillMaterialSelect(sel, onlyIds){
     function add(p){ xs.push(p[0]); ys.push(p[1]); }
     G.edges.forEach(function(e){ e.path.forEach(add); });
     ctx.wires.forEach(function(w){ if (G.alive[w.node]){ add(w.p); add(w.q); } });
-    if (st.A) add(st.A);
-    if (st.B) add(st.B);
+    if (st.A && !srcMode) add(st.A);
+    if (st.B && !srcMode) add(st.B);
     if (!xs.length) return FULLVB;
-    var x0 = Math.min.apply(null, xs), x1 = Math.max.apply(null, xs), y0 = Math.min.apply(null, ys), y1 = Math.max.apply(null, ys);
-    var pad = 34, w = (x1 - x0) * S + 2 * pad, h = (y1 - y0) * S + 2 * pad;
-    var mw = 3 * S + 2 * pad, mh = 2 * S + 2 * pad, cx = MX + (x0 + x1) / 2 * S, cy = MY + (y0 + y1) / 2 * S;
-    w = Math.max(w, mw); h = Math.max(h, mh);
+    var pad = 34, l = MX + Math.min.apply(null, xs) * S - pad, r = MX + Math.max.apply(null, xs) * S + pad;
+    var t = MY + Math.min.apply(null, ys) * S - pad, b = MY + Math.max.apply(null, ys) * S + pad;
+    /* rótulos de corrente e tensão da volta ao circuito também precisam caber */
+    if (kir) kir.boxes.forEach(function(q){ l = Math.min(l, q[0] - 6); t = Math.min(t, q[1] - 6); r = Math.max(r, q[2] + 6); b = Math.max(b, q[3] + 6); });
+    var w = Math.max(r - l, 3 * S + 2 * pad), h = Math.max(b - t, 2 * S + 2 * pad), cx = (l + r) / 2, cy = (t + b) / 2;
     return (cx - w / 2) + ' ' + (cy - h / 2) + ' ' + w + ' ' + h;
   }
   /* lousa: as contas vão sendo escritas conforme o circuito diminui */
+  function lzLine(k, sym, num, now, anim){
+    return '<div class="lz-line' + (now ? ' now' : '') + '">' + (k ? '<span class="lz-k">' + k + '</span>' : '') +
+      '<span class="lz-sym' + anim + '">' + sym + '</span>' + (num ? '<span class="lz-num' + anim + '">' + num + '</span>' : '') + '</div>';
+  }
+  /* lousa da análise com Kirchhoff: linhas fixas em cima (head) e, embaixo, só a seção do quadro atual.
+     f.k = linha atual da seção (as anteriores ficam apagadas); sem f.k, a seção inteira está em destaque */
+  function lousaRet(f, i, fresh){
+    var a = fresh ? ' lz-new' : '', h = '', sc = kir.secs[f.sec];
+    kir.head.forEach(function(l){
+      if (l.min !== undefined && i < l.min) return;
+      var now = !!l.sec && f.sec === l.sec;
+      h += lzLine(l.k, l.sym, l.num, now, now ? a : '');
+    });
+    if (!sc) return h;
+    if (sc.t) h += '<span class="lz-h">' + sc.t + '</span>';
+    (sc.pre || []).forEach(function(l){ h += lzLine(l.k, l.sym, l.num, false, ''); });
+    if (!sc.lines.length && sc.empty) h += '<p class="lz-empty">' + sc.empty + '</p>';
+    sc.lines.forEach(function(l, j){
+      if (l.h){ h += '<span class="lz-h">' + l.h + '</span>'; return; }
+      var all = f.k === undefined, now = all || j === f.k;
+      if (!all && j > f.k) return;
+      h += lzLine(l.k, l.sym, l.num, now, now ? a : '');
+    });
+    return h;
+  }
   function renderLousa(i){
-    var f = frames[i], last = i === frames.length - 1, done = 0, pend = -1, h = '', fresh = i > lzLast;
+    var f = frames[i], last = i === resFi, done = 0, pend = -1, h = '', fresh = i > lzLast;
+    if (f.ph === 'ret'){
+      lzEl.innerHTML = '<span class="lz-h">Lousa</span>' + lousaRet(f, i, fresh);
+      lzEl.scrollTop = lzEl.scrollHeight;
+      lzLast = i;
+      return;
+    }
     if (f.ph === 'mark'){ done = f.opi; pend = f.opi; }
     else if (f.ph === 'done') done = f.opi + 1;
     else if (last) done = lzOps.length;
@@ -1796,7 +2948,7 @@ function fillMaterialSelect(sel, onlyIds){
         '<span class="lz-sym' + (j === pend ? anim : '') + '">' + op.sym + '</span>' +
         (j === pend ? '' : '<span class="lz-num' + anim + '">' + op.num + ' <b>' + op.res + '</b></span>') + '</div>';
     });
-    if (!h) h = '<p class="lz-empty">As contas aparecem aqui, passo a passo, conforme o circuito diminui.</p>';
+    if (!h) h = '<p class="lz-empty">' + (srcMode ? 'As contas das leis de Kirchhoff aparecem aqui, passo a passo.' : 'As contas aparecem aqui, passo a passo, conforme o circuito diminui.') + '</p>';
     if (last && result !== undefined){
       h += '<div class="lz-res' + (fresh ? ' lz-new' : '') + '">R<sub>AB</sub> = ' + (isFinite(result) ? fmtOhm(result) : '∞') +
         (resNote ? ' <small>(' + resNote + ')</small>' : '') + '</div>';
@@ -1809,21 +2961,23 @@ function fillMaterialSelect(sel, onlyIds){
     fi = i;
     var f = frames[i];
     svg.setAttribute('viewBox', playVB);
-    svg.innerHTML = drawGraph(f.G, f.hl, f.nw);
+    svg.innerHTML = drawGraph(f.G, f.hl, f.nw, f.ov);
     renderLousa(i);
     svg.setAttribute('data-tool', 'none');
     capEl.innerHTML = '<h2>' + f.label + '</h2>' + f.cap;
     countEl.textContent = (i + 1) + ' de ' + frames.length;
     prevB.disabled = i === 0;
     nextB.disabled = i === frames.length - 1;
-    resEl.hidden = !(i === frames.length - 1 && result !== undefined);
+    resEl.hidden = !(i >= resFi && result !== undefined);
     if (!resEl.hidden){
       resEl.innerHTML = '<span class="r-label">Resistência equivalente entre A e B' + (resNote ? ' (' + resNote + ')' : '') + '</span>' +
         '<span class="r-value big">' + (isFinite(result) ? fmtOhm(result) : '∞') + '</span>' +
-        (isFinite(result) ? '<span class="r-extra">' + br(result, 5) + ' Ω</span>' : '');
+        (isFinite(result) ? '<span class="r-extra">' + br(result, 5) + ' Ω</span>' : '') +
+        (kir ? '<span class="r-extra">Corrente total com ' + qty(st.V, 'V', 4) + ': ' + qty(kir.IT, 'A', 4) + '</span>' : '');
     }
   }
-  var result, resNote = '';
+  /* resFi: quadro do resultado (Req); kir: dados da volta ao circuito, quando há tensão */
+  var result, resNote = '', resFi = 0, kir = null, srcMode = false;
   function play(){
     if (timer){ stopTimer(); return; }
     if (fi >= frames.length - 1) showFrame(0);
@@ -1837,14 +2991,17 @@ function fillMaterialSelect(sel, onlyIds){
   function go(){
     var b = build();
     if (b.err){
-      /* leva direto à ferramenta que resolve o que falta */
-      if (!st.A) setTool('A'); else if (!st.B) setTool('B'); else if (tool !== 'r') setTool('r');
+      /* leva direto à ferramenta que resolve o que falta (no modo com fontes, A e B não são usados) */
+      if (!b.src){ if (!st.A) setTool('A'); else if (!st.B) setTool('B'); else if (tool !== 'r') setTool('r'); }
       setStatus(statusEl, b.err, true);
       return;
     }
     result = b.open ? Infinity : b.req;
     resNote = b.stuck ? 'análise nodal' : '';
     lzOps = b.ops || [];
+    resFi = b.resFi === undefined ? b.frames.length - 1 : b.resFi;
+    kir = b.kir || null;
+    srcMode = !!b.src;
     lzLast = -1;
     mode = 'play';
     topUi.hidden = true; botUi.hidden = true; playUi.hidden = false;
@@ -1871,34 +3028,69 @@ function fillMaterialSelect(sel, onlyIds){
     try {
       var s = JSON.parse(localStorage.getItem(LS));
       if (s && s.e && typeof s.n === 'number' && okPt(s.A) && okPt(s.B) &&
-          Object.keys(s.e).every(function(k){ var c = s.e[k]; return KEYS.indexOf(k) >= 0 && c && (c.t === 'w' || (c.t === 'r' && c.v > 0 && isFinite(c.v) && typeof c.n === 'number')); }) &&
-          Object.keys(s.e).length) return s;
+          Object.keys(s.e).every(function(k){
+            var c = s.e[k];
+            return KEYS.indexOf(k) >= 0 && c && (c.t === 'w' || (c.t === 'r' && c.v > 0 && isFinite(c.v) && typeof c.n === 'number') ||
+              (c.t === 's' && typeof c.v === 'number' && isFinite(c.v) && typeof c.n === 'number'));
+          }) &&
+          Object.keys(s.e).length){
+        /* fontes: polaridade 0 ou 1 (estados antigos não têm fontes) */
+        Object.keys(s.e).forEach(function(k){ if (s.e[k].t === 's') s.e[k].pos = s.e[k].pos ? 1 : 0; });
+        /* estados antigos não têm V: ficam sem tensão */
+        s.V = typeof s.V === 'number' && isFinite(s.V) && s.V > 0 ? s.V : null;
+        return s;
+      }
     } catch (e) {}
     return null;
   }
   function loadPreset(id){
     var p = PRESETS[id];
-    st = {e:{}, A:p.A ? p.A.slice() : null, B:p.B ? p.B.slice() : null, n:0};
-    p.items.forEach(function(it){ st.e[it[0]] = it[1] === 'w' ? {t:'w'} : {t:'r', v:it[1], n:++st.n}; });
+    /* exemplo com tensão própria troca a tensão; grade em branco mantém a que estava */
+    st = {e:{}, A:p.A ? p.A.slice() : null, B:p.B ? p.B.slice() : null, n:0, V:p.V || st.V || null};
+    p.items.forEach(function(it){
+      st.e[it[0]] = it[1] === 'w' ? {t:'w'} : it[1] === 's' ? {t:'s', v:it[2], pos:it[3] ? 1 : 0, n:++st.n} : {t:'r', v:it[1], n:++st.n};
+    });
   }
   function hint(){
     var t = {
       r:'Toque num trecho da grade para colocar um resistor com o valor acima.',
       w:'Toque num trecho da grade para ligar dois pontos com um fio.',
       x:'Toque num trecho da grade para apagar o que está nele.',
-      e:'Toque num resistor para editar o valor ou o número dele.',
+      s:'Toque num trecho da grade para colocar uma fonte de tensão com o valor acima. O + fica à esquerda (ou em cima); para inverter, use Editar.',
+      e:'Toque num resistor ou numa fonte para editar o valor ou o número.',
       A:'Toque num ponto da grade para marcar a entrada A.',
       B:'Toque num ponto da grade para marcar a saída B.'
     };
-    setStatus(statusEl, tool === 'e' && sel ? names()[sel] + ' selecionado: mude o valor ou o número.' : t[tool]);
+    setStatus(statusEl, tool === 'e' && sel && st.e[sel] ? selMsg(sel) : t[tool]);
   }
+  function selMsg(k){
+    return st.e[k].t === 's' ? names()[k] + ' selecionada: mude o valor, o número ou inverta a polaridade (+ ' + plusSide(k, st.e[k].pos) + ').'
+                             : names()[k] + ' selecionado: mude o valor ou o número.';
+  }
+  /* o campo de valor serve ao resistor (Ω, > 0) ou à fonte (V, pode ser 0); cada um lembra o seu "próximo valor" */
+  var valMem = {r:'10', s:'12'};
+  function valKind(){ return tool === 's' || (tool === 'e' && sel && st.e[sel] && st.e[sel].t === 's') ? 's' : 'r'; }
+  function valOk(v, kind){ return !(v === null || Number.isNaN(v) || (kind === 'r' && v <= 0)); }
   function syncVal(){
-    valBox.hidden = !(tool === 'r' || (tool === 'e' && sel));
-    numBox.hidden = !(tool === 'e' && sel && st.e[sel]);
+    var ed = tool === 'e' && sel && st.e[sel], kind = valKind();
+    valBox.hidden = !(tool === 'r' || tool === 's' || ed);
+    numBox.hidden = !ed;
+    flipB.hidden = !(ed && st.e[sel].t === 's');
     if (!numBox.hidden) fillNum();
-    g('ck-vallab').textContent = tool === 'e' && sel && st.e[sel] ? 'Valor de ' + names()[sel] : 'Valor do próximo resistor';
+    g('ck-vallab').textContent = ed ? 'Valor de ' + names()[sel] : kind === 's' ? 'Valor da próxima fonte' : 'Valor do próximo resistor';
+    g('ck-valunit').textContent = kind === 's' ? 'V' : 'Ω';
+  }
+  /* com fontes na grade, A–B e a tensão ficam de lado: avisa e troca o texto do botão */
+  var goB = g('ck-go'), srcNote = g('ck-srcnote');
+  function syncMode(){
+    var has = Object.keys(st.e).some(function(k){ return st.e[k].t === 's'; });
+    srcNote.hidden = !has;
+    g('ck-vnote').hidden = has;
+    goB.textContent = has ? 'Resolver pelas leis de Kirchhoff' : 'Simplificar passo a passo';
   }
   function setTool(t){
+    if ((tool === 'r' || tool === 's') && valOk(parse(valEl.value), tool)) valMem[tool] = valEl.value;
+    if ((t === 'r' || t === 's') && t !== tool){ valEl.value = valMem[t]; badVal(false); }
     tool = t;
     toolBtns.forEach(function(b){ b.setAttribute('aria-pressed', b.dataset.t === t ? 'true' : 'false'); });
     sel = null;
@@ -1923,8 +3115,9 @@ function fillMaterialSelect(sel, onlyIds){
     if (!from.length || mode !== 'edit') return;
     to.push(snap());
     st = JSON.parse(from.pop());
-    sel = null; editPrev = null;
-    save(); syncVal(); renderEditor(); syncUndo();
+    sel = null; editPrev = null; vPrev = null;
+    if (st.V === undefined) st.V = null;
+    save(); syncVal(); syncV(); renderEditor(); syncUndo();
     setStatus(statusEl, msg);
   }
   function undo(){ restore(hist, fut, 'Desfeito.'); }
@@ -1932,13 +3125,13 @@ function fillMaterialSelect(sel, onlyIds){
   /* número do resistor: escolher outro número troca com o resistor que tinha esse número */
   var numBox = g('ck-numbox'), numSel = g('ck-num');
   function fillNum(){
-    var nm = names(), ks = Object.keys(nm).sort(function(a, b){ return st.e[a].n - st.e[b].n; });
+    var nm = names(), ty = st.e[sel].t, ks = Object.keys(nm).filter(function(k){ return st.e[k].t === ty; }).sort(function(a, b){ return st.e[a].n - st.e[b].n; });
     numSel.innerHTML = ks.map(function(k){ return '<option value="' + k + '">' + nm[k] + '</option>'; }).join('');
     numSel.value = sel;
   }
   numSel.addEventListener('change', function(){
     var other = numSel.value;
-    if (!sel || !st.e[sel] || other === sel || !st.e[other]) return;
+    if (!sel || !st.e[sel] || other === sel || !st.e[other] || st.e[other].t !== st.e[sel].t) return;
     var nm = names(), was = nm[sel], to = nm[other], prev = snap(), tmp = st.e[sel].n;
     st.e[sel].n = st.e[other].n;
     st.e[other].n = tmp;
@@ -1947,6 +3140,16 @@ function fillMaterialSelect(sel, onlyIds){
     done(was + ' agora é ' + to + ', e o antigo ' + to + ' virou ' + was + '.');
   });
   function redo(){ restore(fut, hist, 'Refeito.'); }
+  var flipB = g('ck-flip');
+  function flip(){
+    if (mode !== 'edit' || tool !== 'e' || !sel || !st.e[sel] || st.e[sel].t !== 's') return false;
+    var prev = snap();
+    st.e[sel].pos = st.e[sel].pos ? 0 : 1;
+    commit(prev);
+    done(names()[sel] + ': polaridade invertida, o + agora fica ' + plusSide(sel, st.e[sel].pos) + '.');
+    return true;
+  }
+  flipB.addEventListener('click', flip);
   function done(msg){ save(); renderEditor(); setStatus(statusEl, msg); }
   function badVal(on){ valBox.classList.toggle('bad', on); valEl.setAttribute('aria-invalid', on ? 'true' : 'false'); }
 
@@ -1956,25 +3159,27 @@ function fillMaterialSelect(sel, onlyIds){
     var prev = snap(), old, msg;
     if (k){
       old = st.e[k];
-      var oldName = old && old.t === 'r' ? names()[k] : null;
-      if (tool === 'r'){
-        var v = parse(valEl.value);
-        if (v === null || Number.isNaN(v) || v <= 0){
+      var oldName = old && old.t !== 'w' ? names()[k] : null;
+      if (tool === 'r' || tool === 's'){
+        var v = parse(valEl.value), isS = tool === 's', same = old && old.t === tool;
+        if (!valOk(v, tool)){
           badVal(true); valEl.focus();
-          setStatus(statusEl, 'Digite um valor maior que zero para o resistor.', true);
+          setStatus(statusEl, isS ? 'Digite o valor da fonte em volts (pode ser 0).' : 'Digite um valor maior que zero para o resistor.', true);
           return;
         }
-        st.e[k] = {t:'r', v:v, n:oldName ? old.n : ++st.n};
-        msg = oldName ? (old.v === v ? oldName + ' já vale ' + fmtOhm(v) + '.' : oldName + ' agora vale ' + fmtOhm(v) + '.')
-                      : names()[k] + ' colocado (' + fmtOhm(v) + ').';
+        st.e[k] = isS ? {t:'s', v:v, pos:same ? old.pos : 0, n:same ? old.n : ++st.n} : {t:'r', v:v, n:same ? old.n : ++st.n};
+        var nn = names()[k], vt = fmtEl(st.e[k]);
+        msg = same ? (old.v === v ? nn + ' já vale ' + vt + '.' : nn + ' agora vale ' + vt + '.')
+                   : (oldName ? oldName + ' trocado por ' + nn : nn + (isS ? ' colocada' : ' colocado')) + ' (' + vt +
+                     (isS ? ', + ' + plusSide(k, 0) + ').' : ').');
       } else if (tool === 'e'){
         if (oldName){
           sel = k; valEl.value = fieldFmt(old.v); badVal(false); syncVal(); renderEditor();
           valEl.focus(); valEl.select();
-          setStatus(statusEl, oldName + ' selecionado: mude o valor ou o número.');
+          setStatus(statusEl, selMsg(k));
         } else {
           sel = null; syncVal(); renderEditor();
-          setStatus(statusEl, 'Toque em um resistor para editar o valor.', true);
+          setStatus(statusEl, 'Toque em um resistor ou numa fonte para editar.', true);
         }
         return;
       } else if (tool === 'w'){
@@ -1983,7 +3188,7 @@ function fillMaterialSelect(sel, onlyIds){
       } else if (tool === 'x'){
         if (!old){ setStatus(statusEl, 'Não há nada nesse trecho para apagar.', true); return; }
         delete st.e[k];
-        msg = (oldName || 'Fio') + ' apagado.';
+        msg = (oldName || 'Fio') + (old.t === 's' ? ' apagada.' : ' apagado.');
       } else return;
     } else if (n){
       var p = n.split(',').map(Number), other = tool === 'A' ? 'B' : 'A';
@@ -2007,22 +3212,37 @@ function fillMaterialSelect(sel, onlyIds){
   });
   toolBtns.forEach(function(b){ b.addEventListener('click', function(){ setTool(b.dataset.t); }); });
   valEl.addEventListener('input', function(){
-    var v = parse(valEl.value), ok = !(v === null || Number.isNaN(v) || v <= 0);
+    var kind = valKind(), v = parse(valEl.value), ok = valOk(v, kind);
     badVal(!ok && valEl.value.trim() !== '');
     if (tool !== 'e' || !sel || !st.e[sel]) return;
-    if (!ok){ setStatus(statusEl, 'Digite um valor maior que zero.', true); return; }
+    if (!ok){ setStatus(statusEl, kind === 's' ? 'Digite um valor em volts (pode ser 0).' : 'Digite um valor maior que zero.', true); return; }
     if (editPrev === null) editPrev = snap();
     st.e[sel].v = v;
-    done(names()[sel] + ' agora vale ' + fmtOhm(v) + '.');
+    done(names()[sel] + ' agora vale ' + fmtEl(st.e[sel]) + '.');
   });
   /* a edição de valor vira um único passo de desfazer quando o campo perde o foco */
   valEl.addEventListener('change', function(){ if (editPrev !== null){ commit(editPrev); editPrev = null; } });
+  /* tensão entre A e B (opcional): vazio = só a Req; também vira um passo de desfazer */
+  var vEl = g('ck-v'), vBox = g('ck-vbox'), vPrev = null;
+  function syncV(){ vEl.value = st.V ? fieldFmt(st.V) : ''; vBox.classList.remove('bad'); vEl.setAttribute('aria-invalid', 'false'); }
+  vEl.addEventListener('input', function(){
+    var raw = vEl.value.trim(), v = parse(vEl.value), ok = raw === '' || (isFinite(v) && v > 0);
+    vBox.classList.toggle('bad', !ok); vEl.setAttribute('aria-invalid', ok ? 'false' : 'true');
+    if (!ok){ setStatus(statusEl, 'Digite uma tensão maior que zero (ex.: 12 ou 1k5) ou deixe vazio.', true); return; }
+    if (vPrev === null) vPrev = snap();
+    st.V = raw === '' ? null : v;
+    save();
+    setStatus(statusEl, st.V ? 'Tensão entre A e B: ' + qty(st.V, 'V', 4) + '. Depois da Req, a animação mostra as correntes e as leis de Kirchhoff.'
+                             : 'Sem tensão: a animação mostra só a resistência equivalente.');
+  });
+  vEl.addEventListener('change', function(){ if (vPrev !== null){ commit(vPrev); vPrev = null; } });
+  vEl.addEventListener('keydown', function(e){ if (e.key === 'Enter'){ e.preventDefault(); vEl.blur(); go(); } });
   exSel.addEventListener('change', function(){
     if (!exSel.value) return;
     var prev = snap(), label = exSel.options[exSel.selectedIndex].text;
     loadPreset(exSel.value);
     exSel.value = '';
-    sel = null; syncVal();
+    sel = null; syncVal(); syncV();
     done(commit(prev) ? 'Exemplo carregado: ' + label + '. Use Desfazer para voltar ao seu circuito.' : 'Esse exemplo já está na grade.');
   });
   g('ck-clear').addEventListener('click', function(){
@@ -2053,7 +3273,7 @@ function fillMaterialSelect(sel, onlyIds){
   });
 
   /* teclado: ferramentas, desfazer e Enter na edição; setas e passador de slides na reprodução */
-  var KEYTOOL = {r:'r', e:'e', f:'w', x:'x', a:'A', b:'B'};
+  var KEYTOOL = {r:'r', v:'s', e:'e', f:'w', x:'x', a:'A', b:'B'};
   document.addEventListener('keydown', function(e){
     if (tabEl.hidden || e.altKey) return;
     var t = e.target, typing = /^(INPUT|SELECT|TEXTAREA)$/.test(t.tagName);
@@ -2075,7 +3295,8 @@ function fillMaterialSelect(sel, onlyIds){
       e.preventDefault();
       return;
     }
-    if (KEYTOOL[key]) setTool(KEYTOOL[key]);
+    if (key === 'p'){ if (!flip()) return; }
+    else if (KEYTOOL[key]) setTool(KEYTOOL[key]);
     else if (e.key === 'Delete' || e.key === 'Backspace') setTool('x');
     else if (e.key === 'Enter' && (t === document.body || t === svg || t === tabEl)) go();
     else return;
@@ -2084,6 +3305,7 @@ function fillMaterialSelect(sel, onlyIds){
 
   var saved = load();
   if (saved) st = saved; else loadPreset('b');
+  syncV();
   setTool('r');
   renderEditor();
 })();
@@ -2420,6 +3642,547 @@ function fillMaterialSelect(sel, onlyIds){
     setStatus(st, '');
   }
   [pct, tot, par].forEach(function(x){ x.addEventListener('input', update); });
+  update();
+})();
+
+/* ---------- aba: leis de Kirchhoff (duas malhas) ---------- */
+(function(){
+  var ids = ['E1','E2','R1','R2','R3'];
+  var el = {};
+  ids.forEach(function(k){ el[k] = document.getElementById('kf-' + k); });
+  var st = document.getElementById('kf-status');
+  var out = document.getElementById('kf-result');
+  var stepsEl = document.getElementById('kf-steps');
+  var pol = {1:'top', 2:'top'};
+
+  function num(x, d){ return br(clean(x), d || 4).replace('-', '−'); }
+  /* número entre parênteses se negativo, para usar dentro de contas */
+  function pn(x){ return x < 0 ? '(' + num(x) + ')' : num(x); }
+  function sg(x){ return (x < 0 ? '− ' : '+ ') + num(Math.abs(x)); }
+  function engTxt(x){ var e = eng(x, 'A').replace('-', '−'); return e ? e + ' · ' : ''; }
+  function amp(x){
+    var e = eng(x, 'A').replace('-', '−');
+    return num(x) + ' A' + (e ? ' (' + e + ')' : '');
+  }
+  function zero(x, scale){ return Math.abs(x) <= 1e-9 * scale; }
+
+  /* placa longa e fina = lado +; placa curta e grossa = lado − */
+  function drawBat(n){
+    var top = pol[n] === 'top';
+    var cx = n === 1 ? 30 : 230;
+    var a = document.getElementById('kf-b' + n + 'a');
+    var b = document.getElementById('kf-b' + n + 'b');
+    a.setAttribute('x1', cx - 10); a.setAttribute('x2', cx + 10);
+    a.setAttribute('y1', top ? 68 : 78); a.setAttribute('y2', top ? 68 : 78);
+    b.setAttribute('x1', cx - 5); b.setAttribute('x2', cx + 5);
+    b.setAttribute('y1', top ? 78 : 68); b.setAttribute('y2', top ? 78 : 68);
+    document.getElementById('kf-p' + n).setAttribute('y', top ? 62 : 90);
+  }
+
+  function update(){
+    out.hidden = true; stepsEl.hidden = true;
+    var v = {}, bad = false, miss = false;
+    ids.forEach(function(k){
+      var n = parse(el[k].value);
+      v[k] = n;
+      if (Number.isNaN(n)) bad = true;
+      else if (n === null) miss = true;
+    });
+    if (bad){ setStatus(st, 'Use apenas números, por exemplo 12 ou 4k7.', true); return; }
+    if (miss){ setStatus(st, 'Preencha E1, E2, R1, R2 e R3.'); return; }
+    if (v.R1 < 0 || v.R2 < 0 || v.R3 < 0){ setStatus(st, 'As resistências não podem ser negativas.', true); return; }
+
+    /* e1 e e2: força eletromotriz no sentido horário de cada malha.
+       Ramo da esquerda: horário = subindo. Ramo da direita: horário = descendo. */
+    var e1 = (pol[1] === 'top' ? 1 : -1) * v.E1;
+    var e2 = (pol[2] === 'top' ? -1 : 1) * v.E2;
+    var a11 = v.R1 + v.R3, a12 = -v.R3, a21 = -v.R3, a22 = v.R2 + v.R3;
+    var D = a11 * a22 - a12 * a21;
+    if (zero(D, Math.abs(a11 * a22) + Math.abs(a12 * a21))){
+      setStatus(st, 'Determinante zero: o sistema não tem solução única. Isso acontece, por exemplo, com duas resistências nulas. Ajuste os resistores.', true);
+      return;
+    }
+    var D1 = e1 * a22 - a12 * e2;
+    var D2 = a11 * e2 - e1 * a21;
+    var i1 = D1 / D, i2 = D2 / D, i3 = i1 - i2;
+
+    var scale = Math.abs(i1) + Math.abs(i2) + Math.abs(i3);
+    function flow(x, pos, neg){
+      if (zero(x, scale)) return 'sem corrente';
+      return x > 0 ? pos : neg;
+    }
+    var sL = flow(i1, 'sobe pelo ramo da esquerda', 'desce pelo ramo da esquerda');
+    var sR = flow(i2, 'desce pelo ramo da direita', 'sobe pelo ramo da direita');
+    var sC = flow(i3, 'desce por R3, de A para B', 'sobe por R3, de B para A');
+
+    out.innerHTML =
+      '<div class="r-pair">' +
+        '<div><span class="r-label">I₁ (malha da esquerda)</span><span class="r-value">' + num(i1) + ' A</span><span class="r-extra">' + engTxt(i1) + sL + '</span></div>' +
+        '<div><span class="r-label">I₂ (malha da direita)</span><span class="r-value">' + num(i2) + ' A</span><span class="r-extra">' + engTxt(i2) + sR + '</span></div>' +
+      '</div>' +
+      '<div><span class="r-label">Corrente em R3 (I₁ − I₂)</span><span class="r-value big">' + num(i3) + ' A</span><span class="r-extra">' + engTxt(i3) + sC + '</span></div>';
+    out.hidden = false;
+
+    /* 1ª lei no nó A: corrente que chega por cada ramo (positiva = entra em A) */
+    var toA = [
+      {n: 'ramo da esquerda', x: i1},
+      {n: 'ramo da direita', x: -i2},
+      {n: 'R3', x: -i3}
+    ];
+    var ins = toA.filter(function(b){ return b.x > 0 && !zero(b.x, scale); });
+    var outs = toA.filter(function(b){ return b.x < 0 && !zero(b.x, scale); });
+    function listTxt(a, s){
+      return a.map(function(b){ return num(s * b.x); }).join(' + ');
+    }
+    function sum(a, s){ return a.reduce(function(t, b){ return t + s * b.x; }, 0); }
+    function names(a){ return a.length ? a.map(function(b){ return b.n; }).join(', ') : 'nenhum ramo'; }
+    var sIn = sum(ins, 1), sOut = sum(outs, -1);
+    var okNode = zero(sIn - sOut, scale);
+
+    /* 2ª lei na malha externa, no sentido horário: sobe e1, queda em R1, queda em R2, e2 */
+    var t1 = e1, t2 = -v.R1 * i1, t3 = -v.R2 * i2, t4 = e2;
+    var tot = t1 + t2 + t3 + t4;
+    var okLoop = zero(tot, Math.abs(t1) + Math.abs(t2) + Math.abs(t3) + Math.abs(t4));
+
+    stepsEl.innerHTML =
+      '<h2>Passo a passo</h2><ol>' +
+      '<li><span>Fontes no sentido horário de cada malha (positivo = a fonte empurra a corrente no sentido horário)</span>' +
+        '<code>e₁ = ' + (e1 < 0 ? '−' : '+') + num(Math.abs(e1)) + ' V   e₂ = ' + (e2 < 0 ? '−' : '+') + num(Math.abs(e2)) + ' V</code></li>' +
+      '<li><span>2ª lei na malha da esquerda: R₁ · I₁ + R₃ · (I₁ − I₂) = e₁</span>' +
+        '<code>' + num(v.R1) + ' · I₁ + ' + num(v.R3) + ' · (I₁ − I₂) = ' + num(e1) + '</code></li>' +
+      '<li><span>2ª lei na malha da direita: R₂ · I₂ + R₃ · (I₂ − I₁) = e₂</span>' +
+        '<code>' + num(v.R2) + ' · I₂ + ' + num(v.R3) + ' · (I₂ − I₁) = ' + num(e2) + '</code></li>' +
+      '<li><span>Sistema 2×2 organizado</span>' +
+        '<code>' + num(a11) + ' · I₁ − ' + num(v.R3) + ' · I₂ = ' + num(e1) + '</code>' +
+        '<code>−' + num(v.R3) + ' · I₁ + ' + num(a22) + ' · I₂ = ' + num(e2) + '</code></li>' +
+      '<li><span>Determinantes (regra de Cramer)</span>' +
+        '<code>D = ' + pn(a11) + ' · ' + pn(a22) + ' − ' + pn(a12) + ' · ' + pn(a21) + ' = ' + num(D) + '</code>' +
+        '<code>D₁ = ' + pn(e1) + ' · ' + pn(a22) + ' − ' + pn(a12) + ' · ' + pn(e2) + ' = ' + num(D1) + '</code>' +
+        '<code>D₂ = ' + pn(a11) + ' · ' + pn(e2) + ' − ' + pn(e1) + ' · ' + pn(a21) + ' = ' + num(D2) + '</code></li>' +
+      '<li><span>Correntes de malha (horárias)</span>' +
+        '<code>I₁ = ' + fr('D₁', 'D') + ' = ' + fr(num(D1), num(D)) + ' = ' + num(i1) + ' A</code>' +
+        '<code>I₂ = ' + fr('D₂', 'D') + ' = ' + fr(num(D2), num(D)) + ' = ' + num(i2) + ' A</code></li>' +
+      '<li><span>Correntes nos ramos. Positivo = no sentido desenhado; negativo = no sentido contrário</span>' +
+        '<code>Ramo da esquerda: ' + amp(i1) + ', ' + sL + '</code>' +
+        '<code>Ramo da direita: ' + amp(i2) + ', ' + sR + '</code>' +
+        '<code>I_R3 = I₁ − I₂ = ' + num(i1) + ' − ' + pn(i2) + ' = ' + amp(i3) + ', ' + sC + '</code></li>' +
+      '<li><span>1ª lei no nó A: entra por ' + names(ins) + '; sai por ' + names(outs) + '</span>' +
+        '<code>Σ entram = ' + (ins.length > 1 ? listTxt(ins, 1) + ' = ' : '') + num(sIn) + ' A</code>' +
+        '<code>Σ saem = ' + (outs.length > 1 ? listTxt(outs, -1) + ' = ' : '') + num(sOut) + ' A</code>' +
+        '<code>' + (okNode ? 'Confere: entra o mesmo que sai.' : 'Não confere.') + '</code></li>' +
+      '<li><span>2ª lei na malha externa (horária): e₁ − R₁ · I₁ − R₂ · I₂ + e₂ = 0</span>' +
+        '<code>' + num(t1) + ' ' + sg(t2) + ' ' + sg(t3) + ' ' + sg(t4) + ' = ' + (okLoop ? '0' : num(tot)) + ' V</code>' +
+        '<code>' + (okLoop ? 'Confere: a soma das tensões na malha é zero.' : 'Não confere.') + '</code></li>' +
+      '</ol>';
+    stepsEl.hidden = false;
+    setStatus(st, '');
+  }
+
+  ids.forEach(function(k){ el[k].addEventListener('input', update); });
+  [1, 2].forEach(function(n){
+    var btns = document.getElementById('kf-pol' + n).querySelectorAll('button');
+    Array.prototype.forEach.call(btns, function(b){
+      b.addEventListener('click', function(){
+        pol[n] = b.dataset.p;
+        Array.prototype.forEach.call(btns, function(o){ o.setAttribute('aria-pressed', o === b ? 'true' : 'false'); });
+        drawBat(n);
+        update();
+      });
+    });
+    drawBat(n);
+  });
+  document.getElementById('kf-clear').addEventListener('click', function(){
+    ids.forEach(function(k){ el[k].value = ''; });
+    update();
+  });
+  update();
+})();
+
+/* ---------- matemática: atalhos para as ferramentas ---------- */
+(function(){
+  document.querySelectorAll('.msec-nav a').forEach(function(a){
+    a.addEventListener('click', function(e){
+      var d = document.getElementById(a.dataset.go);
+      if (!d) return;
+      e.preventDefault();
+      d.open = true;
+      d.scrollIntoView({block: 'start'});
+    });
+  });
+})();
+
+/* ---------- matemática: sistemas de equações 2×2 e 3×3 ---------- */
+(function(){
+  var grid = document.getElementById('sy-grid'), eqsEl = document.getElementById('sy-eqs'), st = document.getElementById('sy-status');
+  var res = document.getElementById('sy-result'), stepsEl = document.getElementById('sy-steps'), altEl = document.getElementById('sy-alt');
+  var sizeBox = document.getElementById('sy-size'), namesBox = document.getElementById('sy-names');
+  var n = 2, nameSet = 'xyz';
+  var NAMES = {xyz: ['x', 'y', 'z'], i: ['I₁', 'I₂', 'I₃']};
+  /* cada linha guarda [coef 1, coef 2, coef 3, termo independente] como texto digitado */
+  var EX2 = [['2', '3', '', '12'], ['1', '-1', '', '1']];
+  var EX3 = [['1', '1', '1', '4'], ['2', '-1', '1', '8'], ['1', '2', '-1', '-3']];
+  var MESH = [['8', '-6', '', '18'], ['-6', '9', '', '-9']];
+  var vals = [['', '', '', ''], ['', '', '', ''], ['', '', '', '']];
+
+  /* SOLVER-START */
+  function det2(M){ return M[0][0] * M[1][1] - M[0][1] * M[1][0]; }
+  function det3(M){
+    return M[0][0] * M[1][1] * M[2][2] + M[0][1] * M[1][2] * M[2][0] + M[0][2] * M[1][0] * M[2][1]
+         - M[0][2] * M[1][1] * M[2][0] - M[0][0] * M[1][2] * M[2][1] - M[0][1] * M[1][0] * M[2][2];
+  }
+  function detN(M){ return M.length === 2 ? det2(M) : det3(M); }
+  /* soma dos módulos dos produtos do determinante: escala para saber o que é resíduo de ponto flutuante */
+  function detScale(M){
+    if (M.length === 2) return Math.abs(M[0][0] * M[1][1]) + Math.abs(M[0][1] * M[1][0]);
+    return Math.abs(M[0][0] * M[1][1] * M[2][2]) + Math.abs(M[0][1] * M[1][2] * M[2][0]) + Math.abs(M[0][2] * M[1][0] * M[2][1])
+         + Math.abs(M[0][2] * M[1][1] * M[2][0]) + Math.abs(M[0][0] * M[1][2] * M[2][1]) + Math.abs(M[0][1] * M[1][0] * M[2][2]);
+  }
+  /* determinante sem resíduo: abaixo de 1e-14 da escala dos produtos vale zero */
+  function detZ(M){
+    var d = detN(M);
+    return Math.abs(d) <= 1e-14 * detScale(M) ? 0 : clean(d);
+  }
+  /* matriz com a coluna k trocada pelos termos independentes */
+  function swapCol(M, c, k){ return M.map(function(row, i){ return row.map(function(v, j){ return j === k ? c[i] : v; }); }); }
+  /* posto por eliminação (tolerância relativa) */
+  function rankOf(rows){
+    var m = rows.map(function(r){ return r.slice(); }), mx = 0, rank = 0, cols = m[0].length;
+    m.forEach(function(r){ r.forEach(function(v){ mx = Math.max(mx, Math.abs(v)); }); });
+    var eps = 1e-9 * (mx || 1);
+    for (var c = 0; c < cols && rank < m.length; c++){
+      var p = rank;
+      for (var i = rank + 1; i < m.length; i++) if (Math.abs(m[i][c]) > Math.abs(m[p][c])) p = i;
+      if (Math.abs(m[p][c]) <= eps) continue;
+      var t = m[p]; m[p] = m[rank]; m[rank] = t;
+      for (var r = rank + 1; r < m.length; r++){
+        var f = m[r][c] / m[rank][c];
+        for (var k = c; k < cols; k++) m[r][k] -= f * m[rank][k];
+      }
+      rank++;
+    }
+    return rank;
+  }
+  /* M: coeficientes (n×n), c: termos independentes. Devolve {type, D, Ds, sol} */
+  function solveSys(M, c){
+    var N = M.length, D = detZ(M);
+    if (D !== 0){
+      var Ds = [], sol = [];
+      for (var k = 0; k < N; k++){ Ds.push(detZ(swapCol(M, c, k))); sol.push(clean(Ds[k] / D)); }
+      return {type: 'unique', D: D, Ds: Ds, sol: sol};
+    }
+    var aug = M.map(function(row, i){ return row.concat([c[i]]); });
+    return {type: rankOf(M) < rankOf(aug) ? 'impossible' : 'indet', D: 0};
+  }
+  /* SOLVER-END */
+
+  function fmt(x){ return br(clean(x), Number.isInteger(x) && Math.abs(x) < 1e15 ? 15 : 6).replace(/-/g, '−'); }
+  /* valores digitados e contas feitas só com eles: sem arredondar (até 12 algarismos) */
+  function fmtIn(x){ return br(clean(x), 12).replace(/-/g, '−'); }
+  function P(x){ return x < 0 ? '(' + fmt(x) + ')' : fmt(x); }
+  function PI(x){ return x < 0 ? '(' + fmtIn(x) + ')' : fmtIn(x); }
+  function approx(x){ return !(Number.isInteger(x) && Math.abs(x) < 1e15) && Number(x.toPrecision(6)) !== clean(x); }
+  function li(label, codes){ return '<li><span>' + label + '</span>' + codes.map(function(c){ return '<code>' + c + '</code>'; }).join('') + '</li>'; }
+  function hide(){ res.hidden = true; stepsEl.hidden = true; altEl.hidden = true; }
+  function nm(){ return NAMES[nameSet]; }
+
+  function num(s){
+    s = s.replace(/\s/g, '').replace('−', '-').replace(',', '.');
+    if (s === '') return null;
+    return /^[+-]?(\d+\.?\d*|\.\d+)$/.test(s) ? Number(s) : NaN;
+  }
+  /* equação em texto: 2x − y = 3 */
+  function eqTxt(coefs, d){
+    var names = nm(), s = '';
+    coefs.forEach(function(a, j){
+      if (a === 0) return;
+      var mag = Math.abs(a) === 1 ? names[j] : fmtIn(Math.abs(a)) + '·' + names[j];
+      s += s === '' ? (a < 0 ? '−' : '') + mag : (a < 0 ? ' − ' : ' + ') + mag;
+    });
+    return (s || '0') + ' = ' + fmtIn(d);
+  }
+  function mat(M){ return '[' + M.map(function(r){ return r.map(fmt).join('  '); }).join(' | ') + ']'; }
+
+  /* determinante com as contas à mostra */
+  function det2li(label, M){
+    var p = M[0][0] * M[1][1], q = M[0][1] * M[1][0];
+    return li(label, [label.split(' ')[0] + ' = ' + PI(M[0][0]) + '·' + PI(M[1][1]) + ' − ' + PI(M[0][1]) + '·' + PI(M[1][0]),
+      label.split(' ')[0] + ' = ' + PI(p) + ' − ' + PI(q) + ' = ' + fmtIn(detZ(M))]);
+  }
+  function det3li(label, M){
+    var d = [[0, 0, 1, 1, 2, 2], [0, 1, 1, 2, 2, 0], [0, 2, 1, 0, 2, 1]], u = [[0, 2, 1, 1, 2, 0], [0, 0, 1, 2, 2, 1], [0, 1, 1, 0, 2, 2]];
+    function prod(t){ return M[t[0]][t[1]] * M[t[2]][t[3]] * M[t[4]][t[5]]; }
+    function txt(t){ return PI(M[t[0]][t[1]]) + '·' + PI(M[t[2]][t[3]]) + '·' + PI(M[t[4]][t[5]]); }
+    var nmz = label.split(' ')[0];
+    return li(label, [
+      nmz + ' = ' + d.map(txt).join(' + ') + ' − ' + u.map(txt).join(' − '),
+      nmz + ' = ' + d.map(function(t){ return PI(prod(t)); }).join(' + ') + ' − ' + u.map(function(t){ return PI(prod(t)); }).join(' − '),
+      nmz + ' = ' + fmtIn(detZ(M))]);
+  }
+  function detLi(label, M){ return M.length === 2 ? det2li(label, M) : det3li(label, M); }
+
+  function altMethods(M, c){
+    var names = nm(), out = '';
+    /* substituição: escolhe uma equação e uma incógnita com coeficiente não nulo (de preferência ±1) */
+    var best = null;
+    for (var i = 0; i < 2; i++) for (var j = 0; j < 2; j++){
+      if (M[i][j] === 0) continue;
+      var score = Math.abs(M[i][j]) === 1 ? 0 : 1;
+      if (!best || score < best.s) best = {i: i, j: j, s: score};
+    }
+    var p = best.i, v = best.j, w = 1 - v, q = 1 - p;
+    var mv = M[p][v], mw = M[p][w], cp = c[p];
+    var kk = clean(M[q][w] - M[q][v] * mw / mv), rr = clean(c[q] - M[q][v] * cp / mv);
+    var wv = clean(rr / kk), vv = clean((cp - mw * wv) / mv);
+    var sub = '';
+    var numer = fmt(cp) + (mw === 0 ? '' : (mw < 0 ? ' + ' : ' − ') + (Math.abs(mw) === 1 ? '' : fmt(Math.abs(mw)) + '·') + names[w]);
+    sub += li('Isole ' + names[v] + ' na equação ' + (p + 1) + ': ' + eqTxt(M[p], cp), [names[v] + ' = ' + fr(numer, fmt(mv))]);
+    sub += li('Troque ' + names[v] + ' na equação ' + (q + 1) + ' (' + eqTxt(M[q], c[q]) + ')',
+      [P(M[q][v]) + '·' + fr(numer, fmt(mv)) + ' + ' + P(M[q][w]) + '·' + names[w] + ' = ' + fmt(c[q])]);
+    sub += li('Junte os termos com ' + names[w], [fmt(kk) + '·' + names[w] + ' = ' + fmt(rr), names[w] + ' = ' + fr(fmt(rr), fmt(kk)) + ' = ' + fmt(wv)]);
+    sub += li('Volte na primeira expressão e ache ' + names[v], [names[v] + ' = ' + fr(fmt(cp) + ' − ' + P(mw) + '·' + P(wv), fmt(mv)) + ' = ' + fmt(vv)]);
+    out += '<details><summary>Método da substituição</summary><ol>' + sub + '</ol></details>';
+
+    /* adição: zera uma incógnita multiplicando as equações */
+    var e = M[0][1] !== 0 && M[1][1] !== 0 ? 1 : (M[0][0] !== 0 && M[1][0] !== 0 ? 0 : -1), add = '';
+    if (e < 0){
+      add = '<p class="note">Uma incógnita não aparece em uma das equações. Use a substituição, que já resolve direto.</p>';
+    } else {
+      var t = 1 - e, f1 = M[1][e], f2 = -M[0][e];
+      var K = clean(M[0][t] * f1 + M[1][t] * f2), R = clean(c[0] * f1 + c[1] * f2);
+      var tv = clean(R / K), ev = clean((c[0] - M[0][t] * tv) / M[0][e]);
+      add += li('Para anular ' + names[e] + ', multiplique a equação 1 por ' + P(f1) + ' e a equação 2 por ' + P(f2),
+        [eqTxt([M[0][0] * f1, M[0][1] * f1], c[0] * f1),
+         eqTxt([M[1][0] * f2, M[1][1] * f2], c[1] * f2)]);
+      add += li('Some as duas equações (os termos em ' + names[e] + ' se cancelam)', [fmt(K) + '·' + names[t] + ' = ' + fmt(R)]);
+      add += li('Ache ' + names[t], [names[t] + ' = ' + fr(fmt(R), fmt(K)) + ' = ' + fmt(tv)]);
+      add += li('Troque na equação 1 e ache ' + names[e], [names[e] + ' = ' + fr(fmt(c[0]) + ' − ' + P(M[0][t]) + '·' + P(tv), fmt(M[0][e])) + ' = ' + fmt(ev)]);
+      add = '<ol>' + add + '</ol>';
+    }
+    out += '<details><summary>Método da adição</summary>' + add + '</details>';
+    return '<h2>Outros métodos (2×2)</h2>' + out;
+  }
+
+  function update(){
+    var names = nm(), M = [], c = [], bad = false, empty = 0;
+    for (var i = 0; i < n; i++){
+      var row = [];
+      for (var j = 0; j < n; j++){
+        var a = num(vals[i][j]);
+        if (a === null) empty++; else if (a !== a) bad = true;
+        row.push(a);
+      }
+      var d = num(vals[i][3]);
+      if (d === null) empty++; else if (d !== d) bad = true;
+      M.push(row); c.push(d);
+    }
+    if (bad){ setStatus(st, 'Use apenas números, por exemplo 2, −3 ou 0,5.', true); eqsEl.textContent = ''; hide(); return; }
+    if (empty){ setStatus(st, 'Preencha todos os campos. Use 0 para o termo que não aparece.'); eqsEl.textContent = ''; hide(); return; }
+    setStatus(st, '');
+    eqsEl.textContent = 'Sistema: ' + M.map(function(r, i){ return eqTxt(r, c[i]); }).join('   |   ');
+    var s = solveSys(M, c);
+
+    var steps = '';
+    steps += li('Escreva o sistema', M.map(function(r, i){ return eqTxt(r, c[i]); }));
+    if (s.type !== 'unique'){
+      steps += detLi('D (só os coeficientes)', M);
+      steps += li('D vale zero', ['Não existe uma única solução']);
+      res.innerHTML = '<span class="r-label">Resultado</span><span class="r-value">' + (s.type === 'impossible' ? 'Sistema impossível' : 'Sistema indeterminado') + '</span>' +
+        '<span class="r-extra">' + (s.type === 'impossible'
+          ? 'As equações se contradizem: nenhum valor serve para todas.'
+          : 'Alguma equação é combinação das outras: há infinitas soluções. Falta uma equação independente.') + '</span>';
+      res.hidden = false;
+      stepsEl.innerHTML = '<h2>Passo a passo</h2><ol>' + steps + '</ol>';
+      stepsEl.hidden = false; altEl.hidden = true;
+      return;
+    }
+    steps += detLi('D (só os coeficientes)', M);
+    for (var k = 0; k < n; k++){
+      steps += detLi('D' + names[k] + ' (troque a coluna de ' + names[k] + ' pelos termos independentes)', swapCol(M, c, k));
+    }
+    for (k = 0; k < n; k++){
+      steps += li('Divida: ' + names[k] + ' = D' + names[k] + ' / D', [names[k] + ' = ' + fr(fmtIn(s.Ds[k]), fmtIn(s.D)) + ' ' + (approx(s.Ds[k] / s.D) ? '≈' : '=') + ' ' + fmt(s.sol[k])]);
+    }
+    steps += li('Confira nas equações originais', M.map(function(r, i){
+      var terms = r.map(function(a, j){ return P(a) + '·' + P(s.sol[j]); }).join(' + ');
+      var lhs = r.reduce(function(acc, a, j){ return acc + a * s.sol[j]; }, 0);
+      var ok = Math.abs(lhs - c[i]) <= 1e-6 * Math.max(1, Math.abs(c[i]));
+      return terms + ' = ' + fmt(lhs) + (ok ? ' ✓' : ' (≈ ' + fmt(c[i]) + ', arredondado)');
+    }));
+    var out = '';
+    for (k = 0; k < n; k++){
+      out += '<span><span class="r-label">' + names[k] + '</span><span class="r-value big">' + fmt(s.sol[k]) + '</span>' +
+        (approx(s.sol[k]) ? '<span class="r-extra">valor aproximado</span>' : '') + '</span>';
+    }
+    res.innerHTML = '<div class="r-pair">' + out + '</div>';
+    res.hidden = false;
+    stepsEl.innerHTML = '<h2>Por Cramer' + (n === 3 ? ' (regra de Sarrus)' : '') + '</h2><ol>' + steps + '</ol>';
+    stepsEl.hidden = false;
+    if (n === 2){ altEl.innerHTML = altMethods(M, c); altEl.hidden = false; } else altEl.hidden = true;
+  }
+
+  function build(){
+    var names = nm(), cols = n + 1, h = '';
+    grid.style.gridTemplateColumns = 'repeat(' + cols + ', minmax(0, 1fr))';
+    for (var j = 0; j < n; j++) h += '<span class="gh" aria-hidden="true">' + names[j] + '</span>';
+    h += '<span class="gh" aria-hidden="true">= termo</span>';
+    for (var i = 0; i < n; i++){
+      for (j = 0; j <= n; j++){
+        var col = j < n ? j : 3, what = j < n ? 'coeficiente de ' + names[j] : 'termo independente';
+        h += '<div class="wrap"><input type="text" autocomplete="off" autocapitalize="off" spellcheck="false" data-r="' + i + '" data-c="' + col + '" value="' + vals[i][col] + '" aria-label="Equação ' + (i + 1) + ', ' + what + '"></div>';
+      }
+    }
+    grid.innerHTML = h;
+  }
+  function load(src, size){
+    for (var i = 0; i < 3; i++) for (var j = 0; j < 4; j++) vals[i][j] = src[i] ? src[i][j] : '';
+    n = size; setBtns(sizeBox, 'n', String(n)); build(); update();
+  }
+  function setBtns(box, key, v){
+    box.querySelectorAll('button').forEach(function(b){ b.setAttribute('aria-pressed', b.dataset[key] === v ? 'true' : 'false'); });
+  }
+  grid.addEventListener('input', function(e){
+    var t = e.target;
+    if (t.dataset && t.dataset.r !== undefined) vals[+t.dataset.r][+t.dataset.c] = t.value;
+    update();
+  });
+  sizeBox.querySelectorAll('button').forEach(function(b){
+    b.addEventListener('click', function(){ n = +b.dataset.n; setBtns(sizeBox, 'n', String(n)); build(); update(); });
+  });
+  namesBox.querySelectorAll('button').forEach(function(b){
+    b.addEventListener('click', function(){ nameSet = b.dataset.v; setBtns(namesBox, 'v', nameSet); build(); update(); });
+  });
+  document.getElementById('sy-ex').addEventListener('click', function(){ load(n === 2 ? EX2 : EX3, n); });
+  document.getElementById('sy-ex2').addEventListener('click', function(){ nameSet = 'i'; setBtns(namesBox, 'v', 'i'); load(MESH, 2); });
+  document.getElementById('sy-clear').addEventListener('click', function(){ load([], n); var f = grid.querySelector('input'); if (f) f.focus(); });
+  load(EX2, 2);
+})();
+
+/* ---------- matemática: potências e raízes ---------- */
+(function(){
+  var a = document.getElementById('pw-a'), b = document.getElementById('pw-b'), modeBox = document.getElementById('pw-mode');
+  var la = document.getElementById('pw-la'), lb = document.getElementById('pw-lb'), ua = document.getElementById('pw-ua'), ub = document.getElementById('pw-ub');
+  var st = document.getElementById('pw-status'), res = document.getElementById('pw-result'), stepsEl = document.getElementById('pw-steps');
+  var mode = 'pri';
+  var MODES = {
+    pri: {la: 'R', ua: 'Ω', lb: 'I', ub: 'A', va: '10', vb: '3'},
+    pvr: {la: 'V', ua: 'V', lb: 'R', ub: 'Ω', va: '120', vb: '60'},
+    irp: {la: 'P', ua: 'W', lb: 'R', ub: 'Ω', va: '1500', vb: '15'},
+    vpr: {la: 'P', ua: 'W', lb: 'R', ub: 'Ω', va: '1000', vb: '14,4'}
+  };
+  function f(x){ return br(clean(x), 6).replace(/-/g, '−'); }
+  function li(label, code){ return '<li><span>' + label + '</span><code>' + code + '</code></li>'; }
+  function pf(x){ return x < 0 ? '(' + f(x) + ')' : f(x); }
+  function hide(){ res.hidden = true; stepsEl.hidden = true; }
+  function show(label, value, unit, steps){
+    res.innerHTML = '<span class="r-label">' + label + '</span><span class="r-value big">' + value + ' ' + unit + '</span>';
+    res.hidden = false;
+    stepsEl.innerHTML = '<h2>Passo a passo</h2><ol>' + steps + '</ol>';
+    stepsEl.hidden = false;
+    setStatus(st, '');
+  }
+  function update(){
+    var m = MODES[mode];
+    la.textContent = m.la; lb.textContent = m.lb; ua.textContent = m.ua; ub.textContent = m.ub;
+    var A = parse(a.value), B = parse(b.value);
+    if (Number.isNaN(A) || Number.isNaN(B)){ setStatus(st, 'Use apenas números, por exemplo 2,5.', true); hide(); return; }
+    if (A === null || B === null){ setStatus(st, 'Preencha os dois campos.'); hide(); return; }
+    var s = '', v;
+    if (B !== null && A !== null){
+      var rv = mode === 'pri' ? A : B;
+      if (rv <= 0){ setStatus(st, 'R precisa ser maior que zero.', true); hide(); return; }
+      if ((mode === 'irp' || mode === 'vpr') && A < 0){ setStatus(st, 'P não pode ser negativa: P = R · I² nunca dá menos que zero.', true); hide(); return; }
+    }
+    if (mode === 'pri'){
+      var q = clean(B * B); v = clean(A * q);
+      s += li('Eleve a corrente ao quadrado', 'I² = I · I = ' + pf(B) + ' · ' + pf(B) + ' = ' + f(q));
+      s += li('Multiplique pela resistência', 'P = R · I² = ' + f(A) + ' · ' + f(q) + ' = ' + f(v));
+      show('Potência P', f(v), 'W', s);
+    } else if (mode === 'pvr'){
+      if (B === 0){ setStatus(st, 'R não pode ser zero.', true); hide(); return; }
+      var q2 = clean(A * A); v = clean(q2 / B);
+      s += li('Eleve a tensão ao quadrado', 'V² = V · V = ' + pf(A) + ' · ' + pf(A) + ' = ' + f(q2));
+      s += li('Divida pela resistência', 'P = ' + fr('V²', 'R') + ' = ' + fr(f(q2), f(B)) + ' = ' + f(v));
+      show('Potência P', f(v), 'W', s);
+    } else {
+      var isI = mode === 'irp', rad;
+      if (isI && B === 0){ setStatus(st, 'R não pode ser zero.', true); hide(); return; }
+      rad = isI ? clean(A / B) : clean(A * B);
+      if (rad < 0){ setStatus(st, 'Não existe raiz quadrada real de número negativo (' + f(rad) + '). Confira os sinais.', true); hide(); return; }
+      v = clean(Math.sqrt(rad));
+      s += li(isI ? 'Divida a potência pela resistência' : 'Multiplique potência e resistência',
+        isI ? 'P / R = ' + fr(f(A), f(B)) + ' = ' + f(rad) : 'P · R = ' + f(A) + ' · ' + f(B) + ' = ' + f(rad));
+      s += li('Tire a raiz quadrada (qual número vezes ele mesmo dá ' + f(rad) + '?)', (isI ? 'I' : 'V') + ' = √' + f(rad) + ' = ' + f(v));
+      s += isI ? li('Confira: R · I² deve dar P', f(B) + ' · ' + f(v) + '² = ' + f(B * v * v) + ' W')
+               : li('Confira: V² / R deve dar P', fr(f(v) + '²', f(B)) + ' = ' + f(v * v / B) + ' W');
+      show(isI ? 'Corrente I' : 'Tensão V', f(v), isI ? 'A' : 'V', s);
+    }
+  }
+  [a, b].forEach(function(x){ x.addEventListener('input', update); });
+  modeBox.querySelectorAll('button').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      mode = btn.dataset.m;
+      modeBox.querySelectorAll('button').forEach(function(x){ x.setAttribute('aria-pressed', x === btn ? 'true' : 'false'); });
+      a.value = MODES[mode].va; b.value = MODES[mode].vb;
+      update();
+    });
+  });
+  update();
+})();
+
+/* ---------- matemática: arredondamento ---------- */
+(function(){
+  var v = document.getElementById('ar-v'), nIn = document.getElementById('ar-n'), modeBox = document.getElementById('ar-mode'), ln = document.getElementById('ar-ln');
+  var st = document.getElementById('ar-status'), res = document.getElementById('ar-result'), stepsEl = document.getElementById('ar-steps');
+  var mode = 'dec';
+  function num(s){
+    s = s.replace(/\s/g, '').replace('−', '-').replace(',', '.');
+    if (s === '') return null;
+    return /^[+-]?(\d+\.?\d*|\.\d+)$/.test(s) ? Number(s) : NaN;
+  }
+  /* arredonda para cima a partir de 5 (meio sobe), com dec casas; dec pode ser negativo */
+  function rnd(x, dec){
+    var p = Math.pow(10, dec), s = x < 0 ? -1 : 1;
+    return clean(s * Math.round(clean(Math.abs(x) * p)) / p);
+  }
+  function txt(x, dec){
+    var d = Math.max(0, dec);
+    return x.toLocaleString('pt-BR', {minimumFractionDigits: d, maximumFractionDigits: d}).replace(/-/g, '−');
+  }
+  function li(label, code){ return '<li><span>' + label + '</span><code>' + code + '</code></li>'; }
+  function hide(){ res.hidden = true; stepsEl.hidden = true; }
+  function expo(x){ return Number(Math.abs(x).toExponential().split('e')[1]); }
+  function update(){
+    ln.textContent = mode === 'dec' ? 'Casas decimais' : 'Algarismos significativos';
+    var x = num(v.value), k = num(nIn.value);
+    if (x !== x || k !== k){ setStatus(st, 'Use apenas números. Em casas e algarismos, um inteiro.', true); hide(); return; }
+    if (x === null || k === null){ setStatus(st, 'Preencha os dois campos.'); hide(); return; }
+    if (k !== Math.floor(k) || k < (mode === 'dec' ? 0 : 1) || k > 12){ setStatus(st, mode === 'dec' ? 'Use de 0 a 12 casas decimais.' : 'Use de 1 a 12 algarismos significativos.', true); hide(); return; }
+    var dec = k, steps = '';
+    if (clean(x) !== x){ setStatus(st, 'O valor tem mais de 12 algarismos significativos; use no máximo 12 para o resultado não sair errado.', true); hide(); return; }
+    if (mode === 'sig') dec = x === 0 ? 0 : k - 1 - expo(x);
+    if (x !== 0 && Math.abs(x) * Math.pow(10, Math.max(dec, 0)) >= 1e14){ setStatus(st, 'O número fica grande demais para arredondar com essa precisão. Use menos casas ou um valor menor.', true); hide(); return; }
+    var dec0 = dec, out = x === 0 ? 0 : rnd(x, dec);
+    var prop = false;
+    if (mode === 'sig' && x !== 0 && expo(out) !== expo(x)){ dec -= 1; out = rnd(x, dec); prop = true; }
+    var p = Math.pow(10, dec0), kept = Math.sign(x) * Math.floor(clean(Math.abs(x) * p)) / p;
+    var next = Math.floor(clean(Math.abs(x) * p * 10)) % 10;
+    steps += li('Guarde até a posição escolhida', txt(clean(kept), dec0) + ' (o resto é cortado)');
+    steps += li('Olhe o dígito seguinte: ' + next + (next >= 5 ? ', que é 5 ou mais, então o último dígito sobe um' : ', que é menor que 5, então o último dígito fica'), prop ? txt(rnd(x, dec0), dec0) + ' → o número ganhou um dígito; com ' + k + ' algarismos significativos fica ' + txt(out, dec) : txt(out, dec0));
+    res.innerHTML = '<span class="r-label">' + (mode === 'dec' ? k + (k === 1 ? ' casa decimal' : ' casas decimais') : k + ' algarismo' + (k === 1 ? '' : 's') + ' significativo' + (k === 1 ? '' : 's')) + '</span><span class="r-value big">' + txt(out, dec) + '</span>';
+    res.hidden = false;
+    stepsEl.innerHTML = '<h2>Passo a passo</h2><ol>' + steps + '</ol>';
+    stepsEl.hidden = x === 0;
+    setStatus(st, '');
+  }
+  [v, nIn].forEach(function(x){ x.addEventListener('input', update); });
+  modeBox.querySelectorAll('button').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      mode = btn.dataset.m;
+      modeBox.querySelectorAll('button').forEach(function(x){ x.setAttribute('aria-pressed', x === btn ? 'true' : 'false'); });
+      nIn.value = mode === 'dec' ? '2' : '3';
+      update();
+    });
+  });
   update();
 })();
 </script>
