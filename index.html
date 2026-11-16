@@ -103,7 +103,7 @@ header .lead{color:var(--hi-ink);font-size:.95rem;max-width:34ch}
 /* abas: seletor de funções */
 .tabs{
   position:fixed;left:0;right:0;bottom:0;z-index:20;
-  display:grid;grid-template-columns:repeat(7,minmax(0,1fr));
+  display:grid;grid-template-columns:repeat(8,minmax(0,1fr));
   background:var(--panel);
   padding:0 max(4px, env(safe-area-inset-right)) env(safe-area-inset-bottom) max(4px, env(safe-area-inset-left));
 }
@@ -398,6 +398,14 @@ tbody tr.on{background:var(--accent-soft);box-shadow:inset 4px 0 0 var(--hi)}
 @media (prefers-reduced-motion:no-preference){
   .tab{transition:color .15s,background-color .15s}
 }
+
+/* aba Kirchhoff */
+.kf-src{display:flex;flex-direction:column;gap:4px;min-width:0}
+.kf-src > span{font-size:.85rem;color:var(--muted)}
+.kf-src .seg button{padding:8px 6px;font-size:.9rem}
+.kf-arc{fill:none;stroke:var(--accent);stroke-width:2;stroke-linecap:round}
+.kf-ah{fill:var(--accent)}
+@media (min-width:360px) and (max-width:420px){.tab .tl{font-size:.64rem}}
 </style>
 </head>
 <body>
@@ -414,6 +422,7 @@ tbody tr.on{background:var(--accent-soft);box-shadow:inset 4px 0 0 var(--hi)}
     <button type="button" class="tab" role="tab" id="t-queda" aria-controls="tab-queda" aria-selected="false" aria-label="Queda de tensão"><span class="sym" aria-hidden="true">ΔV</span><span class="tl">Queda</span></button>
     <button type="button" class="tab" role="tab" id="t-equivalente" aria-controls="tab-equivalente" aria-selected="false"><span class="sym" aria-hidden="true">Req</span><span class="tl">Equivalente</span></button>
     <button type="button" class="tab" role="tab" id="t-circuito" aria-controls="tab-circuito" aria-selected="false"><span class="sym" aria-hidden="true">⊞</span><span class="tl">Circuito</span></button>
+    <button type="button" class="tab" role="tab" id="t-kirchhoff" aria-controls="tab-kirchhoff" aria-selected="false"><span class="sym" aria-hidden="true">ΣI</span><span class="tl">Kirchhoff</span></button>
     <button type="button" class="tab" role="tab" id="t-notacao" aria-controls="tab-notacao" aria-selected="false"><span class="sym" aria-hidden="true">10ⁿ</span><span class="tl">Notação</span></button>
     <button type="button" class="tab" role="tab" id="t-matematica" aria-controls="tab-matematica" aria-selected="false"><span class="sym" aria-hidden="true">½</span><span class="tl">Matemática</span></button>
   </nav>
@@ -667,6 +676,75 @@ tbody tr.on{background:var(--accent-soft);box-shadow:inset 4px 0 0 var(--hi)}
     </div>
   </section>
 
+  <!-- ABA: LEIS DE KIRCHHOFF -->
+  <section id="tab-kirchhoff" class="panel" role="tabpanel" aria-labelledby="t-kirchhoff" hidden>
+    <section class="fcard" aria-label="Fórmula e legenda"><h2>Leis de Kirchhoff</h2><div class="fbig"><span><small>1ª lei (nós)</small>Σ I que entram = Σ I que saem</span><span><small>2ª lei (malhas)</small>Σ V ao longo de uma malha fechada = 0</span></div><div class="tablewrap"><table class="legend"><thead><tr><th>Símbolo</th><th>Significado</th><th>Unidade</th></tr></thead><tbody><tr><td>Nó</td><td>Ponto onde três ou mais ramos se encontram</td><td>—</td></tr><tr><td>Ramo</td><td>Trecho entre dois nós, percorrido pela mesma corrente</td><td>—</td></tr><tr><td>Malha</td><td>Caminho fechado que sai de um ponto e volta a ele sem repetir ramos</td><td>—</td></tr><tr><td>I</td><td>Corrente elétrica em um ramo</td><td>ampère (A)</td></tr><tr><td>V, E</td><td>Tensão (queda em um resistor) e força eletromotriz da fonte</td><td>volt (V)</td></tr><tr><td>R</td><td>Resistência elétrica</td><td>ohm (Ω)</td></tr></tbody></table></div></section>
+    <section class="study" aria-label="Estudo"><h2>Entenda antes de calcular</h2><h3>Como ler as leis</h3><ul><li>1ª lei (nós): a carga não se acumula em um nó. Tudo o que chega tem de sair, então a soma das correntes que entram é igual à soma das que saem.</li><li>2ª lei (malhas): saindo de um ponto e dando a volta completa até voltar a ele, o potencial volta ao valor inicial. Os ganhos das fontes e as quedas nos resistores se cancelam, e a soma das tensões é zero.</li><li>Juntas, as duas leis permitem achar todas as correntes de circuitos que não se reduzem só por série e paralelo.</li></ul><h3>Convenção de sinais</h3><ul><li>Arbitre um sentido para cada corrente. Não precisa acertar: se o resultado sair negativo, a corrente real tem o sentido contrário ao arbitrado.</li><li>Em um resistor, a queda de tensão é R · I e vale no sentido da corrente (o potencial diminui ao andar a favor dela).</li><li>Em uma fonte, passar do − para o + soma E (o potencial sobe). Passar do + para o − subtrai E.</li><li>Ao percorrer a malha, o sinal de cada termo depende do sentido da volta e do sentido da corrente. Um resistor percorrido contra a corrente tem sinal trocado.</li></ul><h3>Exemplo resolvido</h3><p>Circuito de duas malhas com E₁ = 18 V (+ em cima, ramo da esquerda), E₂ = 9 V (+ em cima, ramo da direita), R₁ = 2 Ω, R₂ = 3 Ω e R₃ = 6 Ω no ramo central. Arbitramos I₁ e I₂ no sentido horário em cada malha. A corrente em R₃ é I₁ − I₂, para baixo.</p><p>Malha 1: 2 · I₁ + 6 · (I₁ − I₂) = 18, ou seja, 8 · I₁ − 6 · I₂ = 18.<br>Malha 2: 3 · I₂ + 6 · (I₂ − I₁) = −9, ou seja, −6 · I₁ + 9 · I₂ = −9. A fonte E₂ aparece com sinal negativo porque, com o + em cima, ela empurra a corrente no sentido anti-horário.</p><p>Determinantes: D = 8 · 9 − (−6) · (−6) = 36; D₁ = 18 · 9 − (−6) · (−9) = 108; D₂ = 8 · (−9) − 18 · (−6) = 36.</p><p>I₁ = <span class="frac"><span>108</span><span class="sl"> / </span><span>36</span></span> = <strong>3 A</strong>, I₂ = <span class="frac"><span>36</span><span class="sl"> / </span><span>36</span></span> = <strong>1 A</strong> e I₃ = I₁ − I₂ = <strong>2 A</strong> (para baixo, em R₃).</p><p>Conferência: no nó de cima entram 3 A e saem 1 A + 2 A. Na malha externa, 18 − 2 · 3 − 3 · 1 − 9 = 0.</p><h3>Pratique</h3><ol><li>Em um nó chegam 5 A e 3 A. Saem dois fios: um com 2 A e outro com corrente desconhecida. Qual o valor dela?<details><summary>Ver resposta</summary><p>Entram 5 + 3 = 8 A. Saem 2 + I. Então I = 8 − 2 = <strong>6 A</strong>, saindo do nó.</p></details></li><li>Uma fonte de 12 V alimenta, em série, resistores de 100 Ω e 200 Ω. Qual a corrente e a queda no resistor de 200 Ω?<details><summary>Ver resposta</summary><p>2ª lei: 12 − 100 · I − 200 · I = 0, então I = <span class="frac"><span>12</span><span class="sl"> / </span><span>300</span></span> = <strong>0,04 A (40 mA)</strong>. Queda em 200 Ω: 200 · 0,04 = <strong>8 V</strong>. Conferência: 4 V + 8 V = 12 V.</p></details></li><li>Duas fontes iguais de 12 V (+ em cima) alimentam R₃ = 6 Ω, cada uma com um resistor de 6 Ω em série (R₁ = R₂ = 6 Ω). Qual a corrente em R₃?<details><summary>Ver resposta</summary><p>As malhas dão 12 · I₁ − 6 · I₂ = 12 e −6 · I₁ + 12 · I₂ = −12. Então D = 144 − 36 = 108, D₁ = 144 − 72 = 72 e D₂ = −144 + 72 = −72. Logo I₁ = <strong>2/3 A</strong> e I₂ = <strong>−2/3 A</strong> (o sinal negativo diz que a corrente real da direita é anti-horária). Em R₃: I₁ − I₂ = <span class="frac"><span>2</span><span class="sl"> / </span><span>3</span></span> + <span class="frac"><span>2</span><span class="sl"> / </span><span>3</span></span> = <strong><span class="frac"><span>4</span><span class="sl"> / </span><span>3</span></span> A ≈ 1,33 A</strong>, para baixo. Conferência: V₃ = 6 · <span class="frac"><span>4</span><span class="sl"> / </span><span>3</span></span> = 8 V e (12 − 8) / 6 = <span class="frac"><span>2</span><span class="sl"> / </span><span>3</span></span> A em cada ramo.</p></details></li></ol></section>
+    <h2>Calculadora</h2>
+    <p class="lead">Informe as duas fontes e os três resistores do circuito de duas malhas.</p>
+    <div class="about"><p><strong>O que é:</strong> as duas leis de Kirchhoff aplicadas ao circuito clássico de duas malhas: uma fonte e um resistor de cada lado, e um resistor comum no meio.</p><p><strong>Para que serve:</strong> achar a corrente em cada ramo quando série e paralelo não bastam, porque há duas fontes ligadas ao mesmo resistor.</p></div>
+    <figure class="fig on" id="kf-fig">
+      <svg viewBox="0 0 260 145" role="img" aria-label="Circuito de duas malhas: fonte E1 e resistor R1 à esquerda, R3 no ramo central e resistor R2 e fonte E2 à direita, com as correntes de malha I1 e I2 no sentido horário">
+        <path class="wire" d="M30 68 V30 H55 M105 30 H155 M205 30 H230 V68 M230 78 V120 H30 V78 M130 30 V55 M130 95 V120"/>
+        <rect class="rbox" x="55" y="20" width="50" height="20" rx="2"/><text class="lbl" x="80" y="30">R1</text>
+        <rect class="rbox" x="155" y="20" width="50" height="20" rx="2"/><text class="lbl" x="180" y="30">R2</text>
+        <rect class="rbox" x="117" y="55" width="26" height="40" rx="2"/><text class="lbl" x="130" y="75">R3</text>
+        <circle class="dot" cx="130" cy="30" r="3"/><circle class="dot" cx="130" cy="120" r="3"/>
+        <text class="lbl" x="130" y="10">A</text><text class="lbl" x="130" y="135">B</text>
+        <line class="bat" id="kf-b1a" x1="20" y1="68" x2="40" y2="68" stroke-width="2"/><line class="bat" id="kf-b1b" x1="25" y1="78" x2="35" y2="78" stroke-width="4"/>
+        <text class="lbl" id="kf-p1" x="14" y="62">+</text><text class="lbl" x="46" y="73">E1</text>
+        <line class="bat" id="kf-b2a" x1="220" y1="68" x2="240" y2="68" stroke-width="2"/><line class="bat" id="kf-b2b" x1="225" y1="78" x2="235" y2="78" stroke-width="4"/>
+        <text class="lbl" id="kf-p2" x="246" y="62">+</text><text class="lbl" x="214" y="73">E2</text>
+        <path class="kf-arc" d="M64 75 A16 16 0 0 1 96 75"/><polygon class="kf-ah" points="92,74 100,74 96,81"/><text class="lbl" x="80" y="92">I1</text>
+        <path class="kf-arc" d="M164 75 A16 16 0 0 1 196 75"/><polygon class="kf-ah" points="192,74 200,74 196,81"/><text class="lbl" x="180" y="92">I2</text>
+      </svg>
+      <figcaption><strong>Duas malhas.</strong> I1 e I2 são correntes de malha, arbitradas no sentido horário. No ramo central, a corrente em R3 é I1 − I2, para baixo (de A para B). Os nós são A e B.</figcaption>
+    </figure>
+    <div class="grid">
+      <div class="field">
+        <label for="kf-E1"><span>E1 (fonte da esquerda)</span></label>
+        <div class="wrap"><input id="kf-E1" type="text" inputmode="decimal"><span class="unit">V</span></div>
+      </div>
+      <div class="field">
+        <label for="kf-E2"><span>E2 (fonte da direita)</span></label>
+        <div class="wrap"><input id="kf-E2" type="text" inputmode="decimal"><span class="unit">V</span></div>
+      </div>
+      <div class="field">
+        <label for="kf-R1"><span>R1 (esquerda)</span></label>
+        <div class="wrap"><input id="kf-R1" type="text" inputmode="decimal"><span class="unit">Ω</span></div>
+      </div>
+      <div class="field">
+        <label for="kf-R2"><span>R2 (direita)</span></label>
+        <div class="wrap"><input id="kf-R2" type="text" inputmode="decimal"><span class="unit">Ω</span></div>
+      </div>
+      <div class="field wide">
+        <label for="kf-R3"><span>R3 (ramo central, comum)</span></label>
+        <div class="wrap"><input id="kf-R3" type="text" inputmode="decimal"><span class="unit">Ω</span></div>
+      </div>
+      <div class="kf-src">
+        <span id="kf-l1">Polaridade de E1</span>
+        <div class="seg" id="kf-pol1" role="group" aria-labelledby="kf-l1">
+          <button type="button" data-p="top" aria-pressed="true">+ em cima</button>
+          <button type="button" data-p="bot" aria-pressed="false">+ embaixo</button>
+        </div>
+      </div>
+      <div class="kf-src">
+        <span id="kf-l2">Polaridade de E2</span>
+        <div class="seg" id="kf-pol2" role="group" aria-labelledby="kf-l2">
+          <button type="button" data-p="top" aria-pressed="true">+ em cima</button>
+          <button type="button" data-p="bot" aria-pressed="false">+ embaixo</button>
+        </div>
+      </div>
+    </div>
+    <div class="actions">
+      <p id="kf-status" class="status" role="status" aria-live="polite"></p>
+      <button type="button" id="kf-clear" class="btn">Limpar tudo</button>
+    </div>
+    <section id="kf-result" class="result" hidden aria-live="polite"></section>
+    <section id="kf-steps" class="steps" hidden></section>
+    <p class="note">As correntes de malha são as incógnitas. Resultado negativo quer dizer que o sentido real é o contrário do desenhado. Fontes ideais, sem resistência interna.</p>
+  </section>
+
   <!-- ABA: NOTAÇÃO CIENTÍFICA -->
   <section id="tab-notacao" class="panel" role="tabpanel" aria-labelledby="t-notacao" hidden>
     <section class="fcard" aria-label="Fórmula e legenda"><h2>Notação científica e prefixos</h2><div class="fbig"><span>N = a × 10ⁿ  (1 ≤ a &lt; 10)</span><span>(a × 10ᵐ) · (b × 10ⁿ) = (a · b) × 10ᵐ⁺ⁿ</span><span><span class="frac"><span>a × 10ᵐ</span><span class="sl"> / </span><span>b × 10ⁿ</span></span> = <span class="frac"><span>a</span><span class="sl"> / </span><span>b</span></span> × 10ᵐ⁻ⁿ</span></div><div class="tablewrap"><table class="legend"><thead><tr><th>Símbolo</th><th>Significado</th><th>Unidade</th></tr></thead><tbody><tr><td>a, b</td><td>Coeficientes (na forma normalizada ficam entre 1 e 10)</td><td>—</td></tr><tr><td>m, n</td><td>Expoentes inteiros da potência de 10</td><td>—</td></tr><tr><td>k, M, G</td><td>Prefixos de múltiplos: 10³, 10⁶, 10⁹</td><td>—</td></tr><tr><td>m, µ, n, p</td><td>Prefixos de submúltiplos: 10⁻³, 10⁻⁶, 10⁻⁹, 10⁻¹²</td><td>—</td></tr></tbody></table></div></section>
@@ -877,7 +955,7 @@ function fillMaterialSelect(sel, onlyIds){
 
 /* ---------- abas ---------- */
 (function(){
-  var names = ['ohm', 'cabo', 'queda', 'equivalente', 'circuito', 'notacao', 'matematica'];
+  var names = ['ohm', 'cabo', 'queda', 'equivalente', 'circuito', 'kirchhoff', 'notacao', 'matematica'];
   var tabs = names.map(function(n){ return document.getElementById('t-' + n); });
   var panels = names.map(function(n){ return document.getElementById('tab-' + n); });
   function show(name){
@@ -2420,6 +2498,159 @@ function fillMaterialSelect(sel, onlyIds){
     setStatus(st, '');
   }
   [pct, tot, par].forEach(function(x){ x.addEventListener('input', update); });
+  update();
+})();
+
+/* ---------- aba: leis de Kirchhoff (duas malhas) ---------- */
+(function(){
+  var ids = ['E1','E2','R1','R2','R3'];
+  var el = {};
+  ids.forEach(function(k){ el[k] = document.getElementById('kf-' + k); });
+  var st = document.getElementById('kf-status');
+  var out = document.getElementById('kf-result');
+  var stepsEl = document.getElementById('kf-steps');
+  var pol = {1:'top', 2:'top'};
+
+  function num(x, d){ return br(clean(x), d || 4).replace('-', '−'); }
+  /* número entre parênteses se negativo, para usar dentro de contas */
+  function pn(x){ return x < 0 ? '(' + num(x) + ')' : num(x); }
+  function sg(x){ return (x < 0 ? '− ' : '+ ') + num(Math.abs(x)); }
+  function engTxt(x){ var e = eng(x, 'A').replace('-', '−'); return e ? e + ' · ' : ''; }
+  function amp(x){
+    var e = eng(x, 'A').replace('-', '−');
+    return num(x) + ' A' + (e ? ' (' + e + ')' : '');
+  }
+  function zero(x, scale){ return Math.abs(x) <= 1e-9 * Math.max(1, scale); }
+
+  /* placa longa e fina = lado +; placa curta e grossa = lado − */
+  function drawBat(n){
+    var top = pol[n] === 'top';
+    var cx = n === 1 ? 30 : 230;
+    var a = document.getElementById('kf-b' + n + 'a');
+    var b = document.getElementById('kf-b' + n + 'b');
+    a.setAttribute('x1', cx - 10); a.setAttribute('x2', cx + 10);
+    a.setAttribute('y1', top ? 68 : 78); a.setAttribute('y2', top ? 68 : 78);
+    b.setAttribute('x1', cx - 5); b.setAttribute('x2', cx + 5);
+    b.setAttribute('y1', top ? 78 : 68); b.setAttribute('y2', top ? 78 : 68);
+    document.getElementById('kf-p' + n).setAttribute('y', top ? 62 : 90);
+  }
+
+  function update(){
+    out.hidden = true; stepsEl.hidden = true;
+    var v = {}, bad = false, miss = false;
+    ids.forEach(function(k){
+      var n = parse(el[k].value);
+      v[k] = n;
+      if (Number.isNaN(n)) bad = true;
+      else if (n === null) miss = true;
+    });
+    if (bad){ setStatus(st, 'Use apenas números, por exemplo 12 ou 4k7.', true); return; }
+    if (miss){ setStatus(st, 'Preencha E1, E2, R1, R2 e R3.'); return; }
+    if (v.R1 < 0 || v.R2 < 0 || v.R3 < 0){ setStatus(st, 'As resistências não podem ser negativas.', true); return; }
+
+    /* e1 e e2: força eletromotriz no sentido horário de cada malha.
+       Ramo da esquerda: horário = subindo. Ramo da direita: horário = descendo. */
+    var e1 = (pol[1] === 'top' ? 1 : -1) * v.E1;
+    var e2 = (pol[2] === 'top' ? -1 : 1) * v.E2;
+    var a11 = v.R1 + v.R3, a12 = -v.R3, a21 = -v.R3, a22 = v.R2 + v.R3;
+    var D = a11 * a22 - a12 * a21;
+    if (zero(D, a11 * a22)){
+      setStatus(st, 'Determinante zero: o sistema não tem solução única. Isso acontece, por exemplo, com duas resistências nulas. Ajuste os resistores.', true);
+      return;
+    }
+    var D1 = e1 * a22 - a12 * e2;
+    var D2 = a11 * e2 - e1 * a21;
+    var i1 = D1 / D, i2 = D2 / D, i3 = i1 - i2;
+
+    var scale = Math.abs(i1) + Math.abs(i2) + Math.abs(i3);
+    function flow(x, pos, neg){
+      if (zero(x, scale)) return 'sem corrente';
+      return x > 0 ? pos : neg;
+    }
+    var sL = flow(i1, 'sobe pelo ramo da esquerda', 'desce pelo ramo da esquerda');
+    var sR = flow(i2, 'desce pelo ramo da direita', 'sobe pelo ramo da direita');
+    var sC = flow(i3, 'desce por R3, de A para B', 'sobe por R3, de B para A');
+
+    out.innerHTML =
+      '<div class="r-pair">' +
+        '<div><span class="r-label">I₁ (malha da esquerda)</span><span class="r-value">' + num(i1) + ' A</span><span class="r-extra">' + engTxt(i1) + sL + '</span></div>' +
+        '<div><span class="r-label">I₂ (malha da direita)</span><span class="r-value">' + num(i2) + ' A</span><span class="r-extra">' + engTxt(i2) + sR + '</span></div>' +
+      '</div>' +
+      '<div><span class="r-label">Corrente em R3 (I₁ − I₂)</span><span class="r-value big">' + num(i3) + ' A</span><span class="r-extra">' + engTxt(i3) + sC + '</span></div>';
+    out.hidden = false;
+
+    /* 1ª lei no nó A: corrente que chega por cada ramo (positiva = entra em A) */
+    var toA = [
+      {n: 'ramo da esquerda', x: i1},
+      {n: 'ramo da direita', x: -i2},
+      {n: 'R3', x: -i3}
+    ];
+    var ins = toA.filter(function(b){ return b.x > 0 && !zero(b.x, scale); });
+    var outs = toA.filter(function(b){ return b.x < 0 && !zero(b.x, scale); });
+    function listTxt(a, s){
+      return a.map(function(b){ return num(s * b.x); }).join(' + ');
+    }
+    function sum(a, s){ return a.reduce(function(t, b){ return t + s * b.x; }, 0); }
+    function names(a){ return a.length ? a.map(function(b){ return b.n; }).join(', ') : 'nenhum ramo'; }
+    var sIn = sum(ins, 1), sOut = sum(outs, -1);
+    var okNode = zero(sIn - sOut, scale);
+
+    /* 2ª lei na malha externa, no sentido horário: sobe e1, queda em R1, queda em R2, e2 */
+    var t1 = e1, t2 = -v.R1 * i1, t3 = -v.R2 * i2, t4 = e2;
+    var tot = t1 + t2 + t3 + t4;
+    var okLoop = zero(tot, Math.abs(t1) + Math.abs(t2) + Math.abs(t3) + Math.abs(t4));
+
+    stepsEl.innerHTML =
+      '<h2>Passo a passo</h2><ol>' +
+      '<li><span>Fontes no sentido horário de cada malha (positivo = a fonte empurra a corrente no sentido horário)</span>' +
+        '<code>e₁ = ' + (e1 < 0 ? '−' : '+') + num(Math.abs(e1)) + ' V   e₂ = ' + (e2 < 0 ? '−' : '+') + num(Math.abs(e2)) + ' V</code></li>' +
+      '<li><span>2ª lei na malha da esquerda: R₁ · I₁ + R₃ · (I₁ − I₂) = e₁</span>' +
+        '<code>' + num(v.R1) + ' · I₁ + ' + num(v.R3) + ' · (I₁ − I₂) = ' + num(e1) + '</code></li>' +
+      '<li><span>2ª lei na malha da direita: R₂ · I₂ + R₃ · (I₂ − I₁) = e₂</span>' +
+        '<code>' + num(v.R2) + ' · I₂ + ' + num(v.R3) + ' · (I₂ − I₁) = ' + num(e2) + '</code></li>' +
+      '<li><span>Sistema 2×2 organizado</span>' +
+        '<code>' + num(a11) + ' · I₁ − ' + num(v.R3) + ' · I₂ = ' + num(e1) + '</code>' +
+        '<code>−' + num(v.R3) + ' · I₁ + ' + num(a22) + ' · I₂ = ' + num(e2) + '</code></li>' +
+      '<li><span>Determinantes (regra de Cramer)</span>' +
+        '<code>D = ' + pn(a11) + ' · ' + pn(a22) + ' − ' + pn(a12) + ' · ' + pn(a21) + ' = ' + num(D) + '</code>' +
+        '<code>D₁ = ' + pn(e1) + ' · ' + pn(a22) + ' − ' + pn(a12) + ' · ' + pn(e2) + ' = ' + num(D1) + '</code>' +
+        '<code>D₂ = ' + pn(a11) + ' · ' + pn(e2) + ' − ' + pn(e1) + ' · ' + pn(a21) + ' = ' + num(D2) + '</code></li>' +
+      '<li><span>Correntes de malha (horárias)</span>' +
+        '<code>I₁ = ' + fr('D₁', 'D') + ' = ' + fr(num(D1), num(D)) + ' = ' + num(i1) + ' A</code>' +
+        '<code>I₂ = ' + fr('D₂', 'D') + ' = ' + fr(num(D2), num(D)) + ' = ' + num(i2) + ' A</code></li>' +
+      '<li><span>Correntes nos ramos. Positivo = no sentido desenhado; negativo = no sentido contrário</span>' +
+        '<code>Ramo da esquerda: ' + amp(i1) + ', ' + sL + '</code>' +
+        '<code>Ramo da direita: ' + amp(i2) + ', ' + sR + '</code>' +
+        '<code>I_R3 = I₁ − I₂ = ' + num(i1) + ' − ' + pn(i2) + ' = ' + amp(i3) + ', ' + sC + '</code></li>' +
+      '<li><span>1ª lei no nó A: entra por ' + names(ins) + '; sai por ' + names(outs) + '</span>' +
+        '<code>Σ entram = ' + (ins.length > 1 ? listTxt(ins, 1) + ' = ' : '') + num(sIn) + ' A</code>' +
+        '<code>Σ saem = ' + (outs.length > 1 ? listTxt(outs, -1) + ' = ' : '') + num(sOut) + ' A</code>' +
+        '<code>' + (okNode ? 'Confere: entra o mesmo que sai.' : 'Não confere.') + '</code></li>' +
+      '<li><span>2ª lei na malha externa (horária): e₁ − R₁ · I₁ − R₂ · I₂ + e₂ = 0</span>' +
+        '<code>' + num(t1) + ' ' + sg(t2) + ' ' + sg(t3) + ' ' + sg(t4) + ' = ' + (okLoop ? '0' : num(tot)) + ' V</code>' +
+        '<code>' + (okLoop ? 'Confere: a soma das tensões na malha é zero.' : 'Não confere.') + '</code></li>' +
+      '</ol>';
+    stepsEl.hidden = false;
+    setStatus(st, '');
+  }
+
+  ids.forEach(function(k){ el[k].addEventListener('input', update); });
+  [1, 2].forEach(function(n){
+    var btns = document.getElementById('kf-pol' + n).querySelectorAll('button');
+    Array.prototype.forEach.call(btns, function(b){
+      b.addEventListener('click', function(){
+        pol[n] = b.dataset.p;
+        Array.prototype.forEach.call(btns, function(o){ o.setAttribute('aria-pressed', o === b ? 'true' : 'false'); });
+        drawBat(n);
+        update();
+      });
+    });
+    drawBat(n);
+  });
+  document.getElementById('kf-clear').addEventListener('click', function(){
+    ids.forEach(function(k){ el[k].value = ''; });
+    update();
+  });
   update();
 })();
 </script>

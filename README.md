@@ -9,6 +9,7 @@ Página única (HTML + JavaScript, sem dependências) para estudar e testar cál
 - **Queda de tensão:** ΔV = k · ρ(T) · L · I / S, com seção mínima para o limite escolhido.
 - **Equivalente:** resistência equivalente em série e em paralelo, com desenhos e fórmulas de atalho.
 - **Circuito:** grade para montar um circuito de resistores (com diagonais e fios) entre A e B, e animação passo a passo da redução por série e paralelo até a resistência equivalente. Na animação, o circuito aparece ampliado e uma lousa ao lado vai escrevendo as contas de cada passo. Pontes que não reduzem são resolvidas por análise nodal. Tem desfazer/refazer, troca do número dos resistores (R1 ↔ R2), atalhos de teclado e tela cheia para dar aula. O circuito fica salvo no navegador.
+- **Kirchhoff:** 1ª lei (nós) e 2ª lei (malhas), com convenção de sinais, exemplo resolvido e exercícios. A calculadora resolve o circuito clássico de duas malhas (duas fontes e três resistores): monta as equações das malhas, resolve o sistema 2×2 por Cramer e mostra as correntes de cada ramo, com a verificação das duas leis. Cada fonte tem seletor de polaridade e o desenho acompanha.
 - **Notação:** operações em notação científica e conversão de prefixos (T, G, M, k, m, µ, n, p).
 - **Matemática:** contas com frações (soma, subtração, multiplicação e divisão, com simplificação), regra de três direta e inversa e porcentagem.
 
