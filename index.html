@@ -318,6 +318,7 @@ tbody tr.on{background:var(--accent-soft);box-shadow:inset 4px 0 0 var(--hi)}
 .lz-num{overflow-wrap:anywhere}
 .lz-num b{font-weight:600;white-space:nowrap}
 .lz-line.now .lz-num b{color:var(--giz2)}
+.lz-line .lz-num b.lz-ok{color:#9be7a5}
 .lz-empty{margin:0;font-family:var(--font-display);font-size:.9rem;opacity:.75}
 .lz-res{border-top:2px dashed rgba(238,243,234,.45);padding-top:10px;font-size:1.35rem;font-weight:600;color:var(--giz2)}
 .lz-res small{font-size:.75rem;font-weight:500;color:var(--giz)}
@@ -349,7 +350,17 @@ tbody tr.on{background:var(--accent-soft);box-shadow:inset 4px 0 0 var(--hi)}
 .ck-new{animation:ckfade .7s ease-out}
 @keyframes ckpulse{50%{stroke-width:5.5}}
 @keyframes ckfade{from{opacity:0}to{opacity:1}}
-@media (prefers-reduced-motion:reduce){.ck-wire.hl,.ck-new{animation:none}}
+/* volta ao circuito: correntes (verde, com seta), tensões nos nós e destaque do nó ou laço verificado */
+.ck-cur,.ck-volt{font-family:var(--font-mono);font-size:10px;font-weight:600;dominant-baseline:central;pointer-events:none;paint-order:stroke;stroke:var(--surface);stroke-width:3px;stroke-linejoin:round}
+.ck-cur{fill:var(--good)}
+.ck-volt{fill:var(--ink)}
+.ck-volt .ck-vn{fill:var(--accent)}
+.ck-arr{fill:var(--good)}
+.ck-term.hl{stroke:var(--hi);stroke-width:3;animation:ckblink 1s ease-in-out infinite}
+.ck-ring{fill:none;stroke:var(--accent);stroke-width:2.4;animation:ckblink 1s ease-in-out infinite}
+@keyframes ckblink{50%{stroke-opacity:.3}}
+.ck-vfield{margin-top:12px}
+@media (prefers-reduced-motion:reduce){.ck-wire.hl,.ck-new,.ck-term.hl,.ck-ring{animation:none}}
 .btn.primary{background:var(--hi);color:var(--hi-ink);border-color:var(--hi);font-weight:600}
 .ck-cap p{margin:0 0 6px;font-size:.95rem}
 .ck-cap code{display:block;font-family:var(--font-mono);font-size:.85rem;overflow-x:auto;white-space:nowrap;padding-bottom:2px}
@@ -606,7 +617,7 @@ tbody tr.on{background:var(--accent-soft);box-shadow:inset 4px 0 0 var(--hi)}
   <section id="tab-circuito" class="panel" role="tabpanel" aria-labelledby="t-circuito" hidden>
     <h2>Montar e simplificar um circuito</h2>
     <p class="lead">Desenhe o circuito na grade e veja, passo a passo, grupos de resistores sendo trocados por um equivalente até sobrar um só.</p>
-    <details class="about ck-help"><summary>Como usar e regras</summary><p><strong>Como usar:</strong> escolha Resistor e toque nos trechos da grade (inclusive na diagonal) onde ele fica. Use Fio para ligar pontos sem resistência. Com Editar, toque num resistor para mudar o valor ou o número (trocar R1 por R2, por exemplo). Marque a Entrada A e a Saída B e toque em Simplificar. Errou? Use Desfazer.</p><p><strong>Regras da animação:</strong> série (mais nada se liga no ponto entre os dois) e paralelo (os dois ligam os mesmos dois pontos). Valores em ohms; aceita 4k7, 250m etc.</p><p class="ck-kbonly"><strong>Teclado:</strong> R resistor, E editar, F fio, X apagar, A entrada, B saída, Ctrl+Z desfazer, Ctrl+Y refazer, Enter simplificar. Na animação, ← e → trocam de passo.</p></details>
+    <details class="about ck-help"><summary>Como usar e regras</summary><p><strong>Como usar:</strong> escolha Resistor e toque nos trechos da grade (inclusive na diagonal) onde ele fica. Use Fio para ligar pontos sem resistência. Com Editar, toque num resistor para mudar o valor ou o número (trocar R1 por R2, por exemplo). Marque a Entrada A e a Saída B e toque em Simplificar. Errou? Use Desfazer.</p><p><strong>Regras da animação:</strong> série (mais nada se liga no ponto entre os dois) e paralelo (os dois ligam os mesmos dois pontos). Valores em ohms; aceita 4k7, 250m etc.</p><p><strong>Tensão e Kirchhoff:</strong> se preencher a tensão entre A e B (A é o lado +, B é a referência de 0 V), depois da Req a animação volta ao circuito original: corrente total I<sub>T</sub> = V / R<sub>AB</sub>, tensão em cada nó e corrente em cada resistor (I = ΔV / R, com seta no sentido da corrente). Em seguida confere a 1ª lei (nós: o que entra é igual ao que sai) em cada nó com 3 ou mais ligações e a 2ª lei (malhas: a soma das tensões numa volta é zero) em cada laço independente, contando a fonte A–B como um ramo (laços = ramos − nós + 1). Também vale para pontes que não reduzem. Sem tensão, a animação para na Req.</p><p class="ck-kbonly"><strong>Teclado:</strong> R resistor, E editar, F fio, X apagar, A entrada, B saída, Ctrl+Z desfazer, Ctrl+Y refazer, Enter simplificar. Na animação, ← e → trocam de passo.</p></details>
 
     <div id="ck-top" class="panel">
       <div class="ck-tools" id="ck-tools" role="group" aria-label="Ferramentas da grade">
@@ -627,6 +638,11 @@ tbody tr.on{background:var(--accent-soft);box-shadow:inset 4px 0 0 var(--hi)}
           <select id="ck-num"></select>
         </div>
       </div>
+      <div class="field ck-vfield" id="ck-vbox">
+        <label for="ck-v"><span>Tensão entre A e B (opcional)</span></label>
+        <div class="wrap"><input id="ck-v" type="text" inputmode="decimal" autocomplete="off" placeholder="vazio: só a Req" aria-describedby="ck-vnote"><span class="unit">V</span></div>
+        <p class="note" id="ck-vnote">Com tensão, depois da Req a animação volta ao circuito com a corrente em cada resistor e as leis de Kirchhoff.</p>
+      </div>
     </div>
 
     <div class="ck-board"><button type="button" id="ck-fs" class="btn ck-fs" aria-pressed="false">Tela cheia</button><svg id="ck-svg" viewBox="0 0 430 322" role="img" aria-label="Grade para montar o circuito"></svg><div id="ck-lousa" class="ck-lousa" aria-live="polite" hidden></div></div>
@@ -643,9 +659,9 @@ tbody tr.on{background:var(--accent-soft);box-shadow:inset 4px 0 0 var(--hi)}
         <label for="ck-ex"><span>Exemplos</span></label>
         <select id="ck-ex">
           <option value="">Carregar um exemplo…</option>
-          <option value="b">Circuito B do exercício (resultado 4 Ω)</option>
-          <option value="sp">Série e paralelo simples (62 Ω)</option>
-          <option value="ponte">Ponte de Wheatstone (não reduz)</option>
+          <option value="b">Circuito B do exercício (4 Ω, com 12 V)</option>
+          <option value="sp">Série e paralelo simples (62 Ω, com 12 V)</option>
+          <option value="ponte">Ponte de Wheatstone (não reduz, com 10 V)</option>
           <option value="blank">Grade em branco</option>
         </select>
       </div>
@@ -1384,15 +1400,16 @@ function fillMaterialSelect(sel, onlyIds){
     if (x < COLS - 1 && y < ROWS - 1){ KEYS.push(x + ',' + y + 'd'); KEYS.push(x + ',' + y + 'u'); }
   }
   var PRESETS = {
-    b: {A:[0,0], B:[0,2], items:[['0,0h',3],['0,0v',6],['1,0v',6],['1,0h',3],['2,0v',6],['2,0h',4],['2,1h',2],['1,1v',1],
+    b: {A:[0,0], B:[0,2], V:12, items:[['0,0h',3],['0,0v',6],['1,0v',6],['1,0h',3],['2,0v',6],['2,0h',4],['2,1h',2],['1,1v',1],
         ['1,1h','w'],['0,1h','w'],['3,0v','w'],['0,2h','w']]},
-    sp: {A:[0,0], B:[4,0], items:[['0,0h',10],['1,0h',20],['1,1h',30],['3,0h',40],['1,0v','w'],['2,0h','w'],['2,1h','w'],['3,0v','w']]},
-    ponte: {A:[0,1], B:[4,1], items:[['0,0h',10],['0,2h',20],['2,0h',30],['2,2h',40],['2,0v',50],
+    sp: {A:[0,0], B:[4,0], V:12, items:[['0,0h',10],['1,0h',20],['1,1h',30],['3,0h',40],['1,0v','w'],['2,0h','w'],['2,1h','w'],['3,0v','w']]},
+    ponte: {A:[0,1], B:[4,1], V:10, items:[['0,0h',10],['0,2h',20],['2,0h',30],['2,2h',40],['2,0v',50],
         ['0,0v','w'],['1,0h','w'],['0,1v','w'],['1,2h','w'],['3,0h','w'],['4,0v','w'],['3,2h','w'],['4,1v','w'],['2,1v','w']]},
     blank: {A:null, B:null, items:[]}
   };
 
-  var st = {e:{}, A:null, B:null, n:0};
+  /* V: tensão entre A e B (volts) ou null; sem tensão a animação para na Req */
+  var st = {e:{}, A:null, B:null, n:0, V:null};
   var tool = 'r', mode = 'edit', frames = [], fi = 0, timer = null, ctx = {wires:[]}, sel = null;
 
   /* ----- geometria ----- */
@@ -1409,6 +1426,12 @@ function fillMaterialSelect(sel, onlyIds){
     if (a >= 1e6) return br(v / 1e6, 3) + 'M';
     if (a >= 1e3) return br(v / 1e3, 3) + 'k';
     return br(v, 3);
+  }
+  /* valor com prefixo (0,0025 A vira 2,5 mA), com d algarismos significativos */
+  function qty(x, u, d){
+    if (!x) return '0 ' + u;
+    var e = Math.max(-12, Math.min(12, Math.floor(Math.log10(Math.abs(x)) / 3) * 3));
+    return d === 4 ? (eng(x, u) || br(x, 4) + ' ' + u) : br(clean(x / Math.pow(10, e)), d) + ' ' + (e ? ENG[String(e)] : '') + u;
   }
   function lst(a){ return a.length < 2 ? a.join('') : a.slice(0, -1).join(', ') + ' e ' + a[a.length - 1]; }
   function names(){
@@ -1452,12 +1475,12 @@ function fillMaterialSelect(sel, onlyIds){
     });
     return out;
   }
-  function terms(){
+  function terms(hl){
     var o = '';
     [['A', st.A], ['B', st.B]].forEach(function(t){
       if (!t[1]) return;
       var a = px(t[1]);
-      o += '<circle class="ck-term" cx="' + a[0] + '" cy="' + a[1] + '" r="6"/>' +
+      o += '<circle class="ck-term' + (hl ? ' hl' : '') + '" cx="' + a[0] + '" cy="' + a[1] + '" r="6"/>' +
            '<text class="ck-tl" x="' + (a[0] - 11) + '" y="' + (a[1] - 11) + '" text-anchor="middle">' + t[0] + '</text>';
     });
     return o;
@@ -1491,7 +1514,10 @@ function fillMaterialSelect(sel, onlyIds){
     svg.innerHTML = h;
     svg.setAttribute('data-tool', tool);
   }
-  function drawGraph(G, hl, nw){
+  /* ov (opcional, na volta ao circuito): lab = textos de corrente, arrows = setas, tags = tensões nos nós,
+     hlW = fios do nó destacado, path = trechos de fio do laço destacado, ring = ponto do nó, term = destacar A e B */
+  function drawGraph(G, hl, nw, ov){
+    ov = ov || {};
     var h = '', segs = [], hs = {}, hold = {}, ws = ctx.wires.filter(function(w){ return G.alive[w.node]; }), more = true;
     (hl || []).forEach(function(id){ hs[id] = 1; });
     /* pontos que seguram um fio: pontas de resistores, caminhos e terminais */
@@ -1509,48 +1535,84 @@ function fillMaterialSelect(sel, onlyIds){
         return !dead;
       });
     }
-    ws.forEach(function(w){ h += segLine(w.p, w.q, 'ck-wire'); segs.push([w.p, w.q]); });
+    ws.forEach(function(w){ h += segLine(w.p, w.q, 'ck-wire' + (ov.hlW && ov.hlW[w.node] ? ' hl' : '')); segs.push([w.p, w.q]); });
+    (ov.path || []).forEach(function(p){ h += polyline(p, 'ck-wire hl'); });
     G.edges.forEach(function(e){
       var c = hs[e.id] ? 'hl' : '', m = Math.floor((e.path.length - 1) / 2), i;
       h += '<g class="' + (e.id === nw ? 'ck-new' : '') + '">' + polyline(e.path, 'ck-wire ' + c) +
            resBox(e.path[m], e.path[m + 1], e.name, e.val, c) + '</g>';
       for (i = 0; i < e.path.length - 1; i++) segs.push([e.path[i], e.path[i + 1]]);
     });
-    return h + junctions(segs) + terms();
+    h += junctions(segs) + terms(ov.term) + (ov.arrows || []).join('');
+    (ov.lab || []).forEach(function(l){ h += '<text class="ck-cur" text-anchor="' + l.an + '" x="' + l.x + '" y="' + l.y + '">' + l.txt + '</text>'; });
+    (ov.tags || []).forEach(function(t){
+      h += '<text class="ck-volt" text-anchor="' + t.an + '" x="' + t.x + '" y="' + t.y + '">' + (t.l ? '<tspan class="ck-vn">' + t.l + '</tspan> ' : '') + t.v + '</text>';
+    });
+    if (ov.ring) h += '<circle class="ck-ring" cx="' + ov.ring[0] + '" cy="' + ov.ring[1] + '" r="11"/>';
+    return h;
   }
 
   /* ----- cálculo da redução ----- */
-  function solveNodal(edges, nA, nB){
-    var ids = [], idx = {}, n = 0, i, j, c;
-    edges.forEach(function(e){ if (ids.indexOf(e.a) < 0) ids.push(e.a); if (ids.indexOf(e.b) < 0) ids.push(e.b); });
-    ids.forEach(function(id){ if (id !== nB) idx[id] = n++; });
-    var M = [], b = [];
-    for (i = 0; i < n; i++){ M.push([]); b.push(0); for (j = 0; j < n; j++) M[i].push(0); }
-    b[idx[nA]] = 1;
-    edges.forEach(function(e){
-      var gc = 1 / e.val;
-      if (e.a !== nB) M[idx[e.a]][idx[e.a]] += gc;
-      if (e.b !== nB) M[idx[e.b]][idx[e.b]] += gc;
-      if (e.a !== nB && e.b !== nB){ M[idx[e.a]][idx[e.b]] -= gc; M[idx[e.b]][idx[e.a]] -= gc; }
+  /* Análise nodal modificada (MNA). Cada ramo liga os nós a e b e é um de:
+       {kind:'R', val:ohms}   resistor;
+       {kind:'V', val:volts}  fonte de tensão ideal, com V(a) − V(b) = val;
+       {kind:'I', val:ampères} fonte de corrente ideal, que leva val de a para b por dentro dela.
+     Incógnitas: a tensão de cada nó (o nó ref fica em 0 V) e a corrente de cada fonte de tensão.
+     Devolve {v:{nó: volts}, i:[corrente de a para b em cada ramo, na ordem recebida]}
+     ou null quando o sistema não tem solução única (parte solta, fontes em conflito). */
+  function solveMNA(branches, ref){
+    var idx = {}, n = 0, m = 0, row = [], i, j, c;
+    branches.forEach(function(e){
+      [e.a, e.b].forEach(function(k){ if (!(k in idx)) idx[k] = k === ref ? -1 : n++; });
     });
-    for (i = 0; i < n; i++){
+    branches.forEach(function(e, k){ row[k] = e.kind === 'V' ? n + m++ : -1; });
+    var N = n + m, M = [], b = [], big = 0;
+    for (i = 0; i < N; i++){ M.push([]); b.push(0); for (j = 0; j < N; j++) M[i].push(0); }
+    function add(r, col, v){ if (r >= 0 && col >= 0) M[r][col] += v; }
+    branches.forEach(function(e, k){
+      var a = idx[e.a], z = idx[e.b], r = row[k];
+      if (e.kind === 'R'){
+        var gc = 1 / e.val;
+        add(a, a, gc); add(z, z, gc); add(a, z, -gc); add(z, a, -gc);
+      } else if (e.kind === 'V'){
+        /* incógnita extra: corrente por dentro da fonte, de a para b */
+        add(a, r, 1); add(z, r, -1); add(r, a, 1); add(r, z, -1);
+        b[r] += e.val;
+      } else {
+        if (a >= 0) b[a] -= e.val;
+        if (z >= 0) b[z] += e.val;
+      }
+    });
+    M.forEach(function(rw){ rw.forEach(function(v){ big = Math.max(big, Math.abs(v)); }); });
+    for (i = 0; i < N; i++){
       var p = i, t;
-      for (j = i + 1; j < n; j++) if (Math.abs(M[j][i]) > Math.abs(M[p][i])) p = j;
+      for (j = i + 1; j < N; j++) if (Math.abs(M[j][i]) > Math.abs(M[p][i])) p = j;
       t = M[i]; M[i] = M[p]; M[p] = t; t = b[i]; b[i] = b[p]; b[p] = t;
-      if (Math.abs(M[i][i]) < 1e-18) return NaN;
-      for (j = i + 1; j < n; j++){
+      if (!(Math.abs(M[i][i]) > big * 1e-13)) return null;
+      for (j = i + 1; j < N; j++){
         var f = M[j][i] / M[i][i];
-        for (c = i; c < n; c++) M[j][c] -= f * M[i][c];
+        if (!f) continue;
+        for (c = i; c < N; c++) M[j][c] -= f * M[i][c];
         b[j] -= f * b[i];
       }
     }
-    var sol = [];
-    for (i = n - 1; i >= 0; i--){
-      var s = b[i];
-      for (j = i + 1; j < n; j++) s -= M[i][j] * sol[j];
-      sol[i] = s / M[i][i];
+    var x = [];
+    for (i = N - 1; i >= 0; i--){
+      var sm = b[i];
+      for (j = i + 1; j < N; j++) sm -= M[i][j] * x[j];
+      x[i] = sm / M[i][i];
     }
-    return sol[idx[nA]];
+    var v = {};
+    Object.keys(idx).forEach(function(k){ v[k] = idx[k] < 0 ? 0 : x[idx[k]]; });
+    return {v:v, i:branches.map(function(e, k){
+      return e.kind === 'R' ? (v[e.a] - v[e.b]) / e.val : e.kind === 'V' ? x[row[k]] : e.val;
+    })};
+  }
+  function rBranches(edges){ return edges.map(function(e){ return {kind:'R', a:e.a, b:e.b, val:e.val}; }); }
+  /* Req entre A e B: liga uma fonte de 1 V e mede a corrente que ela fornece (a corrente por dentro dela, de A para B, é −I) */
+  function reqNodal(edges, nA, nB){
+    var s = solveMNA(rBranches(edges).concat([{kind:'V', a:nA, b:nB, val:1}]), nB);
+    return s ? -1 / s.i[edges.length] : NaN;
   }
 
   function build(){
@@ -1616,7 +1678,8 @@ function fillMaterialSelect(sel, onlyIds){
     var out = {frames:frames};
 
     if (nA === nB){
-      frames.push({G:G0, hl:[], nw:null, label:'Resultado', cap:'<p>A e B estão ligados por fio, então a resistência entre eles é zero.</p>'});
+      frames.push({G:G0, hl:[], nw:null, label:'Resultado', cap:'<p>A e B estão ligados por fio, então a resistência entre eles é zero.</p>' +
+        (st.V ? '<p>Com ' + qty(st.V, 'V', 4) + ' entre A e B isso seria um curto-circuito: a corrente seria enorme, limitada só pela fonte e pelos fios.</p>' : '')});
       out.req = 0; return out;
     }
 
@@ -1654,9 +1717,13 @@ function fillMaterialSelect(sel, onlyIds){
       frames.push({G:snap(cur), hl:[], nw:null, label:'Limpeza', cap:'<p>Sem os resistores que não conduzem, o circuito fica assim.</p>'});
     }
     if (!seen[nB]){
-      frames.push({G:snap(cur), hl:[], nw:null, label:'Resultado', cap:'<p>Não existe caminho entre A e B: o circuito está aberto e a resistência é infinita.</p>'});
+      frames.push({G:snap(cur), hl:[], nw:null, label:'Resultado', cap:'<p>Não existe caminho entre A e B: o circuito está aberto e a resistência é infinita.</p>' +
+        (st.V ? '<p>Mesmo com ' + qty(st.V, 'V', 4) + ' entre A e B, nenhuma corrente circula.</p>' : '')});
       out.open = true; return out;
     }
+
+    /* circuito limpo, antes da redução: é nele que se calculam tensões e correntes */
+    var cur0 = cur.slice();
 
     /* laço de redução */
     var ops = [], nS = 0, nP = 0, nid = 0, guard = 0, stuck = false;
@@ -1748,17 +1815,255 @@ function fillMaterialSelect(sel, onlyIds){
     out.ops = ops;
 
     if (stuck){
-      var rq = solveNodal(cur, nA, nB);
+      var rq = reqNodal(cur, nA, nB);
       frames.push({G:snap(cur), hl:[], nw:null, label:'Resultado',
         cap:'<p>Não sobrou nenhuma série nem paralelo simples (acontece em pontes, como a de Wheatstone). Só com essas duas regras não dá para continuar.</p>' +
             '<p>Pela análise nodal (equações de tensão em cada ponto) a resistência entre A e B é <strong>' + fmtOhm(rq) + '</strong>. Para reduzir à mão, use a conversão triângulo-estrela.</p>'});
-      out.req = rq; out.stuck = true; return out;
+      out.req = rq; out.stuck = true;
+    } else {
+      var last = cur[0];
+      frames.push({G:snap(cur), hl:[], nw:null, label:'Resultado',
+        cap:'<p>Sobrou um único resistor entre A e B. A resistência equivalente é <strong>' + fmtOhm(last.val) + '</strong>.</p>'});
+      out.req = last.val;
     }
-    var last = cur[0];
-    frames.push({G:snap(cur), hl:[], nw:null, label:'Resultado',
-      cap:'<p>Sobrou um único resistor entre A e B. A resistência equivalente é <strong>' + fmtOhm(last.val) + '</strong>.</p>'});
-    out.req = last.val;
+    out.resFi = frames.length - 1;
+    if (st.V && isFinite(out.req) && out.req > 0) out.kir = kirchhoff(st.V, out.req);
     return out;
+
+    /* ----- volta ao circuito original: tensões, correntes e leis de Kirchhoff ----- */
+    function kirchhoff(Vs, req){
+      var sol = solveMNA(rBranches(cur0).concat([{kind:'V', a:nA, b:nB, val:Vs}]), nB);
+      if (!sol) return null;
+      var V = sol.v, IT = -sol.i[cur0.length], I = {}, inC = {}, tolI = Math.abs(IT) * 1e-9, tolV = Vs * 1e-9;
+      cur0.forEach(function(e, k){ I[e.id] = Math.abs(sol.i[k]) <= tolI ? 0 : sol.i[k]; inC[e.id] = 1; });
+      G0.edges.forEach(function(e){ if (!(e.id in I)) I[e.id] = 0; });
+      Object.keys(V).forEach(function(k){ if (Math.abs(V[k]) <= tolV) V[k] = 0; });
+      /* resistores tirados na limpeza não conduzem: a ponta solta fica com a tensão do ponto onde está presa */
+      var more = true;
+      while (more){
+        more = false;
+        G0.edges.forEach(function(e){
+          var ka = e.a in V, kb = e.b in V;
+          if (ka !== kb){ if (ka) V[e.b] = V[e.a]; else V[e.a] = V[e.b]; more = true; }
+        });
+      }
+
+      /* nomes dos nós: A, B e letras C, D, E... na ordem de leitura da grade */
+      var gp = {}, NN = {};
+      function addPt(n, p){ gp[n] = gp[n] || []; if (!gp[n].some(function(q){ return pk(q) === pk(p); })) gp[n].push(p); }
+      G0.edges.forEach(function(e){ addPt(e.a, e.path[0]); addPt(e.b, e.path[e.path.length - 1]); });
+      gp[nA] = [st.A]; gp[nB] = [st.B];
+      function first(n){ return gp[n].reduce(function(m, p){ return p[1] < m[1] || (p[1] === m[1] && p[0] < m[0]) ? p : m; }); }
+      var mids = Object.keys(V).filter(function(n){ return gp[n] && n !== nA && n !== nB; });
+      mids.sort(function(a, b){ var p = first(a), q = first(b); return p[1] - q[1] || p[0] - q[0]; });
+      NN[nA] = 'A'; NN[nB] = 'B';
+      mids.forEach(function(n, i){ NN[n] = i < 24 ? String.fromCharCode(67 + i) : 'N' + (i + 1); });
+      var order = [nA].concat(mids, [nB]);
+
+      /* rótulos no desenho: corrente perto de cada resistor e tensão perto de cada nó,
+         escolhendo para a tensão a posição que menos cobre fios, caixas e outros textos */
+      var samples = [], occ = [], lab = [], arrows = [], tags = {}, boxes = [];
+      function sampleSeg(p, q){
+        var a = px(p), b = px(q), k, nst = Math.ceil(Math.max(Math.abs(b[0] - a[0]), Math.abs(b[1] - a[1])) / 3);
+        for (k = 0; k <= nst; k++) samples.push([a[0] + (b[0] - a[0]) * k / nst, a[1] + (b[1] - a[1]) * k / nst]);
+      }
+      function box(x, y, an, txt){
+        var w = txt.length * 6.1 + 2, x0 = an === 'end' ? x - w : an === 'middle' ? x - w / 2 : x;
+        return [x0, y - 6.5, x0 + w, y + 6.5];
+      }
+      function r1(v){ return Math.round(v * 10) / 10; }
+      G0.edges.forEach(function(e){ var k; for (k = 0; k < e.path.length - 1; k++) sampleSeg(e.path[k], e.path[k + 1]); });
+      ctx.wires.forEach(function(w){ if (G0.alive[w.node]) sampleSeg(w.p, w.q); });
+      [st.A, st.B].forEach(function(t){ var a = px(t); occ.push([a[0] - 17, a[1] - 19, a[0] - 5, a[1] - 3]); });
+      var mid = G0.edges.map(function(e){
+        var m = Math.floor((e.path.length - 1) / 2), a = px(e.path[m]), b = px(e.path[m + 1]);
+        var mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2, ver = a[0] === b[0], w = ver ? 17 : 22, hh = ver ? 22 : 12, sv = short(e.val);
+        occ.push([mx - w / 2, my - hh / 2, mx + w / 2, my + hh / 2]);
+        occ.push(ver ? box(mx + 12, my, 'start', sv) : box(mx, my - 11, 'middle', sv));
+        return [a, b, mx, my];
+      });
+      /* posição do texto: a de menor custo; a ordem dá preferência às primeiras */
+      function place(cands, txt, bias){
+        var best = null;
+        cands.forEach(function(cd, ci){
+          var r = box(cd[0], cd[1], cd[2], txt), c = cost(r) + ci * bias;
+          if (!best || c < best.c) best = {c:c, x:cd[0], y:cd[1], an:cd[2], r:r, at:cd[3]};
+        });
+        occ.push(best.r); boxes.push(best.r);
+        return best;
+      }
+      G0.edges.forEach(function(e, k){
+        var a = mid[k][0], b = mid[k][1], mx = mid[k][2], my = mid[k][3], dx = b[0] - a[0], dy = b[1] - a[1];
+        var i = I[e.id], t = qty(Math.abs(i), 'A', 3).replace(' ', ''), cs;
+        /* corrente do lado oposto ao valor (diagonal: do lado que o fio não cruza); se estiver ocupado, tenta outro */
+        if (!dx) cs = [[mx - 12, my, 'end'], [mx + 12, my + 13, 'start'], [mx - 12, my - 12, 'end'], [mx - 12, my + 12, 'end']];
+        else if (!dy) cs = [[mx, my + 13, 'middle'], [mx, my - 23, 'middle'], [mx - 13, my + 12, 'end'], [mx + 13, my + 12, 'start']];
+        else if (dx * dy > 0) cs = [[mx - 6, my + 14, 'end'], [mx + 8, my - 12, 'start'], [mx + 14, my, 'start']];
+        else cs = [[mx + 6, my + 14, 'start'], [mx - 8, my - 12, 'end'], [mx - 14, my, 'end']];
+        var pl = place(cs, t, 1.5);
+        lab.push({x:r1(pl.x), y:r1(pl.y), an:pl.an, txt:t});
+        if (i){
+          /* seta no fio, logo depois da caixa, no sentido da corrente (de a para b quando i > 0) */
+          var L = Math.sqrt(dx * dx + dy * dy), sg = i > 0 ? 1 : -1, ux = sg * dx / L, uy = sg * dy / L, d = dx && dy ? 21 : 19;
+          var tx = mx + ux * d, ty = my + uy * d, bx = tx - ux * 7, by = ty - uy * 7, nx = -uy * 4, ny = ux * 4;
+          arrows.push('<polygon class="ck-arr" points="' + r1(tx) + ',' + r1(ty) + ' ' + r1(bx + nx) + ',' + r1(by + ny) + ' ' + r1(bx - nx) + ',' + r1(by - ny) + '"/>');
+        }
+      });
+      var CAND = [[0, -13, 'middle'], [0, 14, 'middle'], [7, -11, 'start'], [-7, -11, 'end'], [7, 12, 'start'], [-7, 12, 'end'], [10, 0, 'start'], [-10, 0, 'end']];
+      /* custo de um texto: pontos de fio cobertos + área sobreposta a caixas e textos (com folga de 2) */
+      function cost(r){
+        var c = 0;
+        samples.forEach(function(q){ if (q[0] > r[0] - 1 && q[0] < r[2] + 1 && q[1] > r[1] - 1 && q[1] < r[3] + 1) c += 1; });
+        occ.forEach(function(o){
+          var w = Math.min(r[2], o[2] + 2) - Math.max(r[0], o[0] - 2), hh = Math.min(r[3], o[3] + 2) - Math.max(r[1], o[1] - 2);
+          if (w > 0 && hh > 0) c += w * hh / 8;
+        });
+        return c;
+      }
+      order.forEach(function(n){
+        var l = n === nA || n === nB ? '' : NN[n], v = qty(V[n], 'V', 3).replace(' ', ''), cs = [];
+        gp[n].forEach(function(p){ var a = px(p); CAND.forEach(function(cd){ cs.push([a[0] + cd[0], a[1] + cd[1], cd[2], a]); }); });
+        var best = place(cs, (l ? l + ' ' : '') + v, 0.05);
+        tags[n] = {x:best.x, y:best.y, an:best.an, l:l, v:v, at:best.at};
+      });
+      function tagList(ns){ return ns.map(function(n){ return tags[n]; }); }
+
+      /* números da lousa: cada equação numa unidade só (A, mA... e V, mV...) */
+      function scale(x){
+        var e = x ? Math.max(-12, Math.min(12, Math.floor(Math.log10(Math.abs(x)) / 3) * 3)) : 0;
+        return {f:Math.pow(10, -e), u:e ? ENG[String(e)] : ''};
+      }
+      var sI = scale(IT), sV = scale(Vs), OK = ' <b class="lz-ok">✓</b>', BAD = ' <b>✗</b>';
+      function iName(e){ return 'I' + e.name.slice(1); }
+      function vSub(n){ return 'V<sub>' + NN[n] + '</sub>'; }
+      var IT_ = 'I<sub>T</sub>';
+      var it = {sym:IT_ + ' = V / R<sub>AB</sub>', num:'= ' + fmt(Vs) + ' / ' + fmt(req) + ' = <b>' + qty(Vs / req, 'A', 4) + '</b>'};
+      var volts = order.map(function(n){ return vSub(n) + ' = ' + br(V[n] * sV.f, 4); }).join(' · ') + ' ' + sV.u + 'V';
+      var named = G0.edges.slice().sort(function(a, b){ return +a.name.slice(1) - +b.name.slice(1); });
+      var curr = named.map(function(e){
+        if (!inC[e.id]) return {k:e.name, sym:iName(e) + ' = 0', num:'fora do caminho, não conduz'};
+        var f = I[e.id] >= 0 ? e.a : e.b, t = f === e.a ? e.b : e.a;
+        return {k:e.name + ' · ' + NN[f] + ' → ' + NN[t], sym:iName(e) + ' = (' + vSub(f) + ' − ' + vSub(t) + ') / ' + e.name,
+          num:'= (' + br(V[f], 4) + ' − ' + br(V[t], 4) + ') / ' + fmt(e.val) + ' = <b>' + qty(Math.abs(I[e.id]), 'A', 4) + '</b>'};
+      });
+
+      /* 1ª lei: nós com 3 ou mais ligações (a fonte A–B conta como ligação de A e de B) */
+      var deg = {};
+      cur0.forEach(function(e){ deg[e.a] = (deg[e.a] || 0) + 1; deg[e.b] = (deg[e.b] || 0) + 1; });
+      deg[nA] = (deg[nA] || 0) + 1; deg[nB] = (deg[nB] || 0) + 1;
+      var kcl = order.filter(function(n){ return deg[n] >= 3; }).map(function(n){
+        var inn = [], outt = [], ids = [], hw = {};
+        if (n === nA) inn.push({s:IT_, v:IT});
+        if (n === nB) outt.push({s:IT_, v:IT});
+        cur0.forEach(function(e){
+          if (e.a !== n && e.b !== n) return;
+          var lv = e.a === n ? I[e.id] : -I[e.id];
+          ids.push(e.id);
+          if (lv < 0) inn.push({s:iName(e), v:-lv, o:+e.name.slice(1)}); else outt.push({s:iName(e), v:lv, o:+e.name.slice(1)});
+        });
+        function byNum(x, y){ return (x.o || 0) - (y.o || 0); }
+        inn.sort(byNum); outt.sort(byNum);
+        function sum(l){ return l.reduce(function(s, x){ return s + x.v; }, 0); }
+        function syms(l){ return l.length ? l.map(function(x){ return x.s; }).join(' + ') : '0'; }
+        function nums(l){ return l.length ? l.map(function(x){ return br(x.v * sI.f, 4); }).join(' + ') : '0'; }
+        var si = sum(inn), so = sum(outt), ok = Math.abs(si - so) <= 1e-9 * Math.max(si, so, Math.abs(IT));
+        hw[n] = 1;
+        return {n:n, ids:ids, hlW:hw, ok:ok, inn:inn, outt:outt, k:'Nó ' + NN[n],
+          sym:syms(inn) + ' = ' + syms(outt), num:nums(inn) + ' = ' + nums(outt) + ' ' + sI.u + 'A' + (ok ? OK : BAD)};
+      });
+
+      /* 2ª lei: laços fundamentais. Árvore geradora só com resistores (busca em largura a partir de A);
+         a fonte A–B e cada resistor fora da árvore (corda) fecham um laço com o caminho da árvore.
+         Não depende de o desenho ser planar (diagonais cruzadas sem ligação funcionam). */
+      var adj = {}, tp = {}, dep = {}, inT = {}, bq = [nA], u;
+      cur0.forEach(function(e){ (adj[e.a] = adj[e.a] || []).push(e); (adj[e.b] = adj[e.b] || []).push(e); });
+      tp[nA] = null; dep[nA] = 0;
+      while (bq.length){
+        u = bq.shift();
+        (adj[u] || []).forEach(function(e){
+          var w = other(e, u);
+          if (!(w in tp)){ tp[w] = {e:e, up:u}; dep[w] = dep[u] + 1; inT[e.id] = 1; bq.push(w); }
+        });
+      }
+      function treePath(x, y){
+        var up = [], down = [];
+        while (x !== y){
+          if (dep[x] >= dep[y]){ up.push({e:tp[x].e, from:x, to:tp[x].up}); x = tp[x].up; }
+          else { down.unshift({e:tp[y].e, from:tp[y].up, to:y}); y = tp[y].up; }
+        }
+        return up.concat(down);
+      }
+      /* o laço da fonte vem primeiro: ela é percorrida de B (−) para A (+) */
+      var loops = [[{src:true, from:nB, to:nA}].concat(treePath(nA, nB))];
+      cur0.forEach(function(e){
+        if (inT[e.id]) return;
+        var f = I[e.id] >= 0 ? e.a : e.b, t = other(e, f);
+        loops.push([{e:e, from:f, to:t}].concat(treePath(t, f)));
+      });
+      var nBr = cur0.length + 1, nNo = Object.keys(dep).length;
+      var kvl = loops.map(function(lp){
+        var sy = '', nu = '', tot = 0, mag = 0, ids = [], ep = [];
+        lp.forEach(function(t, j){
+          var val, sg, nm;
+          if (t.src){ val = V[nA] - V[nB]; nm = 'V'; ep.push([st.B, st.A]); }
+          else {
+            val = V[t.to] - V[t.from]; nm = 'V<sub>' + t.e.name + '</sub>'; ids.push(t.e.id);
+            ep.push(t.from === t.e.a ? [t.e.path[0], t.e.path[t.e.path.length - 1]] : [t.e.path[t.e.path.length - 1], t.e.path[0]]);
+          }
+          if (Math.abs(val) <= tolV) val = 0;
+          /* subida (+) quando a tensão aumenta no sentido da volta; queda (−) quando diminui */
+          sg = val > 0 ? '+' : '−';
+          sy += (j ? ' ' + sg + ' ' : sg) + nm;
+          nu += (j ? ' ' + sg + ' ' : sg) + br(Math.abs(val) * sV.f, 4);
+          tot += val; mag += Math.abs(val);
+        });
+        /* trechos de fio que ligam um elemento ao próximo, para destacar a volta inteira */
+        var path = [];
+        ep.forEach(function(en, j){
+          var wp = wirePath(en[1], ep[(j + 1) % ep.length][0]);
+          if (wp.length > 1) path.push(wp);
+        });
+        /* laço da fonte lido a partir de A; os outros a partir da ponta de onde a corda sai */
+        var seq = lp.map(function(t){ return NN[lp[0].src ? t.to : t.from]; }), ok = Math.abs(tot) <= 1e-9 * Math.max(mag, Vs);
+        return {ids:ids, path:path, src:!!lp[0].src, ok:ok, k:'Laço ' + seq.concat([seq[0]]).join(' → ') + (lp[0].src ? ' (pela fonte)' : ''),
+          sym:sy + ' = 0', num:nu + ' = 0 ' + sV.u + 'V' + (ok ? OK : BAD)};
+      });
+
+      /* quadros */
+      var allTags = tagList(order), Vt = qty(Vs, 'V', 4), It = qty(IT, 'A', 4);
+      function ovx(extra){ var o = {lab:lab, arrows:arrows, tags:allTags}, k; for (k in extra) o[k] = extra[k]; return o; }
+      frames.push({G:G0, hl:[], nw:null, ph:'ret', sec:'it', label:'De volta ao circuito · corrente total',
+        ov:{tags:tagList([nA, nB]), term:true},
+        cap:'<p>Agora voltamos ao circuito original, com <strong>' + Vt + '</strong> entre A (+) e B (0 V). Pela lei de Ohm no circuito todo:</p>' +
+            '<code>I<sub>T</sub> = V / R<sub>AB</sub> = ' + fmt(Vs) + ' / ' + fmt(req) + ' = ' + It + '</code>' +
+            '<p>Essa corrente sai de A, se divide pelos resistores e chega toda em B.</p>'});
+      frames.push({G:G0, hl:[], nw:null, ph:'ret', sec:'vi', label:'Tensão em cada nó e corrente em cada resistor', ov:ovx({}),
+        cap:'<p>Com B em 0 V e A em ' + Vt + ', cada nó (ponto de ligação) tem uma tensão. A corrente num resistor é a diferença de tensão entre as pontas dividida pela resistência, <strong>I = ΔV / R</strong>, e vai do lado de tensão maior para o menor (setas verdes).</p>'});
+      if (!kcl.length){
+        frames.push({G:G0, hl:[], nw:null, ph:'ret', sec:'kcl', k:-1, label:'1ª lei de Kirchhoff · nós', ov:ovx({}),
+          cap:'<p><strong>Lei dos nós:</strong> a soma das correntes que chegam a um nó é igual à soma das que saem.</p>' +
+              '<p>Aqui nenhum nó liga 3 ou mais caminhos: tudo está em série, e a mesma corrente I<sub>T</sub> = ' + It + ' passa por todos os resistores.</p>'});
+      }
+      kcl.forEach(function(c, j){
+        var ins = c.inn.map(function(x){ return x.s; }), outs = c.outt.map(function(x){ return x.s; });
+        frames.push({G:G0, hl:c.ids, nw:null, ph:'ret', sec:'kcl', k:j, label:'1ª lei de Kirchhoff · nó ' + NN[c.n] + ' (' + (j + 1) + ' de ' + kcl.length + ')',
+          ov:ovx({hlW:c.hlW, ring:tags[c.n].at, term:c.n === nA || c.n === nB}),
+          cap:(j ? '' : '<p><strong>Lei dos nós:</strong> a soma das correntes que chegam a um nó é igual à soma das que saem (a carga não some nem se acumula).</p>') +
+              '<p>No nó <strong>' + NN[c.n] + '</strong> ' + (ins.length ? (ins.length > 1 ? 'chegam ' : 'chega ') + lst(ins) : 'não chega corrente') +
+              ' e ' + (outs.length > 1 ? 'saem ' : 'sai ') + lst(outs) + '.</p><code>' + c.sym + '</code><code>' + c.num + '</code>'});
+      });
+      kvl.forEach(function(c, j){
+        frames.push({G:G0, hl:c.ids, nw:null, ph:'ret', sec:'kvl', k:j, label:'2ª lei de Kirchhoff · laço ' + (j + 1) + ' de ' + kvl.length,
+          ov:ovx({path:c.path, term:c.src}),
+          cap:(j ? '' : '<p><strong>Lei das malhas:</strong> numa volta fechada, a soma das tensões é zero: o que a fonte fornece os resistores consomem. ' +
+              'Seguindo a volta, conta + quando a tensão sobe e − quando cai (no sentido da corrente, o resistor é uma queda).</p>' +
+              '<p>São ' + nBr + ' ramos (' + cur0.length + (cur0.length > 1 ? ' resistores' : ' resistor') + ' e a fonte A–B) e ' + nNo + ' nós, então há ' +
+              nBr + ' − ' + nNo + ' + 1 = <strong>' + kvl.length + (kvl.length > 1 ? ' laços independentes' : ' laço') + '</strong>.</p>') +
+              '<p>' + c.k + ':</p><code>' + c.sym + '</code><code>' + c.num + '</code>'});
+      });
+      return {it:it, volts:volts, curr:curr, kcl:kcl, kvl:kvl, IT:IT, boxes:boxes,
+        count:nBr + ' − ' + nNo + ' + 1 = ' + kvl.length, V:V, I:I, NN:NN};
+    }
   }
 
   /* ----- reprodução ----- */
@@ -1776,15 +2081,44 @@ function fillMaterialSelect(sel, onlyIds){
     if (st.A) add(st.A);
     if (st.B) add(st.B);
     if (!xs.length) return FULLVB;
-    var x0 = Math.min.apply(null, xs), x1 = Math.max.apply(null, xs), y0 = Math.min.apply(null, ys), y1 = Math.max.apply(null, ys);
-    var pad = 34, w = (x1 - x0) * S + 2 * pad, h = (y1 - y0) * S + 2 * pad;
-    var mw = 3 * S + 2 * pad, mh = 2 * S + 2 * pad, cx = MX + (x0 + x1) / 2 * S, cy = MY + (y0 + y1) / 2 * S;
-    w = Math.max(w, mw); h = Math.max(h, mh);
+    var pad = 34, l = MX + Math.min.apply(null, xs) * S - pad, r = MX + Math.max.apply(null, xs) * S + pad;
+    var t = MY + Math.min.apply(null, ys) * S - pad, b = MY + Math.max.apply(null, ys) * S + pad;
+    /* rótulos de corrente e tensão da volta ao circuito também precisam caber */
+    if (kir) kir.boxes.forEach(function(q){ l = Math.min(l, q[0] - 6); t = Math.min(t, q[1] - 6); r = Math.max(r, q[2] + 6); b = Math.max(b, q[3] + 6); });
+    var w = Math.max(r - l, 3 * S + 2 * pad), h = Math.max(b - t, 2 * S + 2 * pad), cx = (l + r) / 2, cy = (t + b) / 2;
     return (cx - w / 2) + ' ' + (cy - h / 2) + ' ' + w + ' ' + h;
   }
   /* lousa: as contas vão sendo escritas conforme o circuito diminui */
+  function lzLine(k, sym, num, now, anim){
+    return '<div class="lz-line' + (now ? ' now' : '') + '">' + (k ? '<span class="lz-k">' + k + '</span>' : '') +
+      '<span class="lz-sym' + anim + '">' + sym + '</span>' + (num ? '<span class="lz-num' + anim + '">' + num + '</span>' : '') + '</div>';
+  }
+  /* lousa da volta ao circuito: Req e corrente total em cima e, embaixo, só a parte do quadro atual */
+  function lousaRet(f, fresh){
+    var a = fresh ? ' lz-new' : '', h = lzLine('', 'R<sub>AB</sub> = ' + fmtOhm(result), '', false, '') +
+      lzLine('Corrente total', kir.it.sym, kir.it.num, f.sec === 'it', f.sec === 'it' ? a : '');
+    if (f.sec === 'vi'){
+      h += '<span class="lz-h">Tensões nos nós (B = 0 V)</span>' + lzLine('', kir.volts, '', true, a) +
+           '<span class="lz-h">Correntes · I = ΔV / R</span>';
+      kir.curr.forEach(function(c){ h += lzLine(c.k, c.sym, c.num, true, a); });
+    } else if (f.sec === 'kcl'){
+      h += '<span class="lz-h">1ª lei · nós: entra = sai</span>';
+      if (!kir.kcl.length) h += '<p class="lz-empty">Nenhum nó com 3 ou mais ligações: a mesma corrente I<sub>T</sub> passa por tudo.</p>';
+      kir.kcl.forEach(function(c, j){ if (j <= f.k) h += lzLine(c.k, c.sym, c.num, j === f.k, j === f.k ? a : ''); });
+    } else if (f.sec === 'kvl'){
+      h += '<span class="lz-h">2ª lei · laços: soma = 0</span>' + lzLine('laços = ramos − nós + 1', kir.count, '', false, '');
+      kir.kvl.forEach(function(c, j){ if (j <= f.k) h += lzLine(c.k, c.sym, c.num, j === f.k, j === f.k ? a : ''); });
+    }
+    return h;
+  }
   function renderLousa(i){
-    var f = frames[i], last = i === frames.length - 1, done = 0, pend = -1, h = '', fresh = i > lzLast;
+    var f = frames[i], last = i === resFi, done = 0, pend = -1, h = '', fresh = i > lzLast;
+    if (f.ph === 'ret'){
+      lzEl.innerHTML = '<span class="lz-h">Lousa</span>' + lousaRet(f, fresh);
+      lzEl.scrollTop = lzEl.scrollHeight;
+      lzLast = i;
+      return;
+    }
     if (f.ph === 'mark'){ done = f.opi; pend = f.opi; }
     else if (f.ph === 'done') done = f.opi + 1;
     else if (last) done = lzOps.length;
@@ -1809,21 +2143,23 @@ function fillMaterialSelect(sel, onlyIds){
     fi = i;
     var f = frames[i];
     svg.setAttribute('viewBox', playVB);
-    svg.innerHTML = drawGraph(f.G, f.hl, f.nw);
+    svg.innerHTML = drawGraph(f.G, f.hl, f.nw, f.ov);
     renderLousa(i);
     svg.setAttribute('data-tool', 'none');
     capEl.innerHTML = '<h2>' + f.label + '</h2>' + f.cap;
     countEl.textContent = (i + 1) + ' de ' + frames.length;
     prevB.disabled = i === 0;
     nextB.disabled = i === frames.length - 1;
-    resEl.hidden = !(i === frames.length - 1 && result !== undefined);
+    resEl.hidden = !(i >= resFi && result !== undefined);
     if (!resEl.hidden){
       resEl.innerHTML = '<span class="r-label">Resistência equivalente entre A e B' + (resNote ? ' (' + resNote + ')' : '') + '</span>' +
         '<span class="r-value big">' + (isFinite(result) ? fmtOhm(result) : '∞') + '</span>' +
-        (isFinite(result) ? '<span class="r-extra">' + br(result, 5) + ' Ω</span>' : '');
+        (isFinite(result) ? '<span class="r-extra">' + br(result, 5) + ' Ω</span>' : '') +
+        (kir ? '<span class="r-extra">Corrente total com ' + qty(st.V, 'V', 4) + ': ' + qty(kir.IT, 'A', 4) + '</span>' : '');
     }
   }
-  var result, resNote = '';
+  /* resFi: quadro do resultado (Req); kir: dados da volta ao circuito, quando há tensão */
+  var result, resNote = '', resFi = 0, kir = null;
   function play(){
     if (timer){ stopTimer(); return; }
     if (fi >= frames.length - 1) showFrame(0);
@@ -1845,6 +2181,8 @@ function fillMaterialSelect(sel, onlyIds){
     result = b.open ? Infinity : b.req;
     resNote = b.stuck ? 'análise nodal' : '';
     lzOps = b.ops || [];
+    resFi = b.resFi === undefined ? b.frames.length - 1 : b.resFi;
+    kir = b.kir || null;
     lzLast = -1;
     mode = 'play';
     topUi.hidden = true; botUi.hidden = true; playUi.hidden = false;
@@ -1872,13 +2210,18 @@ function fillMaterialSelect(sel, onlyIds){
       var s = JSON.parse(localStorage.getItem(LS));
       if (s && s.e && typeof s.n === 'number' && okPt(s.A) && okPt(s.B) &&
           Object.keys(s.e).every(function(k){ var c = s.e[k]; return KEYS.indexOf(k) >= 0 && c && (c.t === 'w' || (c.t === 'r' && c.v > 0 && isFinite(c.v) && typeof c.n === 'number')); }) &&
-          Object.keys(s.e).length) return s;
+          Object.keys(s.e).length){
+        /* estados antigos não têm V: ficam sem tensão */
+        s.V = typeof s.V === 'number' && isFinite(s.V) && s.V > 0 ? s.V : null;
+        return s;
+      }
     } catch (e) {}
     return null;
   }
   function loadPreset(id){
     var p = PRESETS[id];
-    st = {e:{}, A:p.A ? p.A.slice() : null, B:p.B ? p.B.slice() : null, n:0};
+    /* exemplo com tensão própria troca a tensão; grade em branco mantém a que estava */
+    st = {e:{}, A:p.A ? p.A.slice() : null, B:p.B ? p.B.slice() : null, n:0, V:p.V || st.V || null};
     p.items.forEach(function(it){ st.e[it[0]] = it[1] === 'w' ? {t:'w'} : {t:'r', v:it[1], n:++st.n}; });
   }
   function hint(){
@@ -1923,8 +2266,9 @@ function fillMaterialSelect(sel, onlyIds){
     if (!from.length || mode !== 'edit') return;
     to.push(snap());
     st = JSON.parse(from.pop());
-    sel = null; editPrev = null;
-    save(); syncVal(); renderEditor(); syncUndo();
+    sel = null; editPrev = null; vPrev = null;
+    if (st.V === undefined) st.V = null;
+    save(); syncVal(); syncV(); renderEditor(); syncUndo();
     setStatus(statusEl, msg);
   }
   function undo(){ restore(hist, fut, 'Desfeito.'); }
@@ -2017,12 +2361,27 @@ function fillMaterialSelect(sel, onlyIds){
   });
   /* a edição de valor vira um único passo de desfazer quando o campo perde o foco */
   valEl.addEventListener('change', function(){ if (editPrev !== null){ commit(editPrev); editPrev = null; } });
+  /* tensão entre A e B (opcional): vazio = só a Req; também vira um passo de desfazer */
+  var vEl = g('ck-v'), vBox = g('ck-vbox'), vPrev = null;
+  function syncV(){ vEl.value = st.V ? fieldFmt(st.V) : ''; vBox.classList.remove('bad'); vEl.setAttribute('aria-invalid', 'false'); }
+  vEl.addEventListener('input', function(){
+    var raw = vEl.value.trim(), v = parse(vEl.value), ok = raw === '' || (isFinite(v) && v > 0);
+    vBox.classList.toggle('bad', !ok); vEl.setAttribute('aria-invalid', ok ? 'false' : 'true');
+    if (!ok){ setStatus(statusEl, 'Digite uma tensão maior que zero (ex.: 12 ou 1k5) ou deixe vazio.', true); return; }
+    if (vPrev === null) vPrev = snap();
+    st.V = raw === '' ? null : v;
+    save();
+    setStatus(statusEl, st.V ? 'Tensão entre A e B: ' + qty(st.V, 'V', 4) + '. Depois da Req, a animação mostra as correntes e as leis de Kirchhoff.'
+                             : 'Sem tensão: a animação mostra só a resistência equivalente.');
+  });
+  vEl.addEventListener('change', function(){ if (vPrev !== null){ commit(vPrev); vPrev = null; } });
+  vEl.addEventListener('keydown', function(e){ if (e.key === 'Enter'){ e.preventDefault(); vEl.blur(); go(); } });
   exSel.addEventListener('change', function(){
     if (!exSel.value) return;
     var prev = snap(), label = exSel.options[exSel.selectedIndex].text;
     loadPreset(exSel.value);
     exSel.value = '';
-    sel = null; syncVal();
+    sel = null; syncVal(); syncV();
     done(commit(prev) ? 'Exemplo carregado: ' + label + '. Use Desfazer para voltar ao seu circuito.' : 'Esse exemplo já está na grade.');
   });
   g('ck-clear').addEventListener('click', function(){
@@ -2084,6 +2443,7 @@ function fillMaterialSelect(sel, onlyIds){
 
   var saved = load();
   if (saved) st = saved; else loadPreset('b');
+  syncV();
   setTool('r');
   renderEditor();
 })();
