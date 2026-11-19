@@ -458,6 +458,54 @@ tbody tr.on{background:var(--accent-soft);box-shadow:inset 4px 0 0 var(--hi)}
 @media (min-width:360px) and (max-width:420px){.tab .tl{font-size:.64rem}}
 /* telas estreitas: rótulos longos viram abreviações (o nome completo fica no aria-label) */
 @media (max-width:420px){.tab .tl-f{display:none}.tab .tl-s{display:inline}}
+/* ---------- ajustes para celular ---------- */
+/* atalho do topo da aba até a calculadora (o estudo vem antes e é longo) */
+.jump{align-self:flex-start;display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:6px 14px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--accent);font-size:.9rem;font-weight:500;text-decoration:none;touch-action:manipulation}
+.jump:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.panel > h2,.msec,.ck-board{scroll-margin-top:12px}
+@media (min-width:720px){.panel > h2,.msec,.ck-board{scroll-margin-top:calc(var(--bar-h) + 12px)}}
+/* legendas: o termo e o exemplo também quebram linha, para a tabela caber sem rolar de lado */
+/* fórmula grande: a linha longa quebra em vez de sumir pela direita */
+.fbig > span{white-space:normal}
+.legend td:first-child{white-space:normal;min-width:3.5em}
+.legend td:nth-child(3){white-space:normal;min-width:5.5em}
+/* teclas extras sobre o teclado numérico (ele não tem sinal de menos nem prefixos) */
+.kx{
+  position:fixed;left:0;right:0;bottom:0;z-index:30;
+  display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;
+  padding:6px max(8px, env(safe-area-inset-right)) 6px max(8px, env(safe-area-inset-left));
+  background:var(--panel);border-top:1px solid rgba(255,255,255,.08);
+}
+.kx button{
+  font-family:var(--font-mono);font-size:1.1rem;font-weight:600;line-height:1.1;
+  min-height:44px;border:0;border-radius:8px;background:#3a434c;color:#fff;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  touch-action:manipulation;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none;
+}
+.kx button small{font-family:var(--font-cond);font-size:.66rem;font-weight:500;color:var(--panel-ink)}
+.kx button:active{background:var(--hi);color:var(--hi-ink)}
+.kx button:active small{color:var(--hi-ink)}
+/* aba Circuito no celular e no tablet */
+@media (max-width:959px){
+  /* rótulos da grade legíveis (a grade inteira encolhe para caber na largura) */
+  .ck-nm{font-size:10px}
+  .ck-val{font-size:11.5px}
+  /* a lousa não empurra os controles para longe: rola por dentro */
+  .ck-lousa{max-height:42vh;max-height:42dvh;overflow:auto}
+  /* Anterior / Próximo presos acima da barra de abas, para avançar sem perder o circuito de vista */
+  .ck-nav{
+    position:fixed;left:0;right:0;z-index:19;margin:0;
+    bottom:calc(var(--bar-h) + env(safe-area-inset-bottom));
+    padding:8px max(16px, calc((100% - 560px) / 2));
+    background:var(--bg);border-top:1px solid var(--line);box-shadow:0 -6px 16px rgba(0,0,0,.14);
+    flex-wrap:nowrap;
+  }
+  .ck-nav .btn{flex:1;min-height:48px}
+  .ck-nav .status{flex:none;text-align:center;min-width:4.5em}
+  #ck-play{padding-bottom:72px}
+  #tab-circuito:fullscreen .ck-nav{bottom:env(safe-area-inset-bottom)}
+}
+@media (min-width:720px) and (max-width:959px){.ck-nav{bottom:env(safe-area-inset-bottom)}}
 </style>
 </head>
 <body>
@@ -724,7 +772,7 @@ tbody tr.on{background:var(--accent-soft);box-shadow:inset 4px 0 0 var(--hi)}
 
     <div id="ck-play" class="panel" hidden>
       <section id="ck-cap" class="steps ck-cap" aria-live="polite"></section>
-      <div class="actions">
+      <div class="actions ck-nav">
         <button type="button" id="ck-prev" class="btn">‹ Anterior</button>
         <span id="ck-count" class="status"></span>
         <button type="button" id="ck-next" class="btn">Próximo ›</button>
@@ -1172,6 +1220,14 @@ tbody tr.on{background:var(--accent-soft);box-shadow:inset 4px 0 0 var(--hi)}
     </details>
   </section>
 </main>
+
+<div id="kx" class="kx" role="toolbar" aria-label="Teclas extras para o campo" hidden>
+  <button type="button" data-k="-" aria-label="Trocar o sinal">±<small>sinal</small></button>
+  <button type="button" data-k="k" aria-label="Prefixo quilo, vezes mil">k<small>×10³</small></button>
+  <button type="button" data-k="M" aria-label="Prefixo mega, vezes um milhão">M<small>×10⁶</small></button>
+  <button type="button" data-k="m" aria-label="Prefixo mili, dividido por mil">m<small>×10⁻³</small></button>
+  <button type="button" data-k="µ" aria-label="Prefixo micro, dividido por um milhão">µ<small>×10⁻⁶</small></button>
+</div>
 
 
 <script>
@@ -1734,6 +1790,8 @@ function fillMaterialSelect(sel, onlyIds){
      no celular fica 8 × 6 para os pontos continuarem fáceis de tocar */
   var WIDE = window.matchMedia('(min-width:960px)').matches;
   var COLS = WIDE ? 12 : 8, ROWS = WIDE ? 8 : 6, S = 54, MX = 26, MY = 26;
+  /* no celular a grade encolhe para caber na tela: caixas e rótulos dos resistores crescem um pouco */
+  var K = WIDE ? 1 : 1.2;
   var LS = 'estudo-eletricidade-circuito' + (WIDE ? '-grande' : '');
   function g(id){ return document.getElementById(id); }
   g('ck-svg').setAttribute('viewBox', '0 0 ' + (2 * MX + (COLS - 1) * S) + ' ' + (2 * MY + (ROWS - 1) * S));
@@ -1817,11 +1875,11 @@ function fillMaterialSelect(sel, onlyIds){
   }
   function resBox(p, q, name, val, cls){
     var a = px(p), b = px(q), mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2, ver = a[0] === b[0];
-    var w = ver ? 17 : 22, h = ver ? 22 : 12;
+    var w = (ver ? 17 : 22) * K, h = (ver ? 22 : 12) * K;
     return '<rect class="ck-box ' + cls + '" x="' + (mx - w / 2) + '" y="' + (my - h / 2) + '" width="' + w + '" height="' + h + '" rx="2"/>' +
       '<text class="ck-nm" x="' + mx + '" y="' + my + '">' + name + '</text>' +
-      (!ver ? '<text class="ck-val" text-anchor="middle" x="' + mx + '" y="' + (my - 11) + '">' + short(val) + '</text>'
-           : '<text class="ck-val" x="' + (mx + 12) + '" y="' + my + '">' + short(val) + '</text>');
+      (!ver ? '<text class="ck-val" text-anchor="middle" x="' + mx + '" y="' + (my - 11 * K) + '">' + short(val) + '</text>'
+           : '<text class="ck-val" x="' + (mx + 12 * K) + '" y="' + my + '">' + short(val) + '</text>');
   }
   /* fonte de tensão: placa longa (+) e placa curta e grossa (−), com o sinal + ao lado da placa longa.
      u aponta para o lado +; n é a perpendicular (para cima, ou para a esquerda no trecho vertical) */
@@ -3009,6 +3067,8 @@ function fillMaterialSelect(sel, onlyIds){
     lzEl.hidden = false;
     boardEl.classList.add('play');
     showFrame(0);
+    /* os controles de cima somem: no celular a tela pularia para o meio da lousa */
+    if (!WIDE && !document.fullscreenElement) boardEl.scrollIntoView({block: 'start'});
   }
   function back(){
     stopTimer();
@@ -4184,6 +4244,91 @@ function fillMaterialSelect(sel, onlyIds){
     });
   });
   update();
+})();
+/* ---------- atalho para a calculadora de cada aba ---------- */
+(function(){
+  document.querySelectorAll('.panel[role="tabpanel"]').forEach(function(p){
+    var kids = Array.prototype.slice.call(p.children);
+    var h = kids.filter(function(c){ return c.tagName === 'H2' && /^Calculadora/.test(c.textContent); })[0];
+    var f = kids.filter(function(c){ return c.classList.contains('fcard'); })[0];
+    if (!h || !f) return;
+    if (!h.id) h.id = p.id + '-calc';
+    var a = document.createElement('a');
+    a.href = '#' + h.id;
+    a.addEventListener('click', function(e){ e.preventDefault(); h.scrollIntoView({block: 'start'}); });
+    var nav = p.querySelector('.msec-nav');
+    if (nav){
+      /* Matemática já tem a fila de atalhos: a calculadora de frações entra nela */
+      a.textContent = 'Frações';
+      nav.insertBefore(a, nav.children[1]);
+    } else {
+      a.className = 'jump';
+      a.textContent = '↓ Ir para a calculadora';
+      f.parentNode.insertBefore(a, f);
+    }
+  });
+})();
+
+/* ---------- teclas extras no celular ----------
+   O teclado numérico (inputmode="decimal") não tem sinal de menos nem letras,
+   então não dá para digitar valores negativos nem prefixos como 4k7 ou 250m.
+   Enquanto um campo numérico está em foco, uma barra com ± e os prefixos fica sobre o teclado. */
+(function(){
+  var bar = document.getElementById('kx');
+  if (!bar || !window.matchMedia || !window.matchMedia('(pointer:coarse)').matches) return;
+  var cur = null, vv = window.visualViewport, PRE = /[TGMkKmµμunp]$/;
+  function isNum(el){ return !!el && el.tagName === 'INPUT' && el.getAttribute('inputmode') === 'decimal'; }
+  /* no iOS o teclado cobre a página sem encolher a janela: a barra sobe junto com a parte visível */
+  function place(){
+    if (bar.hidden) return;
+    var off = vv ? Math.max(0, Math.round(window.innerHeight - vv.height - vv.offsetTop)) : 0;
+    bar.style.transform = off ? 'translateY(' + (-off) + 'px)' : '';
+    if (!cur) return;
+    var top = bar.getBoundingClientRect().top, r = cur.getBoundingClientRect();
+    if (r.bottom > top - 8) window.scrollBy(0, r.bottom - top + 16);
+  }
+  function hide(){ bar.hidden = true; bar.style.transform = ''; cur = null; }
+  document.addEventListener('focusin', function(e){
+    if (!isNum(e.target)){ hide(); return; }
+    cur = e.target;
+    bar.hidden = false;
+    place();
+    setTimeout(place, 350); /* depois que o teclado termina de abrir */
+  });
+  document.addEventListener('focusout', function(){
+    setTimeout(function(){ if (!isNum(document.activeElement)) hide(); }, 0);
+  });
+  if (vv){ vv.addEventListener('resize', place); vv.addEventListener('scroll', place); }
+  function press(k){
+    if (!cur) return;
+    var v = cur.value, end;
+    if (k === '-'){
+      var t = v.replace(/^\s+/, '');
+      cur.value = t.charAt(0) === '-' ? t.slice(1) : '-' + t;
+      end = cur.value.length;
+      try { cur.setSelectionRange(end, end); } catch (e) {}
+    } else {
+      var s = cur.selectionStart, en = cur.selectionEnd;
+      if (s === null || s === undefined){ s = en = v.length; }
+      /* tocar outro prefixo logo depois de um troca o anterior (k → M) */
+      if (s === en && s === v.length && PRE.test(v)) s = v.length - 1;
+      cur.setRangeText(k, s, en, 'end');
+    }
+    cur.dispatchEvent(new Event('input', {bubbles: true}));
+  }
+  /* age no toque e cancela o padrão (o que também evita o clique depois),
+     para o campo não perder o foco e o teclado não fechar */
+  bar.addEventListener('touchstart', function(e){
+    var b = e.target.closest('button');
+    if (!b) return;
+    e.preventDefault();
+    press(b.dataset.k);
+  }, {passive: false});
+  bar.addEventListener('mousedown', function(e){ e.preventDefault(); });
+  bar.addEventListener('click', function(e){
+    var b = e.target.closest('button');
+    if (b) press(b.dataset.k);
+  });
 })();
 </script>
 <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "80ac200414de4acb87bfa7413db1a76f"}'></script><!-- End Cloudflare Web Analytics -->
