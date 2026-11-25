@@ -105,7 +105,7 @@ header .lead{color:var(--hi-ink);font-size:.95rem;max-width:34ch}
 /* abas: seletor de funções */
 .tabs{
   position:fixed;left:0;right:0;bottom:0;z-index:20;
-  display:grid;grid-template-columns:repeat(8,minmax(0,1fr));
+  display:grid;grid-template-columns:repeat(9,minmax(0,1fr));
   background:var(--panel);
   padding:0 max(4px, env(safe-area-inset-right)) env(safe-area-inset-bottom) max(4px, env(safe-area-inset-left));
 }
@@ -604,6 +604,7 @@ tbody tr.on{background:var(--accent-soft);box-shadow:inset 4px 0 0 var(--hi)}
     <button type="button" class="tab" role="tab" id="t-ohm" aria-controls="tab-ohm" aria-selected="true" aria-label="1ª Lei de Ohm"><span class="sym" aria-hidden="true">Ω</span><span class="tl">1ª Lei</span></button>
     <button type="button" class="tab" role="tab" id="t-cabo" aria-controls="tab-cabo" aria-selected="false" aria-label="2ª Lei de Ohm"><span class="sym" aria-hidden="true">ρ</span><span class="tl">2ª Lei</span></button>
     <button type="button" class="tab" role="tab" id="t-queda" aria-controls="tab-queda" aria-selected="false" aria-label="Queda de tensão"><span class="sym" aria-hidden="true">ΔV</span><span class="tl">Queda</span></button>
+    <button type="button" class="tab" role="tab" id="t-predial" aria-controls="tab-predial" aria-selected="false" aria-label="Instalação predial"><span class="sym" aria-hidden="true">⌂</span><span class="tl">Predial</span></button>
     <button type="button" class="tab" role="tab" id="t-equivalente" aria-controls="tab-equivalente" aria-selected="false" aria-label="Equivalente"><span class="sym" aria-hidden="true">Req</span><span class="tl"><span class="tl-f">Equivalente</span><span class="tl-s" aria-hidden="true">Equiv.</span></span></button>
     <button type="button" class="tab" role="tab" id="t-circuito" aria-controls="tab-circuito" aria-selected="false"><span class="sym" aria-hidden="true">⊞</span><span class="tl">Circuito</span></button>
     <button type="button" class="tab" role="tab" id="t-kirchhoff" aria-controls="tab-kirchhoff" aria-selected="false"><span class="sym" aria-hidden="true">ΣI</span><span class="tl">Kirchhoff</span></button>
@@ -759,6 +760,176 @@ tbody tr.on{background:var(--accent-soft);box-shadow:inset 4px 0 0 var(--hi)}
   </section>
 
   <!-- ABA: RESISTÊNCIA EQUIVALENTE -->
+  <!-- ABA: INSTALAÇÃO PREDIAL -->
+  <section id="tab-predial" class="panel" role="tabpanel" aria-labelledby="t-predial" hidden>
+    <section class="fcard" aria-label="Fórmula e legenda"><h2>Dimensionamento de circuito predial</h2><div class="fbig"><span><small>Monofásico ou bifásico</small>I = <span class="frac"><span>P</span><span class="sl"> / </span><span>V · FP</span></span></span><span><small>Trifásico</small>I = <span class="frac"><span>P</span><span class="sl"> / </span><span>√3 · V · FP</span></span></span><span><small>Regra do disjuntor</small>Ib ≤ In ≤ Iz</span></div><div class="tablewrap"><table class="legend"><thead><tr><th>Símbolo</th><th>Significado</th><th>Unidade</th></tr></thead><tbody><tr><td>Ib</td><td>Corrente de projeto (a que a carga puxa)</td><td>ampère (A)</td></tr><tr><td>In</td><td>Corrente nominal do disjuntor</td><td>ampère (A)</td></tr><tr><td>Iz</td><td>Corrente que o cabo suporta com segurança</td><td>ampère (A)</td></tr><tr><td>FP</td><td>Fator de potência (1 para chuveiro e resistências)</td><td>sem unidade</td></tr></tbody></table></div></section>
+    <section class="study" aria-label="Estudo"><h2>Entenda antes de calcular</h2><h3>Como ler</h3><ul><li>O disjuntor protege o cabo: ele precisa desarmar antes que o cabo esquente demais. Por isso a corrente da carga (Ib) fica abaixo do disjuntor (In), e o disjuntor abaixo do que o cabo aguenta (Iz).</li><li>Nunca troque o disjuntor por um maior para parar de desarmar. Se desarma, o cabo ou a carga tem problema.</li><li>Além da corrente, o cabo precisa ter seção mínima para o tipo de uso e não pode perder tensão demais no caminho.</li></ul><h3>Exemplo resolvido</h3><p>Chuveiro de 5.500 W em 220 V (2 fases), a 20 m do quadro: I = <span class="frac"><span>5.500</span><span class="sl"> / </span><span>220</span></span> = <strong>25 A</strong>. Disjuntor de <strong>25 A</strong>. O cabo de 2,5 mm² aguenta 24 A (pouco), então usa-se <strong>4 mm²</strong> (32 A).</p><h3>Pratique</h3><ol><li>Um ar-condicionado de 1.500 W em 220 V, FP 0,9. Qual a corrente?<details><summary>Ver resposta</summary><p>I = <span class="frac"><span>1.500</span><span class="sl"> / </span><span>220 · 0,9</span></span> = <strong>7,58 A</strong>. Disjuntor de 10 A e cabo de 2,5 mm² (mínimo para tomada de uso específico).</p></details></li><li>Quando a conta dá 33 A, qual o disjuntor?<details><summary>Ver resposta</summary><p>O próximo valor comercial acima: <strong>40 A</strong>. Não existe disjuntor de 33 A. O cabo então precisa aguentar pelo menos 40 A, ou seja, 10 mm² (57 A) em vez de 6 mm² (41 A, no limite).</p></details></li></ol></section>
+    <h2>Calculadora</h2>
+    <p class="lead">Informe a carga e a calculadora sugere o disjuntor e a seção do cabo de cobre. Se informar o comprimento, ela confere também a queda de tensão.</p>
+    <div class="about"><p><strong>O que é:</strong> um roteiro rápido de dimensionamento pela NBR 5410, para cabo de cobre com isolação PVC em eletroduto embutido na parede (método B1).</p><p><strong>Para que serve:</strong> chegar ao disjuntor e à bitola de um circuito novo ou conferir se a instalação existente aguenta uma carga nova.</p></div>
+    <div class="grid">
+      <div class="field wide">
+        <label for="p-use"><span>Tipo de circuito</span></label>
+        <select id="p-use">
+          <option value="1.5">Iluminação (mínimo 1,5 mm²)</option>
+          <option value="2.5">Tomadas de uso geral (mínimo 2,5 mm²)</option>
+          <option value="2.5" selected>Uso específico: chuveiro, forno, ar-condicionado (mínimo 2,5 mm²)</option>
+        </select>
+      </div>
+      <div class="field wide">
+        <label for="p-circ"><span>Ligação</span></label>
+        <select id="p-circ">
+          <option value="2">Monofásico (fase + neutro)</option>
+          <option value="2" selected>Bifásico (2 fases)</option>
+          <option value="3">Trifásico (3 fases)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="p-P"><span>Potência</span></label>
+        <div class="wrap"><input id="p-P" type="text" inputmode="decimal" value="5500"><span class="unit">W</span></div>
+      </div>
+      <div class="field">
+        <label for="p-V"><span>Tensão</span></label>
+        <div class="wrap"><input id="p-V" type="text" inputmode="decimal" value="220"><span class="unit">V</span></div>
+      </div>
+      <div class="field">
+        <label for="p-fp"><span>Fator de potência</span></label>
+        <div class="wrap"><input id="p-fp" type="text" inputmode="decimal" value="1"></div>
+      </div>
+      <div class="field">
+        <label for="p-L"><span>Comprimento (opcional)</span></label>
+        <div class="wrap"><input id="p-L" type="text" inputmode="decimal" value="20"><span class="unit">m</span></div>
+      </div>
+    </div>
+    <p id="p-status" class="status" role="status" aria-live="polite"></p>
+    <section id="p-result" class="result" hidden aria-live="polite"></section>
+    <section id="p-steps" class="steps" hidden></section>
+    <p class="note">No trifásico use a tensão entre fases (220 ou 380 V) e considere a carga equilibrada. No monofásico a tensão é a de fase (127 V ou 220 V). A seção respeita o maior entre: mínimo do tipo de circuito, corrente do disjuntor e queda de 4 %. Não inclui fatores de agrupamento de circuitos nem de temperatura ambiente: com vários circuitos no mesmo eletroduto, aumente a seção. Confira sempre a NBR 5410 vigente e o projeto.</p>
+
+    <details class="msec" id="pr-cond">
+      <summary><h2>Capacidade dos cabos e disjuntor máximo</h2></summary>
+      <div class="msec-body">
+        <section class="table-card" aria-label="Capacidade de condução">
+          <div class="tablewrap"><table id="p-amp"><thead><tr><th class="num">Seção (mm²)</th><th class="num">2 condutores (A)</th><th class="num">3 condutores (A)</th><th class="num">Disjuntor máx. 2c / 3c</th></tr></thead><tbody></tbody></table></div>
+          <p class="note">Cobre, isolação PVC 70 °C, eletroduto embutido em alvenaria (método B1), temperatura ambiente de 30 °C, um circuito por eletroduto. "Condutores" são os que carregam corrente: fase e neutro, ou duas fases = 2; três fases = 3. O terra não conta. Valores conforme tabela da NBR 5410; confira a norma vigente.</p>
+        </section>
+      </div>
+    </details>
+
+    <details class="msec" id="pr-cores">
+      <summary><h2>Cores dos condutores</h2></summary>
+      <div class="msec-body">
+        <section class="table-card" aria-label="Cores dos condutores">
+          <div class="tablewrap"><table class="legend"><thead><tr><th>Função</th><th>Cor</th></tr></thead><tbody>
+            <tr><td>Neutro</td><td>Azul-claro</td></tr>
+            <tr><td>Proteção (terra, PE)</td><td>Verde ou verde-amarelo</td></tr>
+            <tr><td>Fase</td><td>Preto, vermelho, branco ou outra cor, menos azul-claro, verde e verde-amarelo</td></tr>
+            <tr><td>Retorno (interruptor)</td><td>Cor diferente das do neutro e do terra, em geral amarelo ou cinza</td></tr>
+          </tbody></table></div>
+          <p class="note">A mesma cor deve ter sempre a mesma função em toda a obra. Nunca use azul-claro como fase, nem verde como neutro.</p>
+        </section>
+      </div>
+    </details>
+
+    <details class="msec" id="pr-cargas">
+      <summary><h2>Potência de aparelhos comuns</h2></summary>
+      <div class="msec-body">
+        <section class="table-card" aria-label="Potência de aparelhos">
+          <div class="tablewrap"><table><thead><tr><th>Aparelho</th><th class="num">Potência típica (W)</th></tr></thead><tbody>
+            <tr><td>Chuveiro elétrico</td><td class="num">4.400 a 7.500</td></tr>
+            <tr><td>Torneira elétrica</td><td class="num">3.000 a 5.500</td></tr>
+            <tr><td>Forno elétrico</td><td class="num">1.500 a 3.500</td></tr>
+            <tr><td>Ar-condicionado 9.000 BTU/h</td><td class="num">≈ 1.000</td></tr>
+            <tr><td>Ar-condicionado 12.000 BTU/h</td><td class="num">≈ 1.400</td></tr>
+            <tr><td>Micro-ondas</td><td class="num">1.200 a 1.500</td></tr>
+            <tr><td>Máquina de lavar</td><td class="num">500 a 1.000</td></tr>
+            <tr><td>Secador de cabelo</td><td class="num">1.200 a 2.000</td></tr>
+            <tr><td>Ferro de passar</td><td class="num">1.000 a 1.500</td></tr>
+            <tr><td>Geladeira</td><td class="num">100 a 300</td></tr>
+            <tr><td>TV</td><td class="num">80 a 200</td></tr>
+            <tr><td>Lâmpada LED</td><td class="num">5 a 15</td></tr>
+          </tbody></table></div>
+          <p class="note">Valores típicos, só para uma primeira estimativa. Use sempre a potência da etiqueta do aparelho. Aparelhos de uso específico (chuveiro, forno, ar-condicionado) pedem circuito próprio.</p>
+        </section>
+      </div>
+    </details>
+
+    <details class="msec" id="pr-pontos">
+      <summary><h2>Pontos mínimos de tomada e iluminação</h2></summary>
+      <div class="msec-body">
+        <section class="study" aria-label="Pontos mínimos">
+          <h3>Tomadas de uso geral (TUG)</h3>
+          <ul>
+            <li><strong>Banheiro:</strong> pelo menos 1 tomada junto ao lavatório, a no mínimo 60 cm da porta do box. Carga de 600 VA por ponto, até 3 pontos, e 100 VA nos demais.</li>
+            <li><strong>Cozinha, copa e área de serviço:</strong> 1 tomada para cada 3,5 m de perímetro (ou fração), no mínimo 2 acima da bancada. Carga de 600 VA por ponto, até 3 pontos, e 100 VA nos demais.</li>
+            <li><strong>Sala e dormitório:</strong> 1 tomada para cada 5 m de perímetro (ou fração), bem distribuídas. 100 VA por ponto.</li>
+            <li><strong>Varanda e áreas externas:</strong> pelo menos 1 tomada. Subsolo, garagem e sótão também têm exigência mínima.</li>
+          </ul>
+          <h3>Iluminação</h3>
+          <ul>
+            <li>Pelo menos 1 ponto no teto em cada cômodo, comandado por interruptor.</li>
+            <li>Carga mínima: 100 VA para cômodos até 6 m². Acima disso, 100 VA nos primeiros 6 m² mais 60 VA para cada 4 m² inteiros que sobrarem.</li>
+          </ul>
+          <h3>Alturas usuais</h3>
+          <ul>
+            <li>Tomada baixa: 0,30 m do piso. Tomada média (bancada): 1,10 m. Tomada alta (ar-condicionado): 2,00 m ou mais.</li>
+            <li>Interruptor: cerca de 1,10 m do piso.</li>
+          </ul>
+          <p class="note">As quantidades são o mínimo da NBR 5410. As alturas são prática comum de obra, não obrigação da norma. Confira a versão vigente.</p>
+        </section>
+      </div>
+    </details>
+
+    <details class="msec" id="pr-prot">
+      <summary><h2>DR, curvas de disjuntor e queda de tensão</h2></summary>
+      <div class="msec-body">
+        <section class="study" aria-label="Proteções">
+          <h3>DR (diferencial residual) de 30 mA</h3>
+          <ul>
+            <li>Obrigatório nos circuitos de banheiros, cozinhas, copas, lavanderias, áreas de serviço, áreas externas e tomadas que possam alimentar equipamentos ao ar livre.</li>
+            <li>Protege as pessoas contra choque. O disjuntor protege o cabo. Um não substitui o outro.</li>
+            <li>Teste o DR todo mês no botão "T". Se não desarmar, troque.</li>
+          </ul>
+          <h3>Curvas do disjuntor</h3>
+          <ul>
+            <li><strong>B</strong> (arma entre 3 e 5 vezes In): iluminação e cargas resistivas.</li>
+            <li><strong>C</strong> (entre 5 e 10 vezes In): uso geral e motores pequenos, o mais comum em residência.</li>
+            <li><strong>D</strong> (entre 10 e 20 vezes In): cargas com partida forte.</li>
+          </ul>
+          <h3>Valores comerciais de disjuntor (A)</h3>
+          <p>6, 10, 16, 20, 25, 32, 40, 50, 63, 70, 80, 90, 100, 125.</p>
+          <h3>Queda de tensão máxima</h3>
+          <ul>
+            <li>Circuito terminal (do quadro até o ponto de uso): 4 %.</li>
+            <li>Total desde a entrada da concessionária: 5 %. Com transformador próprio, 7 %.</li>
+            <li>Para calcular com mais detalhe, use a aba Queda.</li>
+          </ul>
+        </section>
+      </div>
+    </details>
+
+    <details class="msec" id="pr-obra">
+      <summary><h2>Eletroduto e segurança na obra</h2></summary>
+      <div class="msec-body">
+        <section class="study" aria-label="Eletroduto e segurança">
+          <h3>Ocupação do eletroduto</h3>
+          <ul>
+            <li>Os cabos ocupam no máximo 53 % da área interna com 1 cabo, 31 % com 2 cabos e 40 % com 3 ou mais.</li>
+            <li>Mais circuitos no mesmo eletroduto exigem cabos mais grossos (fator de agrupamento).</li>
+            <li>Evite mais de 3 curvas de 90° entre caixas, e use caixas de passagem.</li>
+          </ul>
+          <h3>Antes de mexer</h3>
+          <ol>
+            <li>Desligue o disjuntor do circuito e coloque aviso ou trava.</li>
+            <li>Teste a ausência de tensão com detector ou multímetro, nos dois condutores e no terra.</li>
+            <li>Confirme que o terra está ligado e que o DR atua antes de religar.</li>
+            <li>Use EPI e ferramenta isolada. O trabalho em instalações elétricas segue a NR-10.</li>
+          </ol>
+        </section>
+      </div>
+    </details>
+  </section>
+
   <section id="tab-equivalente" class="panel" role="tabpanel" aria-labelledby="t-equivalente" hidden>
     <section class="fcard" aria-label="Fórmula e legenda"><h2>Resistência equivalente</h2><div class="fbig"><span>Série: Req = R₁ + R₂ + … + Rₙ</span><span>Paralelo: <span class="frac"><span>1</span><span class="sl"> / </span><span>Req</span></span> = <span class="frac"><span>1</span><span class="sl"> / </span><span>R₁</span></span> + <span class="frac"><span>1</span><span class="sl"> / </span><span>R₂</span></span> + … + <span class="frac"><span>1</span><span class="sl"> / </span><span>Rₙ</span></span></span></div><div class="tablewrap"><table class="legend"><thead><tr><th>Símbolo</th><th>Significado</th><th>Unidade</th></tr></thead><tbody><tr><td>Req</td><td>Resistência equivalente (o resistor único que substitui o conjunto)</td><td>ohm (Ω)</td></tr><tr><td>R₁ … Rₙ</td><td>Resistência de cada resistor</td><td>ohm (Ω)</td></tr><tr><td><span class="frac"><span>1</span><span class="sl"> / </span><span>R</span></span></td><td>Condutância (inverso da resistência)</td><td>siemens (S)</td></tr><tr><td>N</td><td>Quantidade de resistores iguais (atalho do paralelo)</td><td>—</td></tr></tbody></table></div></section>
     <section class="study" aria-label="Estudo"><h2>Entenda antes de calcular</h2><h3>Como ler a fórmula</h3><ul><li>Série: só há um caminho. A corrente é a mesma em todos e a tensão se divide entre eles.</li><li>Paralelo: há vários caminhos. A tensão é a mesma em todos e a corrente se divide.</li><li>No paralelo, a Req é sempre menor que o menor resistor, porque ganhar caminhos facilita a passagem da corrente.</li></ul><h3>Exemplo resolvido</h3><p>Resistores de 100 Ω, 220 Ω e 330 Ω. Em série: 100 + 220 + 330 = <strong>650 Ω</strong>. Em paralelo: <span class="frac"><span>1</span><span class="sl"> / </span><span>100</span></span> + <span class="frac"><span>1</span><span class="sl"> / </span><span>220</span></span> + <span class="frac"><span>1</span><span class="sl"> / </span><span>330</span></span> = 0,017576 S, então Req = <span class="frac"><span>1</span><span class="sl"> / </span><span>0,017576</span></span> ≈ <strong>56,9 Ω</strong>.</p><h3>Pratique</h3><ol><li>Três resistores de 30 Ω em paralelo. Qual a Req?<details><summary>Ver resposta</summary><p>Resistores iguais: Req = <span class="frac"><span>R</span><span class="sl"> / </span><span>N</span></span> = <span class="frac"><span>30</span><span class="sl"> / </span><span>3</span></span> = <strong>10 Ω</strong>.</p></details></li><li>Dois resistores, de 6 Ω e 3 Ω, em paralelo. Qual a Req?<details><summary>Ver resposta</summary><p>Produto pela soma: <span class="frac"><span>6 · 3</span><span class="sl"> / </span><span>6 + 3</span></span> = <span class="frac"><span>18</span><span class="sl"> / </span><span>9</span></span> = <strong>2 Ω</strong>.</p></details></li></ol></section>
@@ -1383,7 +1554,7 @@ function fillMaterialSelect(sel, onlyIds){
 
 /* ---------- abas ---------- */
 (function(){
-  var names = ['ohm', 'cabo', 'queda', 'equivalente', 'circuito', 'kirchhoff', 'notacao', 'matematica'];
+  var names = ['ohm', 'cabo', 'queda', 'predial', 'equivalente', 'circuito', 'kirchhoff', 'notacao', 'matematica'];
   var tabs = names.map(function(n){ return document.getElementById('t-' + n); });
   var panels = names.map(function(n){ return document.getElementById('tab-' + n); });
   function show(name){
@@ -1738,6 +1909,78 @@ function fillMaterialSelect(sel, onlyIds){
   ids.forEach(function(k){ el[k].addEventListener('input', update); });
   circSel.addEventListener('change', update);
   matSel.addEventListener('change', update);
+  update();
+})();
+
+/* ---------- aba: instalação predial ---------- */
+(function(){
+  /* capacidade de condução (A): cobre, PVC 70 °C, eletroduto embutido (B1), 30 °C. [seção, 2 cond, 3 cond] */
+  var AMP = [[1.5,17.5,15.5],[2.5,24,21],[4,32,28],[6,41,36],[10,57,50],[16,76,68],[25,101,89],[35,125,111],[50,151,134]];
+  var BRK = [6,10,16,20,25,32,40,50,63,70,80,90,100,125];
+  var RHO70 = 0.0173 * (1 + 0.004 * (70 - 20));
+  function maxBrk(iz){ var r = null; BRK.forEach(function(b){ if (b <= iz) r = b; }); return r; }
+  var tb = document.querySelector('#p-amp tbody');
+  AMP.forEach(function(a){
+    var tr = document.createElement('tr');
+    tr.innerHTML = '<td class="num">' + br(a[0]) + '</td><td class="num">' + br(a[1]) + '</td><td class="num">' + br(a[2]) + '</td><td class="num">' + maxBrk(a[1]) + ' / ' + maxBrk(a[2]) + ' A</td>';
+    tb.appendChild(tr);
+  });
+  var useSel = document.getElementById('p-use'), circSel = document.getElementById('p-circ');
+  var ids = ['P','V','fp','L'], el = {};
+  ids.forEach(function(k){ el[k] = document.getElementById('p-' + k); });
+  var st = document.getElementById('p-status'), out = document.getElementById('p-result'), stepsEl = document.getElementById('p-steps');
+  function update(){
+    out.hidden = true; stepsEl.hidden = true;
+    var v = {}, bad = false;
+    ids.forEach(function(k){
+      var n = parse(el[k].value);
+      v[k] = n;
+      if (Number.isNaN(n)) bad = true;
+    });
+    if (bad){ setStatus(st, 'Use apenas números, por exemplo 12,5.', true); return; }
+    if (v.P === null || v.V === null || v.fp === null){ setStatus(st, 'Preencha potência, tensão e fator de potência.'); return; }
+    if (v.P <= 0 || v.V <= 0 || (v.L !== null && v.L <= 0)){ setStatus(st, 'Use valores maiores que zero.', true); return; }
+    if (v.fp <= 0 || v.fp > 1){ setStatus(st, 'O fator de potência fica entre 0 e 1 (exemplo: 0,9).', true); return; }
+    var n = Number(circSel.value), tri = n === 3, minUse = Number(useSel.value);
+    var Ib = tri ? v.P / (Math.sqrt(3) * v.V * v.fp) : v.P / (v.V * v.fp);
+    var In = BRK.filter(function(b){ return b >= Ib; })[0];
+    if (!In){ setStatus(st, 'Corrente de ' + br(Ib, 3) + ' A passa de 125 A. Esse circuito pede projeto específico.', true); return; }
+    var col = tri ? 2 : 1;
+    var byAmp = AMP.filter(function(a){ return a[col] >= In; })[0];
+    if (!byAmp){ setStatus(st, 'Disjuntor de ' + In + ' A pede cabo acima de 50 mm². Consulte a tabela completa da NBR 5410.', true); return; }
+    var k = tri ? Math.sqrt(3) : 2, kTxt = tri ? '√3' : '2';
+    var sDrop = v.L ? k * RHO70 * v.L * Ib / (0.04 * v.V) : 0;
+    var cands = [minUse, byAmp[0]];
+    if (sDrop) cands.push(SECTIONS.filter(function(s){ return s >= sDrop; })[0] || 300);
+    var S = Math.max.apply(null, cands);
+    var row = AMP.filter(function(a){ return a[0] === S; })[0];
+    if (!row){ setStatus(st, 'A queda de tensão pede seção acima de 50 mm². Reduza o comprimento ou consulte o projeto.', true); return; }
+    var why = S === minUse && S >= byAmp[0] && S >= sDrop ? 'mínimo do tipo de circuito' : (S === byAmp[0] && S >= sDrop ? 'corrente do disjuntor' : 'queda de tensão');
+    var pct = v.L ? k * RHO70 * v.L * Ib / S / v.V * 100 : null;
+    var okQ = pct === null || pct <= 4;
+    out.innerHTML =
+      '<div class="r-pair">' +
+        '<div><span class="r-label">Corrente de projeto</span><span class="r-value">' + br(Ib, 3) + ' A</span></div>' +
+        '<div><span class="r-label">Disjuntor</span><span class="r-value">' + In + ' A</span></div>' +
+        '<div><span class="r-label">Cabo de cobre</span><span class="r-value">' + br(S) + ' mm²</span>' +
+        '<span class="r-extra">aguenta ' + br(row[col]) + ' A · definido por: ' + why + '</span></div>' +
+        (pct !== null ? '<div><span class="r-label">Queda de tensão</span><span class="r-value">' + br(pct, 3) + ' %</span>' +
+        '<span class="r-extra">limite 4 %<span class="pill ' + (okQ ? 'ok' : 'bad') + '">' + (okQ ? 'dentro' : 'acima') + '</span></span></div>' : '') +
+      '</div>';
+    out.hidden = false;
+    stepsEl.innerHTML = '<h2>Passo a passo</h2><ol>' +
+      '<li><span>Corrente de projeto</span><code>' + fr('P', (tri ? '√3 · ' : '') + 'V · FP') + ' = ' + fr(br(v.P), (tri ? '√3 · ' : '') + br(v.V) + ' · ' + br(v.fp)) + ' = ' + br(Ib, 4) + ' A</code></li>' +
+      '<li><span>Disjuntor: menor valor comercial acima da corrente</span><code>' + In + ' A</code></li>' +
+      '<li><span>Cabo que aguenta o disjuntor (' + (tri ? '3' : '2') + ' condutores carregados)</span><code>' + br(byAmp[0]) + ' mm² (' + br(byAmp[col]) + ' A ≥ ' + In + ' A)</code></li>' +
+      '<li><span>Seção mínima do tipo de circuito</span><code>' + br(minUse) + ' mm²</code></li>' +
+      (sDrop ? '<li><span>Seção para queda de 4 % (cobre a 70 °C)</span><code>' + fr(kTxt + ' · ' + br(RHO70) + ' · ' + br(v.L) + ' · ' + br(Ib, 4), '0,04 · ' + br(v.V)) + ' = ' + br(sDrop, 3) + ' mm²</code></li>' : '') +
+      '<li><span>Escolhida: a maior de todas</span><code>' + br(S) + ' mm²</code></li></ol>';
+    stepsEl.hidden = false;
+    setStatus(st, okQ ? 'Circuito dimensionado.' : 'A queda passa de 4 %. Reduza o comprimento ou aumente a seção.', !okQ);
+  }
+  ids.forEach(function(k){ el[k].addEventListener('input', update); });
+  useSel.addEventListener('change', update);
+  circSel.addEventListener('change', update);
   update();
 })();
 
