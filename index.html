@@ -9,7 +9,9 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;600&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;600&display=swap"></noscript>
 <style>
 /* Tema: multímetro de bancada. Carcaça amarela no topo, visor LCD nos resultados,
    seletor de funções como barra fixa embaixo (celular) ou no topo (telas largas).
@@ -506,6 +508,88 @@ tbody tr.on{background:var(--accent-soft);box-shadow:inset 4px 0 0 var(--hi)}
   #tab-circuito:fullscreen .ck-nav{bottom:env(safe-area-inset-bottom)}
 }
 @media (min-width:720px) and (max-width:959px){.ck-nav{bottom:env(safe-area-inset-bottom)}}
+
+/* ---------- acessibilidade no celular (leitura e toque para quem tem mais idade) ----------
+   Texto base maior (tudo em rem cresce junto), alvos de toque de pelo menos 52px,
+   barra de abas que rola com rótulos legíveis e mais contraste nos textos de apoio. */
+@media (max-width:719px){
+  :root{--bar-h:72px;--muted:#3f4a53}
+  html{font-size:112.5%}
+  body{line-height:1.6;padding-left:18px;padding-right:18px}
+  header{margin:0 -18px;padding-left:18px;padding-right:18px}
+  h1{font-size:2rem}
+  h2{font-size:1.3rem}
+  .study h3{font-size:1.15rem;margin-top:10px}
+  .study p,.study ul,.study ol,.ck-cap p{font-size:1rem}
+  .study ul,.study ol{gap:12px}
+  .lead,header .lead{font-size:1rem;max-width:none}
+  .note,.about{font-size:.95rem}
+  .field label,.matrow label,.kf-src > span,.r-label,.steps li span{font-size:.95rem}
+  .legend td,.legend th,table{font-size:.95rem}
+  .steps code,.flist code{font-size:.95rem}
+
+  /* campos e botões maiores */
+  .grid{grid-template-columns:1fr;gap:16px}
+  .wrap{min-height:56px;border-width:2px;border-color:#7b8791;padding:0 12px}
+  .wrap input{font-size:1.25rem}
+  .wrap:focus-within{outline-width:3px}
+  select{min-height:56px;font-size:1.05rem;border-width:2px;border-color:#7b8791}
+  .unit{font-size:.95rem}
+  .btn{min-height:52px;min-width:52px;font-size:1rem;padding:10px 18px;border-width:2px;border-color:#7b8791}
+  .btn.primary{border-color:var(--hi)}
+  .seg{border-width:2px;border-color:#7b8791}
+  .seg button{min-height:54px;font-size:1.05rem}
+  .seg.q button{font-size:1rem}
+  .ops{grid-template-columns:52px 52px}
+  .ops button{min-height:52px;font-size:1.4rem}
+  .ck-tools button,.ck-row .btn{min-height:52px;font-size:1rem}
+  .ck-go{min-height:56px}
+  .ck-fs{min-height:48px;font-size:.95rem}
+  .rrow .btn{min-width:52px}
+  .actions{flex-direction:column;align-items:stretch}
+  .actions .btn{width:100%}
+  .actions .status{text-align:center}
+  .jump,.msec-nav a{min-height:52px;font-size:1rem}
+  .msec > summary{min-height:60px}
+  .msec > summary h2{font-size:1.2rem}
+  .study summary,.steps summary{min-height:52px;display:flex;align-items:center;font-size:1rem;font-weight:600}
+  .ck-help summary{min-height:48px}
+  .ck-nav .btn{min-height:56px}
+
+  /* visor: números grandes */
+  .r-value{font-size:1.9rem}
+  .r-value.big{font-size:2.2rem}
+  .r-extra{font-size:1rem}
+  .r-pair{grid-template-columns:1fr}
+  .pill{font-size:.9rem}
+  .fbig{font-size:1.2rem}
+  .fbig small{font-size:.95rem}
+  .lz-k,.lz-h{font-size:.85rem}
+  .ck-lousa{font-size:1.05rem}
+
+  /* barra de abas: rola de lado, ~4 abas visíveis, com rótulo completo */
+  .tabs{display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x proximity;
+    -webkit-overflow-scrolling:touch;scrollbar-width:none;
+    border-top:2px solid rgba(255,255,255,.12)}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{flex:0 0 auto;min-width:88px;padding:8px 10px 7px;scroll-snap-align:center;gap:2px}
+  .tab .sym{font-size:1.3rem}
+  .tab .tl,.tab .tl-f,.tab .tl{font-size:.82rem;font-weight:600}
+  .tab .tl-f{display:inline}
+  .tab .tl-s{display:none}
+  .tab[aria-selected="true"]{box-shadow:inset 0 4px 0 var(--hi);background:rgba(255,194,14,.18)}
+  .tabs::after{content:"";flex:0 0 1px}
+  .kx{gap:8px;padding-top:8px;padding-bottom:8px}
+  .kx button{min-height:54px;font-size:1.3rem}
+  .kx button small{font-size:.75rem}
+}
+@media (max-width:359px){
+  .tab .tl{font-size:.8rem}
+  html{font-size:106.25%}
+}
+@media (prefers-contrast:more){
+  :root{--muted:#1d2328;--line:#6b7780}
+}
 </style>
 </head>
 <body>
@@ -1309,6 +1393,10 @@ function fillMaterialSelect(sel, onlyIds){
       tabs[i].setAttribute('aria-selected', on ? 'true' : 'false');
       tabs[i].tabIndex = on ? 0 : -1;
       panels[i].hidden = !on;
+      /* a barra de abas rola no celular: mantém a aba ativa à vista */
+      if (on && tabs[i].scrollIntoView) {
+        try { tabs[i].scrollIntoView({block: 'nearest', inline: 'center'}); } catch (e) {}
+      }
     });
   }
   tabs.forEach(function(t, i){
